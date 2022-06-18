@@ -840,7 +840,7 @@ namespace DivaModManager
                     }
                     if (config.ContainsKey("version") && (config["version"] as string).Length > 0)
                         text += $"Version: {config["version"]}\n";
-                    if (config.ContainsKey("date") && (config["date"] as string).Length > 0)
+                    if (config.ContainsKey("date") && config["date"].ToString().Length > 0)
                         text += $"Date: {config["date"]}";
                     if (!String.IsNullOrEmpty(text))
                     {
