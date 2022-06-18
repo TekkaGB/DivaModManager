@@ -1,0 +1,56 @@
+﻿<Window x:Class="DivaModManager.UI.ConfigureModWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DivaModManager.UI"
+        mc:Ignorable="d"
+        Title="Diva Mod Manager" WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize" MinWidth="400" MaxWidth="750"
+        Background="#202020" ShowActivated="True" SizeToContent="WidthAndHeight">
+    <Window.Resources>
+        <local:FileNameConverter x:Key="FileNameConverter"/>
+        <local:PathNameConverter x:Key="PathNameConverter"/>
+        <Style x:Key="ToggleButtonStyle" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border x:Name="border" Background="#353535">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="#006ac1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <TextBox Name="ConfigBox" AcceptsReturn="True" Height="400" Grid.ColumnSpan="2" Background="#303030" BorderBrush="#353535" Foreground="#f2f2f2" Margin="5" ClipToBounds="False" VerticalScrollBarVisibility="Auto"/>
+        <Button Grid.Row="1" Grid.Column="1" HorizontalContentAlignment="Stretch" Margin="5" Name="CloseButton" Content=" Close" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Stretch"  VerticalAlignment="Center" Height="30"  Background="#494949" Foreground="#f2f2f2" Click="CloseButton_Click">
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="2"/>
+                </Style>
+            </Button.Resources>
+        </Button>
+        <Button Grid.Row="1" Grid.Column="0" HorizontalContentAlignment="Stretch" Margin="5" Name="SaveButton" Content=" Save" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Stretch"  VerticalAlignment="Center" Height="30"  Background="#494949" Foreground="#f2f2f2" Click="SaveButton_Click">
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="2"/>
+                </Style>
+            </Button.Resources>
+        </Button>
+    </Grid>
+</Window>

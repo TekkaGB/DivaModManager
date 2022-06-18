@@ -1,0 +1,70 @@
+﻿<Window x:Class="DivaModManager.UI.AltLinkWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DivaModManager.UI"
+        xmlns:fa5="http://schemas.fontawesome.com/icons/"
+        mc:Ignorable="d"
+        Title="Diva Mod Manager" WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize" MinWidth="600" MaxWidth="750"
+        Background="#202020" ShowActivated="True" Closing="Window_Closing" SizeToContent="WidthAndHeight">
+    <Window.Resources>
+        <DataTemplate x:Key="FileTemplate">
+            <Button Click="SelectButton_Click"  Margin="5" HorizontalContentAlignment="Stretch" Background="#494949">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="2"/>
+                    </Style>
+                </Button.Resources>
+                <Grid VerticalAlignment="Center" x:Name="GridItem" Margin="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" FontSize="18" FontWeight="Bold" Foreground="#f2f2f2" Text="{Binding Path=Description}"/>
+                    <TextBlock Grid.Row="1" FontSize="13" TextWrapping="WrapWithOverflow" Foreground="#a2a2a2" Text="{Binding Path=Url}"/>
+                </Grid>
+            </Button>
+            </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Padding="10,2,10,2" Background="Transparent" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25" FontWeight="Bold" TextWrapping="Wrap" Name="TitleBox"/>
+        <TextBlock Name="Description" Grid.Row="1" TextWrapping="Wrap" Margin="10,2,10,2" Background="Transparent" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16"/>
+        <TextBox BorderThickness="0" IsReadOnly="True" Name="PathText" Grid.Row="2" TextWrapping="WrapWithOverflow" FontWeight="Bold" Margin="8,0,8,0" TextAlignment="Left" Background="Transparent" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16"/>
+        <TextBlock Name="FetchDescription" Grid.Row="3" TextWrapping="Wrap" Margin="10,2,10,2" Background="Transparent" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16"/>
+        <TextBox BorderThickness="0" IsReadOnly="True" Name="UrlText" Grid.Row="4" TextWrapping="WrapWithOverflow" FontWeight="Bold" Margin="8,0,8,0" TextAlignment="Left" Background="Transparent" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16"/>
+        <ListView MaxHeight="500" Style="{StaticResource ListviewStyle}" Name="FileList" Grid.Row="5" Background="Transparent" BorderThickness="0" ItemTemplate="{StaticResource FileTemplate}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Focusable" Value="false"/>
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                <ContentPresenter />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+        <Button Grid.Row="6" HorizontalContentAlignment="Stretch" Margin="5" Name="CancelButton" Content=" Cancel" FontSize="18" FontWeight="Bold" HorizontalAlignment="Stretch"  VerticalAlignment="Bottom" Height="40"  Background="#494949" Foreground="#f2f2f2" Click="CancelButton_Click">
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="2"/>
+                </Style>
+            </Button.Resources>
+        </Button>
+    </Grid>
+</Window>

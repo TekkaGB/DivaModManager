@@ -1,0 +1,94 @@
+﻿<Window x:Class="DivaModManager.UI.ChangelogBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DivaModManager"
+        Title="Changelog"
+        Background="#202020" ShowActivated="True" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+    <Window.Resources>
+        <local:CategoryColorConverter x:Key="CategoryColorConverter"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" x:Name="Text" Padding="10" Foreground="White" TextAlignment="Center" VerticalAlignment="Center" TextWrapping="WrapWithOverflow" FontSize="15"/>
+        <Label Grid.Row="2" x:Name="VersionLabel" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="17" Foreground="White"/>
+        <Image Grid.Row="1" Name="PreviewImage" HorizontalAlignment="Center" Width="350" Visibility="Collapsed"/>
+        <DataGrid Grid.Row="3" x:Name="ChangesGrid" HorizontalAlignment="Center" Margin="25,0, 25, 10" RowBackground="#202020" Background="#202020" BorderBrush="Transparent" Foreground="White" 
+                  VerticalAlignment="Center" FontSize="13" HeadersVisibility="None" AutoGenerateColumns="False" VerticalScrollBarVisibility="Auto" MaxHeight="150"
+                  HorizontalScrollBarVisibility="Disabled" GridLinesVisibility="None" VerticalContentAlignment="Top">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label 
+                            Content="{Binding Category}"
+                            Foreground="{Binding Category, Converter={StaticResource CategoryColorConverter}}"
+                            FontSize="15"
+                            Background="#3c4044"
+                            VerticalAlignment="Center"
+                            />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn IsReadOnly="True" Binding="{Binding Text}" MaxWidth="300">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            <Setter Property="TextBlock.VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+
+            <DataGrid.CellStyle>
+                <Style TargetType="{x:Type DataGridCell}">
+                    <Style.Triggers>
+                        <Trigger Property="DataGridCell.IsSelected" Value="True">
+                            <Setter Property="BorderBrush">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="Transparent"/>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Foreground"
+                            Value="White"/>
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="Transparent"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="MinHeight" Value="28"/>
+                </Style>
+            </DataGrid.RowStyle>
+
+        </DataGrid>
+        <ScrollViewer Grid.Row="4" MaxHeight="150" VerticalScrollBarVisibility="Auto">
+        <TextBlock MaxWidth="500" Name="UpdateText" Padding="10" Foreground="White" VerticalAlignment="Center"  TextWrapping="Wrap" FontSize="15"/>
+        </ScrollViewer>
+        <TextBlock MaxWidth="500" Grid.Row="5" Padding="10" Foreground="White" TextAlignment="Center" Text="Would you like to update?" VerticalAlignment="Center"  TextWrapping="Wrap" FontSize="15"/>
+        <Grid Grid.Row="6" Grid.Column="1" Margin="0, 0, 0, 15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="YesButton" Content="Yes" Background="#494949" Foreground="#f2f2f2" Height="25" Width="80" VerticalAlignment="Center" HorizontalAlignment="Center" Click="YesButton_Click" IsDefault="True" Grid.Column="0"/>
+            <Button x:Name="NoButton" Content="No" Background="#494949" Foreground="#f2f2f2" Height="25" Width="80" VerticalAlignment="Center" HorizontalAlignment="Center" Click="NoButton_Click" Grid.Column="1"/>
+            <Button x:Name="SkipButton" Visibility="Collapsed" Content="Skip Update" Background="#494949" Foreground="#f2f2f2" Height="25" Width="80" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Skip_Button_Click" Grid.Column="2"/>
+        </Grid>
+    </Grid>
+</Window>
