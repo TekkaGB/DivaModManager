@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DivaModManager" WindowStartupLocation="CenterScreen"
         mc:Ignorable="d" Background="#202020" Closing="Window_Closing"
-        Title="ProgressBox" Height="160" Width="500">
+        Title="ProgressBox" Height="160" Width="500" ResizeMode="CanMinimize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>

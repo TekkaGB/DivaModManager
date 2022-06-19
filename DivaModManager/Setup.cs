@@ -273,6 +273,17 @@ namespace DivaModManager
         }
         public static bool Generic(string exe, string defaultPath)
         {
+            // Get install path from registry
+            try
+            {
+                var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 1761390");
+                if (!String.IsNullOrEmpty(key.GetValue("InstallLocation") as string))
+                    defaultPath = $"{key.GetValue("InstallLocation") as string}{Global.s}DivaMegaMix.exe";
+            }
+            catch (Exception e)
+            {
+
+            }
             if (!File.Exists(defaultPath))
             {
                 OpenFileDialog dialog = new OpenFileDialog();
