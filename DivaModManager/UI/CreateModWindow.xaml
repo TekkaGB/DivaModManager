@@ -36,6 +36,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.3*"/>
@@ -50,8 +51,13 @@
         <TextBlock Text="Date" Grid.Row="3" FontWeight="SemiBold" Foreground="#f2f2f2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
         <TextBox Name="DateBox" Grid.Row="3" Height="20" Grid.Column="1"  Background="#303030" BorderBrush="#353535" Foreground="#f2f2f2" Margin="5" ClipToBounds="False" VerticalScrollBarVisibility="Disabled"/>
         <TextBlock Text="Description" Grid.Row="4" FontWeight="SemiBold" Foreground="#f2f2f2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-        <TextBox Name="DescriptionBox" Grid.Row="4" Height="100" Grid.Column="1"  Background="#303030" BorderBrush="#353535" Foreground="#f2f2f2" Margin="5" ClipToBounds="False" VerticalScrollBarVisibility="Auto"/>
-        <Grid Grid.Row="5" Grid.ColumnSpan="2">
+        <TextBox Name="DescriptionBox" AcceptsReturn="True" Grid.Row="4" Height="100" Grid.Column="1"  Background="#303030" BorderBrush="#353535" Foreground="#f2f2f2" Margin="5" ClipToBounds="False" VerticalScrollBarVisibility="Auto"/>
+        <TextBlock Text="Preview" Grid.Row="5" FontWeight="SemiBold" Foreground="#f2f2f2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
+        <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
+            <TextBox Name="PreviewBox" Width="230" Height="20" Background="#303030" BorderBrush="#353535" Foreground="#f2f2f2" Margin="5,5,0,5" ClipToBounds="False" VerticalScrollBarVisibility="Disabled"/>
+            <Button Margin="5" Width="70" Content="Browse" FontSize="12" Click="Browse_Click"/>
+        </StackPanel>
+        <Grid Grid.Row="6" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1.8*"/>
                 <ColumnDefinition/>
@@ -63,7 +69,7 @@
                 </Style>
             </Button.Resources>
         </Button>
-        <Button Grid.Row="6" Grid.Column="0" HorizontalContentAlignment="Stretch" Margin="5" Name="SaveButton" Content=" Create" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Stretch"  VerticalAlignment="Center" Height="30"  Background="#494949" Foreground="#f2f2f2" Click="SaveButton_Click" IsEnabled="False">
+        <Button Grid.Column="0" HorizontalContentAlignment="Stretch" Margin="5" Name="SaveButton" Content=" Create" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Stretch"  VerticalAlignment="Center" Height="30"  Background="#494949" Foreground="#f2f2f2" Click="SaveButton_Click" IsEnabled="False">
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="2"/>

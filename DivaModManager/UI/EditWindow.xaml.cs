@@ -44,7 +44,7 @@ namespace DivaModManager.UI
         }
         private void CreateName()
         {
-            var newDirectory = $"{Global.assemblyLocation}{Global.s}Mods{Global.s}{Global.config.CurrentGame}{Global.s}{NameBox.Text}";
+            var newDirectory = $"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{NameBox.Text}";
             if (!Directory.Exists(newDirectory))
             {
                 directory = newDirectory;
@@ -57,8 +57,8 @@ namespace DivaModManager.UI
         {
             if (!NameBox.Text.Equals(_mod.name, StringComparison.InvariantCultureIgnoreCase))
             {
-                var oldDirectory = $"{Global.assemblyLocation}{Global.s}Mods{Global.s}{Global.config.CurrentGame}{Global.s}{_mod.name}";
-                var newDirectory = $"{Global.assemblyLocation}{Global.s}Mods{Global.s}{Global.config.CurrentGame}{Global.s}{NameBox.Text}";
+                var oldDirectory = $"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{Global.s}{_mod.name}";
+                var newDirectory = $"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{Global.s}{NameBox.Text}";
                 if (!Directory.Exists(newDirectory))
                 {
                     try

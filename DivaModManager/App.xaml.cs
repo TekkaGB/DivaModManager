@@ -65,6 +65,7 @@ namespace DivaModManager
                 ((MainWindow)Current.MainWindow).OpenModsButton.IsEnabled = true;
                 ((MainWindow)Current.MainWindow).UpdateButton.IsEnabled = true;
                 ((MainWindow)Current.MainWindow).GameBox.IsEnabled = true;
+                ((MainWindow)Current.MainWindow).DropBox.Visibility = Visibility.Collapsed;
             });
         }
     }

@@ -27,6 +27,7 @@ using SharpCompress.Readers;
 using SharpCompress.Archives.SevenZip;
 using SharpCompress.Archives;
 using System.Threading;
+using WpfAnimatedGif;
 
 namespace DivaModManager
 {
@@ -135,8 +136,8 @@ namespace DivaModManager
             defaultFlow.Blocks.Add(ConvertToFlowParagraph(defaultText));
             DescriptionWindow.Document = defaultFlow;
             var bitmap = new BitmapImage(new Uri("pack://application:,,,/DivaModManager;component/Assets/preview.png"));
-            Preview.Source = bitmap;
-            PreviewBG.Source = null;
+            ImageBehavior.SetAnimatedSource(Preview, bitmap);
+            ImageBehavior.SetAnimatedSource(PreviewBG, null);
 
             GameBox.IsEnabled = false;
             ModGrid.IsEnabled = false;
@@ -160,9 +161,9 @@ namespace DivaModManager
                 }
             });
         }
-        private void WindowLoaded(object sender, RoutedEventArgs e)
+        private async void WindowLoaded(object sender, RoutedEventArgs e)
         {
-            OnFirstOpen();
+            await Task.Run(() => OnFirstOpen());
 
             LauncherOptionsBox.IsEnabled = true;
             LauncherOptionsBox.ItemsSource = LauncherOptions;
@@ -354,17 +355,10 @@ namespace DivaModManager
                 Refresh();
                 Directory.CreateDirectory(Global.config.Configs[Global.config.CurrentGame].ModsFolder);
                 Global.logger.WriteLine($"Building loadout for {Global.config.CurrentGame}", LoggerType.Info);
-                if (!await Build(Global.config.Configs[Global.config.CurrentGame].ModsFolder))
-                {
-                    Global.logger.WriteLine($"Failed to build loadout, not building and launching", LoggerType.Error);
-                    ModGrid.IsEnabled = true;
-                    ConfigButton.IsEnabled = true;
-                    LaunchButton.IsEnabled = true;
-                    OpenModsButton.IsEnabled = true;
-                    UpdateButton.IsEnabled = true;
-                    GameBox.IsEnabled = true;
-                    return;
-                }
+
+                var mods = Global.config.Configs[Global.config.CurrentGame].ModList.Where(x => x.enabled).ToList();
+                await Task.Run(() => ModLoader.Build(mods));
+                ModLoader.Build(mods);
                 ModGrid.IsEnabled = true;
                 ConfigButton.IsEnabled = true;
                 LaunchButton.IsEnabled = true;
@@ -497,17 +491,6 @@ namespace DivaModManager
                 }
         }
 
-        private async Task<bool> Build(string path)
-        {
-            return await Task.Run(() =>
-            {
-                var mods = Global.config.Configs[Global.config.CurrentGame].ModList.Where(x => x.enabled).ToList();
-
-                ModLoader.Build(mods);
-                return true;
-            });
-        }
-
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (WindowState == WindowState.Maximized)
@@ -618,95 +601,92 @@ namespace DivaModManager
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] fileList = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-                await ExtractPackages(fileList);
+                await Task.Run(() => ExtractPackages(fileList));
             }
             DropBox.Visibility = Visibility.Collapsed;
         }
-        private async Task ExtractPackages(string[] fileList)
+        private void ExtractPackages(string[] fileList)
         {
-            await Application.Current.Dispatcher.Invoke(async () =>
+            var temp = $"{Global.assemblyLocation}{Global.s}temp";
+            foreach (var file in fileList)
             {
-                var temp = $"{Global.assemblyLocation}{Global.s}temp";
-                foreach (var file in fileList)
+                Directory.CreateDirectory(temp);
+                if (Directory.Exists(file))
                 {
-                    Directory.CreateDirectory(temp);
-                    if (Directory.Exists(file))
+                    Global.logger.WriteLine($@"Moving {file} into {Global.config.Configs[Global.config.CurrentGame].ModsFolder}", LoggerType.Info);
+                    string path = $@"{temp}{Global.s}{Path.GetFileName(file)}";
+                    int index = 2;
+                    while (Directory.Exists(path))
                     {
-                        Global.logger.WriteLine($@"Moving {file} into {Global.config.Configs[Global.config.CurrentGame].ModsFolder}", LoggerType.Info);
-                        string path = $@"{temp}{Global.s}{Path.GetFileName(file)}";
-                        int index = 2;
-                        while (Directory.Exists(path))
-                        {
-                            path = $@"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{Path.GetFileName(file)} ({index})";
-                            index += 1;
-                        }
-                        MoveDirectory(file, path);
+                        path = $@"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{Path.GetFileName(file)} ({index})";
+                        index += 1;
                     }
-                    else if (Path.GetExtension(file).ToLower() == ".7z" || Path.GetExtension(file).ToLower() == ".rar" || Path.GetExtension(file).ToLower() == ".zip")
-                    {
-                        string _ArchiveSource = file;
-                        string _ArchiveType = Path.GetExtension(file);
-                        if (File.Exists(_ArchiveSource))
-                        {
-                            try
-                            {
-                                if (Path.GetExtension(_ArchiveSource).Equals(".7z", StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    using (var archive = SevenZipArchive.Open(_ArchiveSource))
-                                    {
-                                        var reader = archive.ExtractAllEntries();
-                                        while (reader.MoveToNextEntry())
-                                        {
-                                            if (!reader.Entry.IsDirectory)
-                                                reader.WriteEntryToDirectory(temp, new ExtractionOptions()
-                                                {
-                                                    ExtractFullPath = true,
-                                                    Overwrite = true
-                                                });
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    using (Stream stream = File.OpenRead(_ArchiveSource))
-                                    using (var reader = ReaderFactory.Open(stream))
-                                    {
-                                        while (reader.MoveToNextEntry())
-                                        {
-                                            if (!reader.Entry.IsDirectory)
-                                            {
-                                                reader.WriteEntryToDirectory(temp, new ExtractionOptions()
-                                                {
-                                                    ExtractFullPath = true,
-                                                    Overwrite = true
-                                                });
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                MessageBox.Show($"Couldn't extract {file}: {e.Message}", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            }
-                            File.Delete(_ArchiveSource);
-                        }
-                    }
-                    foreach (var folder in Directory.GetDirectories(temp, "*", SearchOption.AllDirectories).Where(x => File.Exists($@"{x}{Global.s}config.toml")))
-                    {
-                        string path = $@"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{Path.GetFileName(folder)}";
-                        int index = 2;
-                        while (Directory.Exists(path))
-                        {
-                            path = $@"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{Path.GetFileName(folder)} ({index})";
-                            index += 1;
-                        }
-                        MoveDirectory(folder, path);
-                    }
-                    if (Directory.Exists(temp))
-                        Directory.Delete(temp, true);
+                    MoveDirectory(file, path);
                 }
-            });
+                else if (Path.GetExtension(file).ToLower() == ".7z" || Path.GetExtension(file).ToLower() == ".rar" || Path.GetExtension(file).ToLower() == ".zip")
+                {
+                    string _ArchiveSource = file;
+                    string _ArchiveType = Path.GetExtension(file);
+                    if (File.Exists(_ArchiveSource))
+                    {
+                        try
+                        {
+                            if (Path.GetExtension(_ArchiveSource).Equals(".7z", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                using (var archive = SevenZipArchive.Open(_ArchiveSource))
+                                {
+                                    var reader = archive.ExtractAllEntries();
+                                    while (reader.MoveToNextEntry())
+                                    {
+                                        if (!reader.Entry.IsDirectory)
+                                            reader.WriteEntryToDirectory(temp, new ExtractionOptions()
+                                            {
+                                                ExtractFullPath = true,
+                                                Overwrite = true
+                                            });
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                using (Stream stream = File.OpenRead(_ArchiveSource))
+                                using (var reader = ReaderFactory.Open(stream))
+                                {
+                                    while (reader.MoveToNextEntry())
+                                    {
+                                        if (!reader.Entry.IsDirectory)
+                                        {
+                                            reader.WriteEntryToDirectory(temp, new ExtractionOptions()
+                                            {
+                                                ExtractFullPath = true,
+                                                Overwrite = true
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show($"Couldn't extract {file}: {e.Message}", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                        File.Delete(_ArchiveSource);
+                    }
+                }
+                foreach (var folder in Directory.GetDirectories(temp, "*", SearchOption.AllDirectories).Where(x => File.Exists($@"{x}{Global.s}config.toml")))
+                {
+                    string path = $@"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{Path.GetFileName(folder)}";
+                    int index = 2;
+                    while (Directory.Exists(path))
+                    {
+                        path = $@"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{Path.GetFileName(folder)} ({index})";
+                        index += 1;
+                    }
+                    MoveDirectory(folder, path);
+                }
+                if (Directory.Exists(temp))
+                    Directory.Delete(temp, true);
+            }
         }
         private static void MoveDirectory(string sourcePath, string targetPath)
         {
@@ -787,6 +767,9 @@ namespace DivaModManager
         private void ShowMetadata(string mod)
         {
             FlowDocument descFlow = new FlowDocument();
+            // Set image
+            string path = $@"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{mod}";
+            FileInfo[] previewFiles = new DirectoryInfo(path).GetFiles("Preview.*");
             // Add info from mod.json and config.toml
             if (File.Exists($"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{mod}{Global.s}mod.json")
                 || File.Exists($"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{mod}{Global.s}config.toml"))
@@ -806,50 +789,48 @@ namespace DivaModManager
                 }
 
                 var para = new Paragraph();
-                if (config != null)
+                var text = String.Empty;
+                if (config != null && config.ContainsKey("author") && (config["author"] as string).Length > 0)
+                    text += $"Author: {config["author"]}\n";
+                else if (metadata != null)
                 {
-                    var text = String.Empty;
-                    if (config.ContainsKey("author") && (config["author"] as string).Length > 0)
-                        text += $"Author: {config["author"]}\n";
-                    else if (metadata != null)
+                    if (metadata.submitter != null)
                     {
-                        if (metadata.submitter != null)
+                        para.Inlines.Add($"Submitter: ");
+                        if (metadata.avi != null && metadata.avi.ToString().Length > 0)
                         {
-                            para.Inlines.Add($"Submitter: ");
-                            if (metadata.avi != null && metadata.avi.ToString().Length > 0)
-                            {
-                                BitmapImage bm = new BitmapImage(metadata.avi);
-                                Image image = new Image();
-                                image.Source = bm;
-                                image.Height = 35;
-                                para.Inlines.Add(image);
-                                para.Inlines.Add(" ");
-                            }
-                            if (metadata.upic != null && metadata.upic.ToString().Length > 0)
-                            {
-                                BitmapImage bm = new BitmapImage(metadata.upic);
-                                Image image = new Image();
-                                image.Source = bm;
-                                image.Height = 25;
-                                para.Inlines.Add(image);
-                            }
-                            else
-                                para.Inlines.Add($"{metadata.submitter}\n");
-                            descFlow.Blocks.Add(para);
+                            BitmapImage bm = new BitmapImage(metadata.avi);
+                            Image image = new Image();
+                            image.Source = bm;
+                            image.Height = 35;
+                            para.Inlines.Add(image);
+                            para.Inlines.Add(" ");
                         }
+                        if (metadata.upic != null && metadata.upic.ToString().Length > 0)
+                        {
+                            BitmapImage bm = new BitmapImage(metadata.upic);
+                            Image image = new Image();
+                            image.Source = bm;
+                            image.Height = 25;
+                            para.Inlines.Add(image);
+                        }
+                        else
+                            para.Inlines.Add($"{metadata.submitter}\n");
+                        descFlow.Blocks.Add(para);
                     }
-                    if (config.ContainsKey("version") && (config["version"] as string).Length > 0)
-                        text += $"Version: {config["version"]}\n";
-                    if (config.ContainsKey("date") && config["date"].ToString().Length > 0)
-                        text += $"Date: {config["date"]}";
-                    if (!String.IsNullOrEmpty(text))
+                }
+                if (config != null && config.ContainsKey("version") && (config["version"] as string).Length > 0)
+                    text += $"Version: {config["version"]}\n";
+                if (config != null && config.ContainsKey("date") && config["date"].ToString().Length > 0)
+                    text += $"Date: {config["date"]}";
+                if (metadata != null && !String.IsNullOrEmpty(metadata.cat))
+                {
+                    if (!String.IsNullOrWhiteSpace(text))
                     {
                         var init = ConvertToFlowParagraph(text);
                         descFlow.Blocks.Add(init);
                     }
-                }
-                if (metadata != null)
-                {
+                    text = String.Empty;
                     para.Inlines.Add("Category: ");
                     if (metadata.caticon != null && metadata.caticon.ToString().Length > 0)
                     {
@@ -861,47 +842,83 @@ namespace DivaModManager
                     }
                     para.Inlines.Add($" {metadata.cat} {metadata.section}");
                     descFlow.Blocks.Add(para);
-                    var text = String.Empty;
-                    if (config != null && config.ContainsKey("description"))
-                        text += $"Description: {config["description"]}\n";
-                    else if (metadata.description != null && metadata.description.Length > 0)
-                        text += $"Description: {metadata.description}\n";
-                    if (metadata.homepage != null && metadata.homepage.ToString().Length > 0)
-                        text += $"Home Page: {metadata.homepage}";
-                    if (!String.IsNullOrEmpty(text))
+                }
+                else if (!String.IsNullOrWhiteSpace(text))
+                    text += "\n";
+
+                if (config != null && config.ContainsKey("description") && (config["description"] as string).Length > 0)
+                    text += $"Description: {config["description"]}\n";
+                else if (metadata != null && metadata.description != null && metadata.description.Length > 0)
+                    text += $"Description: {metadata.description}\n";
+                if (metadata != null && metadata.homepage != null && metadata.homepage.ToString().Length > 0)
+                    text += $"Home Page: {metadata.homepage}";
+                if (!String.IsNullOrWhiteSpace(text))
+                {
+                    var init = ConvertToFlowParagraph(text);
+                    descFlow.Blocks.Add(init);
+                }
+                if (previewFiles.Length > 0)
+                {
+                    try
                     {
-                        var init = ConvertToFlowParagraph(text);
-                        descFlow.Blocks.Add(init);
+                        byte[] imageBytes = File.ReadAllBytes(previewFiles[0].FullName);
+                        var stream = new MemoryStream(imageBytes);
+                        var img = new BitmapImage();
+
+                        img.BeginInit();
+                        img.StreamSource = stream;
+                        img.CacheOption = BitmapCacheOption.OnLoad;
+                        img.EndInit();
+                        ImageBehavior.SetAnimatedSource(Preview, img);
+                        ImageBehavior.SetAnimatedSource(PreviewBG, img);
                     }
-                    if (metadata.preview != null)
+                    catch (Exception ex)
                     {
-                        var bitmap = new BitmapImage();
-                        bitmap.BeginInit();
-                        bitmap.UriSource = metadata.preview;
-                        bitmap.EndInit();
-                        Preview.Source = bitmap;
-                        PreviewBG.Source = bitmap;
+                        Global.logger.WriteLine(ex.Message, LoggerType.Error);
                     }
-                    else
-                    {
-                        var bitmap = new BitmapImage(new Uri("pack://application:,,,/DivaModManager;component/Assets/preview.png"));
-                        Preview.Source = bitmap;
-                        PreviewBG.Source = null;
-                    }
+                }
+                else if (metadata != null && metadata.preview != null)
+                {
+                    var bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.UriSource = metadata.preview;
+                    bitmap.EndInit();
+                    ImageBehavior.SetAnimatedSource(Preview, bitmap);
+                    ImageBehavior.SetAnimatedSource(PreviewBG, bitmap);
                 }
                 else
                 {
                     var bitmap = new BitmapImage(new Uri("pack://application:,,,/DivaModManager;component/Assets/preview.png"));
-                    Preview.Source = bitmap;
-                    PreviewBG.Source = null;
+                    ImageBehavior.SetAnimatedSource(Preview, bitmap);
+                    ImageBehavior.SetAnimatedSource(PreviewBG, null);
                 }
             }
-            // Set preview if no mod.json exists
+            else if (previewFiles.Length > 0)
+            {
+                try
+                {
+                    byte[] imageBytes = File.ReadAllBytes(previewFiles[0].FullName);
+                    var stream = new MemoryStream(imageBytes);
+                    var img = new BitmapImage();
+
+                    img.BeginInit();
+                    img.StreamSource = stream;
+                    img.CacheOption = BitmapCacheOption.OnLoad;
+                    img.EndInit();
+                    ImageBehavior.SetAnimatedSource(Preview, img);
+                    ImageBehavior.SetAnimatedSource(PreviewBG, img);
+                }
+                catch (Exception ex)
+                {
+                    Global.logger.WriteLine(ex.Message, LoggerType.Error);
+                }
+            }
+            // Set preview if no mod.json or preview exists
             else
             {
                 var bitmap = new BitmapImage(new Uri("pack://application:,,,/DivaModManager;component/Assets/preview.png"));
-                Preview.Source = bitmap;
-                PreviewBG.Source = null;
+                ImageBehavior.SetAnimatedSource(Preview, bitmap);
+                ImageBehavior.SetAnimatedSource(PreviewBG, null);
             }
             // Default preview if no config.toml or mod.json
             if (descFlow.Blocks.Count == 0)
@@ -1275,7 +1292,6 @@ namespace DivaModManager
         }
         private void OnBrowserTabSelected(object sender, RoutedEventArgs e)
         {
-            managerSelected = false;
             if (!selected)
             {
                 InitializeBrowser();
@@ -1285,10 +1301,8 @@ namespace DivaModManager
             else
                 DiscordButton.Visibility = Visibility.Collapsed;
         }
-        bool managerSelected = true;
         private void OnManagerTabSelected(object sender, RoutedEventArgs e)
         {
-            managerSelected = true;
             if (GameBox.SelectedIndex != 5)
                 DiscordButton.Visibility = Visibility.Visible;
             else
@@ -1564,60 +1578,57 @@ namespace DivaModManager
             }
         }
 
-        private async void OnFirstOpen()
+        private void OnFirstOpen()
         {
-            await Task.Run(() =>
+            if (!Global.config.Configs[Global.config.CurrentGame].FirstOpen)
             {
-                if (!Global.config.Configs[Global.config.CurrentGame].FirstOpen)
+                var choices = new List<Choice>();
+                choices.Add(new Choice()
                 {
-                    var choices = new List<Choice>();
-                    choices.Add(new Choice()
+                    OptionText = "Launch through Executable",
+                    OptionSubText = "Launches the executable directly",
+                    Index = 0
+                });
+                choices.Add(new Choice()
+                {
+                    OptionText = $"Launch through Steam",
+                    OptionSubText = $"Uses the Steam shortcut to launch",
+                    Index = 1
+                });
+                Dispatcher.Invoke(() =>
+                {
+                    var choice = new ChoiceWindow(choices, $"Launcher Options for {Global.config.CurrentGame}");
+                    choice.ShowDialog();
+                    if (choice.choice != null)
                     {
-                        OptionText = "Launch through Executable",
-                        OptionSubText = "Launches the executable directly",
-                        Index = 0
-                    });
-                    choices.Add(new Choice()
+                        Global.config.Configs[Global.config.CurrentGame].LauncherOptionIndex = (int)choice.choice;
+                        LauncherOptionsBox.SelectedIndex = (int)choice.choice;
+                    }
+                    else
                     {
-                        OptionText = $"Launch through Steam",
-                        OptionSubText = $"Uses the Steam shortcut to launch",
-                        Index = 1
-                    });
+                        Global.logger.WriteLine($"No launch option chosen, defaulting to Steam shortcut", LoggerType.Warning);
+                        Global.config.Configs[Global.config.CurrentGame].LauncherOptionIndex = 1;
+                        LauncherOptionsBox.SelectedIndex = 1;
+                    }
+                });
+                Global.config.Configs[Global.config.CurrentGame].FirstOpen = true;
+                Global.UpdateConfig();
+                Global.logger.WriteLine($"If you want to switch the Launch Method, use the dropdown box to the right of the Launch Button", LoggerType.Info);
+
+                if (SetupGame())
+                {
                     Dispatcher.Invoke(() =>
                     {
-                        var choice = new ChoiceWindow(choices, $"Launcher Options for {Global.config.CurrentGame}");
-                        choice.ShowDialog();
-                        if (choice.choice != null)
-                        {
-                            Global.config.Configs[Global.config.CurrentGame].LauncherOptionIndex = (int)choice.choice;
-                            LauncherOptionsBox.SelectedIndex = (int)choice.choice;
-                        }
-                        else
-                        {
-                            Global.logger.WriteLine($"No launch option chosen, defaulting to Steam shortcut", LoggerType.Warning);
-                            Global.config.Configs[Global.config.CurrentGame].LauncherOptionIndex = 1;
-                            LauncherOptionsBox.SelectedIndex = 1;
-                        }
+                        // Watch mods folder to detect
+                        ModsWatcher = new FileSystemWatcher(Global.config.Configs[Global.config.CurrentGame].ModsFolder);
+                        ModsWatcher.Created += OnModified;
+                        ModsWatcher.Deleted += OnModified;
+                        ModsWatcher.Renamed += OnModified;
+                        Refresh();
+                        ModsWatcher.EnableRaisingEvents = true;
                     });
-                    Global.config.Configs[Global.config.CurrentGame].FirstOpen = true;
-                    Global.UpdateConfig();
-                    Global.logger.WriteLine($"If you want to switch the Launch Method, use the dropdown box to the right of the Launch Button", LoggerType.Info);
-
-                    if (SetupGame())
-                    {
-                        Dispatcher.Invoke(() =>
-                        {
-                            // Watch mods folder to detect
-                            ModsWatcher = new FileSystemWatcher(Global.config.Configs[Global.config.CurrentGame].ModsFolder);
-                            ModsWatcher.Created += OnModified;
-                            ModsWatcher.Deleted += OnModified;
-                            ModsWatcher.Renamed += OnModified;
-                            Refresh();
-                            ModsWatcher.EnableRaisingEvents = true;
-                        });
-                    }
                 }
-            });
+            }
         }
         private bool handle;
         private void GameBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1640,7 +1651,7 @@ namespace DivaModManager
                 Global.UpdateConfig();
             }
         }
-        private void GameBox_DropDownClosed(object sender, EventArgs e)
+        private async void GameBox_DropDownClosed(object sender, EventArgs e)
         {
             if (handle)
             {
@@ -1673,7 +1684,7 @@ namespace DivaModManager
                     LaunchButton.IsEnabled = true;
                 }
 
-                OnFirstOpen();
+                await Task.Run(() => OnFirstOpen());
 
                 LauncherOptionsBox.IsEnabled = true;
                 LauncherOptionsBox.ItemsSource = LauncherOptions;
@@ -1681,9 +1692,9 @@ namespace DivaModManager
 
                 DescriptionWindow.Document = defaultFlow;
                 var bitmap = new BitmapImage(new Uri("pack://application:,,,/DivaModManager;component/Assets/preview.png"));
-                Preview.Source = bitmap;
-                PreviewBG.Source = null; 
-                
+                ImageBehavior.SetAnimatedSource(Preview, bitmap);
+                ImageBehavior.SetAnimatedSource(PreviewBG, null);
+
                 GameBox.IsEnabled = false;
                 ModGrid.IsEnabled = false;
                 ConfigButton.IsEnabled = false;

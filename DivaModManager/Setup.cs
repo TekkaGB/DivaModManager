@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Windows;
 using Octokit;
 using System.Net.Http;

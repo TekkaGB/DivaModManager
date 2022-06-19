@@ -291,7 +291,7 @@ namespace DivaModManager
                 }
                 progressBox.Close();
                 ClearDirectory(mod);
-                await ExtractFile(fileName, mod, updateTime);
+                await Task.Run(() => ExtractFile(fileName, mod, updateTime));
             }
             catch (OperationCanceledException)
             {
@@ -331,72 +331,68 @@ namespace DivaModManager
                 di.Delete();
             }
         }
-        private static async Task ExtractFile(string fileName, string output, DateTime updateTime)
+        private static void ExtractFile(string fileName, string output, DateTime updateTime)
         {
-            await Task.Run(() =>
+            string _ArchiveSource = $@"{Global.assemblyLocation}{Global.s}Downloads{Global.s}{fileName}";
+            string ArchiveDestination = $@"{Global.assemblyLocation}{Global.s}temp";
+            Directory.CreateDirectory(ArchiveDestination);
+            if (File.Exists(_ArchiveSource))
             {
-                string _ArchiveSource = $@"{Global.assemblyLocation}{Global.s}Downloads{Global.s}{fileName}";
-                string ArchiveDestination = $@"{Global.assemblyLocation}{Global.s}temp";
-                Directory.CreateDirectory(ArchiveDestination);
-                if (File.Exists(_ArchiveSource))
+                try
                 {
-                    try
+                    if (Path.GetExtension(_ArchiveSource).Equals(".7z", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        if (Path.GetExtension(_ArchiveSource).Equals(".7z", StringComparison.InvariantCultureIgnoreCase))
+                        using (var archive = SevenZipArchive.Open(_ArchiveSource))
                         {
-                            using (var archive = SevenZipArchive.Open(_ArchiveSource))
+                            var reader = archive.ExtractAllEntries();
+                            while (reader.MoveToNextEntry())
                             {
-                                var reader = archive.ExtractAllEntries();
-                                while (reader.MoveToNextEntry())
-                                {
-                                    if (!reader.Entry.IsDirectory)
-                                        reader.WriteEntryToDirectory(ArchiveDestination, new ExtractionOptions()
-                                        {
-                                            ExtractFullPath = true,
-                                            Overwrite = true
-                                        });
-                                }
-                            }
-                        }
-                        else
-                        {
-                            using (Stream stream = File.OpenRead(_ArchiveSource))
-                            using (var reader = ReaderFactory.Open(stream))
-                            {
-                                while (reader.MoveToNextEntry())
-                                {
-                                    if (!reader.Entry.IsDirectory)
+                                if (!reader.Entry.IsDirectory)
+                                    reader.WriteEntryToDirectory(ArchiveDestination, new ExtractionOptions()
                                     {
-                                        reader.WriteEntryToDirectory(ArchiveDestination, new ExtractionOptions()
-                                        {
-                                            ExtractFullPath = true,
-                                            Overwrite = true
-                                        });
-                                    }
+                                        ExtractFullPath = true,
+                                        Overwrite = true
+                                    });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        using (Stream stream = File.OpenRead(_ArchiveSource))
+                        using (var reader = ReaderFactory.Open(stream))
+                        {
+                            while (reader.MoveToNextEntry())
+                            {
+                                if (!reader.Entry.IsDirectory)
+                                {
+                                    reader.WriteEntryToDirectory(ArchiveDestination, new ExtractionOptions()
+                                    {
+                                        ExtractFullPath = true,
+                                        Overwrite = true
+                                    });
                                 }
                             }
                         }
                     }
-                    catch (Exception e)
-                    {
-                        Global.logger.WriteLine($"Couldn't extract {fileName}. ({e.Message})", LoggerType.Error);
-                    }
-                    foreach (var folder in Directory.GetDirectories(ArchiveDestination, "*", SearchOption.AllDirectories).Where(x => File.Exists($@"{x}{Global.s}config.toml")))
-                    {
-                        MoveDirectory(folder, output);
-                    }
-                    if (File.Exists($@"{output}{Global.s}mod.json"))
-                    {
-                        var metadata = JsonSerializer.Deserialize<Metadata>(File.ReadAllText($@"{output}{Global.s}mod.json"));
-                        metadata.lastupdate = updateTime;
-                        string metadataString = JsonSerializer.Serialize(metadata, new JsonSerializerOptions { WriteIndented = true });
-                        File.WriteAllText($@"{output}{Global.s}mod.json", metadataString);
-                    }
-                    File.Delete(_ArchiveSource);
-                    Directory.Delete(ArchiveDestination, true);
                 }
-            });
-
+                catch (Exception e)
+                {
+                    Global.logger.WriteLine($"Couldn't extract {fileName}. ({e.Message})", LoggerType.Error);
+                }
+                foreach (var folder in Directory.GetDirectories(ArchiveDestination, "*", SearchOption.AllDirectories).Where(x => File.Exists($@"{x}{Global.s}config.toml")))
+                {
+                    MoveDirectory(folder, output);
+                }
+                if (File.Exists($@"{output}{Global.s}mod.json"))
+                {
+                    var metadata = JsonSerializer.Deserialize<Metadata>(File.ReadAllText($@"{output}{Global.s}mod.json"));
+                    metadata.lastupdate = updateTime;
+                    string metadataString = JsonSerializer.Serialize(metadata, new JsonSerializerOptions { WriteIndented = true });
+                    File.WriteAllText($@"{output}{Global.s}mod.json", metadataString);
+                }
+                File.Delete(_ArchiveSource);
+                Directory.Delete(ArchiveDestination, true);
+            }
         }
         private static void MoveDirectory(string sourcePath, string targetPath)
         {

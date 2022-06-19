@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using Tomlyn;
 using Tomlyn.Model;
 using System.Diagnostics;
+using Microsoft.Win32;
 
 namespace DivaModManager.UI
 {
@@ -54,6 +55,8 @@ namespace DivaModManager.UI
             Directory.CreateDirectory($"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{path}");
             var configFile = Toml.FromModel(config);
             File.WriteAllText($"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{path}{Global.s}config.toml", configFile);
+            if (!String.IsNullOrEmpty(PreviewBox.Text) && File.Exists(PreviewBox.Text))
+                File.Copy(PreviewBox.Text, $"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{path}{Global.s}Preview{Path.GetExtension(PreviewBox.Text)}", true);
             Global.logger.WriteLine($"Created {NameBox.Text}!", LoggerType.Info);
             try
             {
@@ -73,6 +76,20 @@ namespace DivaModManager.UI
                 SaveButton.IsEnabled = true;
             else
                 SaveButton.IsEnabled = false;
+        }
+
+        private void Browse_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = $"Image Files (*.*)|*.*";
+            dialog.Title = $"Select Preview";
+            dialog.Multiselect = false;
+            dialog.InitialDirectory = Global.assemblyLocation;
+            dialog.ShowDialog();
+            if (!String.IsNullOrEmpty(dialog.FileName) && File.Exists(dialog.FileName))
+                PreviewBox.Text = dialog.FileName;
+            // Bring Create Package window back to foreground after closing dialog
+            Activate();
         }
     }
 }

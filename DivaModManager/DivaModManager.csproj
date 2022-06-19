@@ -7,7 +7,7 @@
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Assets\miku.ico</ApplicationIcon>
     <AssemblyName>DivaModManager</AssemblyName>
-    <AssemblyVersion>0.0.3.0</AssemblyVersion>
+    <AssemblyVersion>0.0.4.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,8 +30,6 @@
     <PackageReference Include="Onova" Version="2.6.2" />
     <PackageReference Include="SharpCompress" Version="0.32.0" />
     <PackageReference Include="Tomlyn" Version="0.14.3" />
-    <PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" />
-    <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
     <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
 
