@@ -57,8 +57,8 @@ namespace DivaModManager
                 }
                 if (downloadUrl != null && fileName != null)
                 {
-                    await Task.Run(() => DownloadFile(downloadUrl, fileName, new Progress<DownloadProgress>(ReportUpdateProgress),
-                        CancellationTokenSource.CreateLinkedTokenSource(cancellationToken.Token)));
+                    await DownloadFile(downloadUrl, fileName, new Progress<DownloadProgress>(ReportUpdateProgress),
+                                CancellationTokenSource.CreateLinkedTokenSource(cancellationToken.Token));
                     if (!cancelled)
                         await Task.Run(() => ExtractFile(fileName, game, record));
                 }
@@ -81,10 +81,10 @@ namespace DivaModManager
                     downloadWindow.ShowDialog();
                     if (downloadWindow.YesNo)
                     {
-                        await Task.Run(() => DownloadFile(URL_TO_ARCHIVE, fileName, new Progress<DownloadProgress>(ReportUpdateProgress),
-                            CancellationTokenSource.CreateLinkedTokenSource(cancellationToken.Token)));
+                        await DownloadFile(URL_TO_ARCHIVE, fileName, new Progress<DownloadProgress>(ReportUpdateProgress),
+                            CancellationTokenSource.CreateLinkedTokenSource(cancellationToken.Token));
                         if (!cancelled)
-                            await Task.Run(() => ExtractFile(fileName, response.Game.Name.Replace(":", String.Empty), response));
+                            await Task.Run(() => ExtractFile(fileName, response.Game.Name, response));
                     }
                 }
             }
@@ -124,7 +124,7 @@ namespace DivaModManager
         {
             try
             {
-                line = line.Replace("dmm:", "");
+                line = line.Replace("divamodmanager:", "");
                 string[] data = line.Split(',');
                 URL_TO_ARCHIVE = data[0];
                 // Used to grab file info from dictionary
@@ -303,11 +303,11 @@ namespace DivaModManager
             }
             foreach (var folder in Directory.GetDirectories(ArchiveDestination, "*", SearchOption.AllDirectories).Where(x => File.Exists($@"{x}{Global.s}config.toml")))
             {
-                string path = $@"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{Path.GetFileName(folder)}";
+                string path = $@"{Global.config.Configs[game].ModsFolder}{Global.s}{Path.GetFileName(folder)}";
                 int index = 2;
                 while (Directory.Exists(path))
                 {
-                    path = $@"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{Path.GetFileName(folder)} ({index})";
+                    path = $@"{Global.config.Configs[game].ModsFolder}{Global.s}{Path.GetFileName(folder)} ({index})";
                     index += 1;
                 }
                 MoveDirectory(folder, path);
@@ -339,7 +339,7 @@ namespace DivaModManager
                 Directory.Delete(ArchiveDestination, true);
             }
         }
-        private async void DownloadFile(string uri, string fileName, Progress<DownloadProgress> progress, CancellationTokenSource cancellationToken)
+        private async Task DownloadFile(string uri, string fileName, Progress<DownloadProgress> progress, CancellationTokenSource cancellationToken)
         {
             try
             {
@@ -354,12 +354,11 @@ namespace DivaModManager
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show($"Couldn't delete the already existing {Global.assemblyLocation}/Downloads/{fileName} ({e.Message})", 
+                        MessageBox.Show($"Couldn't delete the already existing {Global.assemblyLocation}/Downloads/{fileName} ({e.Message})",
                             "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                         return;
                     }
                 }
-
                 progressBox = new ProgressBox(cancellationToken);
                 progressBox.progressBar.Value = 0;
                 progressBox.finished = false;

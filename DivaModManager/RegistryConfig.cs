@@ -9,7 +9,7 @@ namespace DivaModManager
         public static bool InstallGBHandler()
         {
             string AppPath = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".exe");
-            string protocolName = $"dmm";
+            string protocolName = $"divamodmanager";
             try
             {
                 var reg = Registry.CurrentUser.CreateSubKey(@"Software\Classes\DivaModManager");

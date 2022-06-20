@@ -664,7 +664,7 @@
                             </Button>
                         </StackPanel>
                     </Grid>
-                    <ComboBox Margin="10,0,0,0" IsEnabled="False" Name="GameFilterBox" Height="35" Width="60" HorizontalAlignment="Stretch" FontSize="18" FontWeight="Medium" SelectionChanged="GameFilterSelectionChanged">
+                    <ComboBox Margin="10,0,0,0" IsEnabled="False" Name="GameFilterBox" Height="35" Width="65" HorizontalAlignment="Stretch" FontSize="18" FontWeight="Medium" SelectionChanged="GameFilterSelectionChanged">
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <Image Source="../Assets/Icons/mmplus.png" Width="27" Margin="4,0,10,0"/>
