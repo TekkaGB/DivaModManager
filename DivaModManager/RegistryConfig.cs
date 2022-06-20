@@ -8,7 +8,7 @@ namespace DivaModManager
     {
         public static bool InstallGBHandler()
         {
-            string AppPath = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".exe");
+            string AppPath = $"{Global.assemblyLocation}{Global.s}DivaModManager.exe";
             string protocolName = $"divamodmanager";
             try
             {

@@ -431,7 +431,7 @@
                             <TextBlock Text="Setup" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium"/>
                         </Button>
                         <Button Name="BuildButton" Margin="0,0,10,0" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="4" Background="#181818" BorderBrush="#252525" Click="Build_Click">
-                            <TextBlock Text="Build" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium"/>
+                            <TextBlock Text="Save" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium"/>
                         </Button>
                         <Button Name="LaunchButton" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium" Content="Launch" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="5" Background="#181818" BorderBrush="#252525" Click="Launch_Click"/>
                         <Button Name="OpenModsButton" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="7" Background="#181818" BorderBrush="#252525" Click="CreateMod_Click">

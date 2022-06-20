@@ -27,7 +27,7 @@ namespace DivaModManager
         public static async Task<bool> CheckForDMMUpdate(CancellationTokenSource cancellationToken)
         {
             // Get Version Number
-            var localVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
+            var localVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             try
             {
                 var owner = "TekkaGB";

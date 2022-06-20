@@ -47,7 +47,7 @@ namespace DivaModManager
             Global.config = new();
 
             // Get Version Number
-            var DMMVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
+            var DMMVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             version = DMMVersion.Substring(0, DMMVersion.LastIndexOf('.'));
 
             Global.logger.WriteLine($"Launched Diva Mod Manager v{version}!", LoggerType.Info);
