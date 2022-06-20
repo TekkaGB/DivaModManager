@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="Diva Mod Manager" WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize" Width="400"
-        Background="#202020" ShowActivated="True" Closing="Window_Closing" SizeToContent="Height">
+        Background="#202020" ShowActivated="True" Closing="Window_Closing" SizeToContent="WidthAndHeight">
     <Window.Resources>
         <DataTemplate x:Key="ChoiceTemplate">
             <Button Click="SelectButton_Click"  Margin="5" HorizontalContentAlignment="Stretch" Background="#494949">

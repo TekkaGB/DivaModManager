@@ -1701,7 +1701,7 @@ namespace DivaModManager
             choices.Add(new Choice()
             {
                 OptionText = $"Delete Current Loadout",
-                OptionSubText = $"Deletes current loadout and switch to first available one",
+                OptionSubText = $"Deletes current loadout and switches to first available one",
                 Index = 2
             });
             Dispatcher.Invoke(() =>
