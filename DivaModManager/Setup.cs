@@ -282,7 +282,7 @@ namespace DivaModManager
             }
             catch (Exception e)
             {
-
+                Global.logger.WriteLine($"Couldn't find install path in registry ({e.Message})", LoggerType.Error);
             }
             if (!File.Exists(defaultPath))
             {

@@ -35,7 +35,7 @@ namespace DivaModManager
             catch { }
             return running;
         }
-        protected async override void OnStartup(StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs e)
         {
             ShutdownMode = ShutdownMode.OnMainWindowClose;
 
@@ -65,6 +65,8 @@ namespace DivaModManager
                 ((MainWindow)Current.MainWindow).OpenModsButton.IsEnabled = true;
                 ((MainWindow)Current.MainWindow).UpdateButton.IsEnabled = true;
                 ((MainWindow)Current.MainWindow).GameBox.IsEnabled = true;
+                ((MainWindow)Current.MainWindow).LoadoutBox.IsEnabled = true;
+                ((MainWindow)Current.MainWindow).EditLoadoutsButton.IsEnabled = true;
                 ((MainWindow)Current.MainWindow).DropBox.Visibility = Visibility.Collapsed;
             });
         }

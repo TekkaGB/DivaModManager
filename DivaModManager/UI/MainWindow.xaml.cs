@@ -1272,7 +1272,7 @@ namespace DivaModManager
                                 {
                                     response = JsonSerializer.Deserialize<List<GameBananaCategory>>(responseString);
                                 }
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
                                     LoadingBar.Visibility = Visibility.Collapsed;
                                     ErrorPanel.Visibility = Visibility.Visible;
@@ -1689,7 +1689,7 @@ namespace DivaModManager
             choices.Add(new Choice()
             {
                 OptionText = "Add New Loadout",
-                OptionSubText = "Adds a new loadout to switch priority",
+                OptionSubText = "Adds a new loadout starting with all mods enabled in alphanumeric order",
                 Index = 0
             });
             choices.Add(new Choice()
@@ -1813,7 +1813,7 @@ namespace DivaModManager
                 LauncherOptionsBox.IsEnabled = false;
                 LoadoutBox.IsEnabled = false;
                 EditLoadoutsButton.IsEnabled = false;
-                App.Current.Dispatcher.Invoke(async () =>
+                await App.Current.Dispatcher.Invoke(async () =>
                 {
                     Global.logger.WriteLine("Checking for mod updates...", LoggerType.Info);
                     await ModUpdater.CheckForUpdates(Global.config.Configs[Global.config.CurrentGame].ModsFolder, this);
