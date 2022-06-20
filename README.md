@@ -20,7 +20,7 @@ There are 3 methods of doing this:
 3. Downloading mods from other sources such as the Discord server and dragging and dropping them onto the mod grid for easy install.
 
 ### Managing Mods
-Managing mods is as simple as dragging the order of the rows to prioritize the top and enabling which mods you want in the build. Once you have your desired loadout, click Launch and loadout will be built and the game will launch.
+Managing mods is as simple as dragging the order of the rows to prioritize the top and enabling which mods you want in the build. Once you have your desired loadout, click Save and loadout will be ready to be used on the next launch of the game. Click the Launch button to quickly launch the game after saving the loadout.
 
 ### Auto Updates
 Diva Mod Manager also supports auto updates for mods downloaded from GameBanana. Click the Check for Updates button for Diva Mod Manager to check if any are available for the currently selected game. It will also check if there are updates for both DivaModLoader and Diva Mod Manager. These updates are also checked when launching the manager.
