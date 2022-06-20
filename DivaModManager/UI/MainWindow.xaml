@@ -9,7 +9,7 @@
         Background="#131313"
         Title="Diva Mod Manager" SizeChanged="OnResize"
         mc:Ignorable="d" Closing="Window_Closing" WindowStartupLocation="CenterScreen"
-        Height="750" Width="1280" MinHeight="750" MinWidth="900" Loaded="WindowLoaded">
+        Height="750" Width="1280" MinHeight="750" MinWidth="700" Loaded="WindowLoaded">
     <Window.Resources>
         <FontFamily x:Key="Monospace">../Assets/#Roboto Mono</FontFamily>
         <DataTemplate x:Key="ModTemplate">
@@ -423,11 +423,21 @@
                                 </StackPanel>
                             </ComboBoxItem>
                         </ComboBox>
-                        <Button FontSize="18" FontWeight="Medium" Name="EditLoadoutsButton" Margin="0,0,10,0" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="2" Content="Edit Loadouts" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2" Click="EditLoadouts_Click" />
-                        <Button FontSize="18" FontWeight="Medium" Name="ConfigButton" Margin="0,0,10,0" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="3" Content="Setup" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2" Click="Setup_Click" />
-                        <Button FontSize="18" FontWeight="Medium" Name="LaunchButton" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="4" Content="Launch" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2" Click="Launch_Click"/>
-                        <Button FontSize="18" FontWeight="Medium" Name="OpenModsButton" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="6" Content="Create Mod" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2" Click="CreateMod_Click"/>
-                        <Button FontSize="18" FontWeight="Medium" Name="UpdateButton" Margin="0,0,10,0"  Height="34" VerticalAlignment="Center" Grid.Column="7" Content="Check for Updates" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2" Click="Update_Click"/>
+                        <Button Name="EditLoadoutsButton" Margin="0,0,10,0" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="2" Background="#181818" BorderBrush="#252525" Click="EditLoadouts_Click">
+                            <TextBlock Text="Edit Loadouts" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium"/>
+                        </Button>
+                        <Button Name="ConfigButton" Margin="0,0,10,0" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="3" Background="#181818" BorderBrush="#252525" Click="Setup_Click">
+                            <TextBlock Text="Setup" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium"/>
+                        </Button>
+                        <Button Name="LaunchButton" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="4" Background="#181818" BorderBrush="#252525" Click="Launch_Click">
+                            <TextBlock Text="Launch" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium"/>
+                        </Button>
+                        <Button Name="OpenModsButton" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="6" Background="#181818" BorderBrush="#252525" Click="CreateMod_Click">
+                            <TextBlock Text="Create Mod" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium"/>
+                        </Button>
+                        <Button FontWeight="Medium" Name="UpdateButton" Margin="0,0,10,0"  Height="34" VerticalAlignment="Center" Grid.Column="7" Background="#181818" BorderBrush="#252525"  Click="Update_Click">
+                            <TextBlock Text="Check For Updates" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium"/>
+                        </Button>
 
                         <ComboBox Grid.Column="5" Margin="0,0,10,0" Height="35" FontSize="18" FontWeight="Medium" Name="LauncherOptionsBox" SelectionChanged="LauncherOptionsBox_SelectionChanged"/>
                         <ComboBox Grid.Column="1" Margin="10,0,10,0" Height="35" FontSize="18" FontWeight="Medium" Name="LoadoutBox" SelectionChanged="LoadoutsBox_SelectionChanged"/>
