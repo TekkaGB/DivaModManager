@@ -30,6 +30,7 @@ namespace DivaModManager
                 main.GameBox.IsEnabled = true;
                 main.ModGrid.IsEnabled = true;
                 main.ConfigButton.IsEnabled = true;
+                main.BuildButton.IsEnabled = true;
                 main.LaunchButton.IsEnabled = true;
                 main.OpenModsButton.IsEnabled = true;
                 main.UpdateButton.IsEnabled = true;
@@ -99,6 +100,7 @@ namespace DivaModManager
                 main.GameBox.IsEnabled = true;
                 main.ModGrid.IsEnabled = true;
                 main.ConfigButton.IsEnabled = true;
+                main.BuildButton.IsEnabled = true;
                 main.LaunchButton.IsEnabled = true;
                 main.OpenModsButton.IsEnabled = true;
                 main.UpdateButton.IsEnabled = true;
@@ -126,6 +128,7 @@ namespace DivaModManager
                             main.GameBox.IsEnabled = true;
                             main.ModGrid.IsEnabled = true;
                             main.ConfigButton.IsEnabled = true;
+                            main.BuildButton.IsEnabled = true;
                             main.LaunchButton.IsEnabled = true;
                             main.OpenModsButton.IsEnabled = true;
                             main.UpdateButton.IsEnabled = true;
@@ -163,6 +166,7 @@ namespace DivaModManager
             main.GameBox.IsEnabled = true;
             main.ModGrid.IsEnabled = true;
             main.ConfigButton.IsEnabled = true;
+            main.BuildButton.IsEnabled = true;
             main.LaunchButton.IsEnabled = true;
             main.OpenModsButton.IsEnabled = true;
             main.UpdateButton.IsEnabled = true;

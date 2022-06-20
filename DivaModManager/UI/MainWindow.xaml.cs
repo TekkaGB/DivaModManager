@@ -144,6 +144,7 @@ namespace DivaModManager
             GameBox.IsEnabled = false;
             ModGrid.IsEnabled = false;
             ConfigButton.IsEnabled = false;
+            BuildButton.IsEnabled = false;
             LaunchButton.IsEnabled = false;
             OpenModsButton.IsEnabled = false;
             UpdateButton.IsEnabled = false;
@@ -345,13 +346,14 @@ namespace DivaModManager
             });
             GameBox.IsEnabled = true;
         }
-        private async void Launch_Click(object sender, RoutedEventArgs e)
+        private async void Build_Click(object sender, RoutedEventArgs e)
         {
             if (Global.config.Configs[Global.config.CurrentGame].ModsFolder != null)
             {
                 GameBox.IsEnabled = false;
                 ModGrid.IsEnabled = false;
                 ConfigButton.IsEnabled = false;
+                BuildButton.IsEnabled = false;
                 LaunchButton.IsEnabled = false;
                 OpenModsButton.IsEnabled = false;
                 UpdateButton.IsEnabled = false;
@@ -364,22 +366,25 @@ namespace DivaModManager
 
                 var mods = Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout].Where(x => x.enabled).ToList();
                 await Task.Run(() => ModLoader.Build(mods));
-                ModLoader.Build(mods);
                 ModGrid.IsEnabled = true;
                 ConfigButton.IsEnabled = true;
+                BuildButton.IsEnabled = true;
                 LaunchButton.IsEnabled = true;
                 OpenModsButton.IsEnabled = true;
                 UpdateButton.IsEnabled = true;
                 GameBox.IsEnabled = true;
+                LauncherOptionsBox.IsEnabled = true;
                 LoadoutBox.IsEnabled = true;
                 EditLoadoutsButton.IsEnabled = true;
             }
             else
             {
-                Global.logger.WriteLine("Please click Setup before launching!", LoggerType.Warning);
+                Global.logger.WriteLine("Please click Setup before building!", LoggerType.Warning);
                 return;
             }
-            
+        }
+        private void Launch_Click(object sender, RoutedEventArgs e)
+        {
             if (Global.config.Configs[Global.config.CurrentGame].Launcher != null && File.Exists(Global.config.Configs[Global.config.CurrentGame].Launcher))
             {
                 var path = Global.config.Configs[Global.config.CurrentGame].Launcher;
@@ -406,6 +411,7 @@ namespace DivaModManager
                         Verb = "open"
                     };
                     Process.Start(ps);
+                    WindowState = WindowState.Minimized;
                 }
                 catch (Exception ex)
                 {
@@ -716,6 +722,7 @@ namespace DivaModManager
             GameBox.IsEnabled = false;
             ModGrid.IsEnabled = false;
             ConfigButton.IsEnabled = false;
+            BuildButton.IsEnabled = false;
             LaunchButton.IsEnabled = false;
             OpenModsButton.IsEnabled = false;
             UpdateButton.IsEnabled = false;

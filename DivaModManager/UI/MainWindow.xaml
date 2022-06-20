@@ -9,7 +9,7 @@
         Background="#131313"
         Title="Diva Mod Manager" SizeChanged="OnResize"
         mc:Ignorable="d" Closing="Window_Closing" WindowStartupLocation="CenterScreen"
-        Height="750" Width="1280" MinHeight="750" MinWidth="700" Loaded="WindowLoaded">
+        Height="750" Width="1280" MinHeight="750" MinWidth="800" Loaded="WindowLoaded">
     <Window.Resources>
         <FontFamily x:Key="Monospace">../Assets/#Roboto Mono</FontFamily>
         <DataTemplate x:Key="ModTemplate">
@@ -413,6 +413,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <ComboBox Margin="10,0,0,0" Name="GameBox" Height="35" MinWidth="55" Width="65" FontSize="18" FontWeight="Medium" SelectionChanged="GameBox_SelectionChanged" DropDownClosed="GameBox_DropDownClosed"
                                   VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center">
@@ -429,18 +430,21 @@
                         <Button Name="ConfigButton" Margin="0,0,10,0" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="3" Background="#181818" BorderBrush="#252525" Click="Setup_Click">
                             <TextBlock Text="Setup" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium"/>
                         </Button>
-                        <Button Name="LaunchButton" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium" Content="Launch" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="4" Background="#181818" BorderBrush="#252525" Click="Launch_Click"/>
-                        <Button Name="OpenModsButton" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="6" Background="#181818" BorderBrush="#252525" Click="CreateMod_Click">
+                        <Button Name="BuildButton" Margin="0,0,10,0" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="4" Background="#181818" BorderBrush="#252525" Click="Build_Click">
+                            <TextBlock Text="Build" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium"/>
+                        </Button>
+                        <Button Name="LaunchButton" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium" Content="Launch" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="5" Background="#181818" BorderBrush="#252525" Click="Launch_Click"/>
+                        <Button Name="OpenModsButton" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="7" Background="#181818" BorderBrush="#252525" Click="CreateMod_Click">
                             <TextBlock Text="Create Mod" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium"/>
                         </Button>
-                        <Button FontWeight="Medium" Name="UpdateButton" Margin="0,0,10,0"  Height="34" VerticalAlignment="Center" Grid.Column="7" Background="#181818" BorderBrush="#252525"  Click="Update_Click">
-                            <TextBlock Text="Check For Updates" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium"/>
+                        <Button FontWeight="Medium" Name="UpdateButton" Margin="0,0,10,0"  Height="34" VerticalAlignment="Center" Grid.Column="8" Background="#181818" BorderBrush="#252525"  Click="Update_Click">
+                            <TextBlock Text="Update" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium"/>
                         </Button>
 
-                        <ComboBox Grid.Column="5" Margin="0,0,10,0" Height="35" FontSize="18" FontWeight="Medium" Name="LauncherOptionsBox" SelectionChanged="LauncherOptionsBox_SelectionChanged"/>
+                        <ComboBox Grid.Column="6" Margin="0,0,10,0" Height="35" FontSize="18" FontWeight="Medium" Name="LauncherOptionsBox" SelectionChanged="LauncherOptionsBox_SelectionChanged"/>
                         <ComboBox Grid.Column="1" Margin="10,0,10,0" Height="35" FontSize="18" FontWeight="Medium" Name="LoadoutBox" SelectionChanged="LoadoutsBox_SelectionChanged"/>
 
-                        <Grid Name="MiddleGrid" Grid.Row="1" Grid.ColumnSpan="8">
+                        <Grid Name="MiddleGrid" Grid.Row="1" Grid.ColumnSpan="9">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1.8*"/>
                                 <ColumnDefinition Width="Auto"/>
@@ -525,9 +529,9 @@
                              FontWeight="Medium"/>
                             </Grid>
                         </Grid>
-                        <GridSplitter Grid.Row="2" Grid.ColumnSpan="8" HorizontalAlignment="Stretch" Height="10" Background="Transparent" />
+                        <GridSplitter Grid.Row="2" Grid.ColumnSpan="9" HorizontalAlignment="Stretch" Height="10" Background="Transparent" />
 
-                        <RichTextBox FontFamily="{StaticResource Monospace}" FontSize="12" Margin="10,3,10,10" Name="ConsoleWindow" Background="#202020" BorderBrush="#424242" ClipToBounds="False" Grid.Row="3" Grid.Column="0" VerticalScrollBarVisibility="Auto" IsReadOnly="True" Grid.ColumnSpan="8" TextChanged="ScrollToBottom">
+                        <RichTextBox FontFamily="{StaticResource Monospace}" FontSize="12" Margin="10,3,10,10" Name="ConsoleWindow" Background="#202020" BorderBrush="#424242" ClipToBounds="False" Grid.Row="3" Grid.Column="0" VerticalScrollBarVisibility="Auto" IsReadOnly="True" Grid.ColumnSpan="9" TextChanged="ScrollToBottom">
                             <RichTextBox.Resources>
                                 <Style TargetType="{x:Type Paragraph}">
                                     <Setter Property="Margin" Value="0" />
