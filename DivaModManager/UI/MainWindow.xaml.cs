@@ -148,6 +148,8 @@ namespace DivaModManager
             OpenModsButton.IsEnabled = false;
             UpdateButton.IsEnabled = false;
             LauncherOptionsBox.IsEnabled = false;
+            LoadoutBox.IsEnabled = false;
+            EditLoadoutsButton.IsEnabled = false;
             App.Current.Dispatcher.Invoke(async () =>
             {
                 Global.logger.WriteLine("Checking for mod updates...", LoggerType.Info);
@@ -354,6 +356,8 @@ namespace DivaModManager
                 OpenModsButton.IsEnabled = false;
                 UpdateButton.IsEnabled = false;
                 LauncherOptionsBox.IsEnabled = false;
+                LoadoutBox.IsEnabled = false;
+                EditLoadoutsButton.IsEnabled = false;
                 Refresh();
                 Directory.CreateDirectory(Global.config.Configs[Global.config.CurrentGame].ModsFolder);
                 Global.logger.WriteLine($"Building loadout for {Global.config.CurrentGame}", LoggerType.Info);
@@ -367,6 +371,8 @@ namespace DivaModManager
                 OpenModsButton.IsEnabled = true;
                 UpdateButton.IsEnabled = true;
                 GameBox.IsEnabled = true;
+                LoadoutBox.IsEnabled = true;
+                EditLoadoutsButton.IsEnabled = true;
             }
             else
             {
@@ -714,6 +720,8 @@ namespace DivaModManager
             OpenModsButton.IsEnabled = false;
             UpdateButton.IsEnabled = false;
             LauncherOptionsBox.IsEnabled = false;
+            LoadoutBox.IsEnabled = false;
+            EditLoadoutsButton.IsEnabled = false;
             App.Current.Dispatcher.Invoke(async () =>
             {
                 Global.logger.WriteLine("Checking for mod updates...", LoggerType.Info);
@@ -1735,20 +1743,15 @@ namespace DivaModManager
                         case 2:
                             if (Global.config.Configs[Global.config.CurrentGame].Loadouts.Count == 1)
                             {
-                                Global.logger.WriteLine("Unable to delete current loadout since there is only one", LoggerType.Warning);
+                                Global.logger.WriteLine("Unable to delete current loadout since there is only one", LoggerType.Error);
                                 return;
                             }
                             else
                             {
                                 Global.LoadoutItems.Remove(Global.config.Configs[Global.config.CurrentGame].CurrentLoadout);
                                 Global.config.Configs[Global.config.CurrentGame].Loadouts.Remove(Global.config.Configs[Global.config.CurrentGame].CurrentLoadout);
-                                LoadoutBox.SelectedIndex = 0; // Triggers selection changed event?
-                                /*
-                                Global.config.Configs[Global.config.CurrentGame].CurrentLoadout = LoadoutBox.SelectedItem.ToString();
-                                Global.ModList = Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout];
-                                ModGrid.ItemsSource = Global.ModList;
-                                Global.UpdateConfig();
-                                */
+                                // Triggers selection changed event
+                                LoadoutBox.SelectedIndex = 0;
                             }
                             break;
                     }
@@ -1808,6 +1811,8 @@ namespace DivaModManager
                 OpenModsButton.IsEnabled = false;
                 UpdateButton.IsEnabled = false;
                 LauncherOptionsBox.IsEnabled = false;
+                LoadoutBox.IsEnabled = false;
+                EditLoadoutsButton.IsEnabled = false;
                 App.Current.Dispatcher.Invoke(async () =>
                 {
                     Global.logger.WriteLine("Checking for mod updates...", LoggerType.Info);
