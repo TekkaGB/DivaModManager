@@ -9,7 +9,7 @@
         Background="#131313"
         Title="Diva Mod Manager" SizeChanged="OnResize"
         mc:Ignorable="d" Closing="Window_Closing" WindowStartupLocation="CenterScreen"
-        Height="750" Width="1280" MinHeight="750" MinWidth="800" Loaded="WindowLoaded">
+        Height="750" Width="1280" MinHeight="750" MinWidth="825" Loaded="WindowLoaded">
     <Window.Resources>
         <FontFamily x:Key="Monospace">../Assets/#Roboto Mono</FontFamily>
         <DataTemplate x:Key="ModTemplate">
