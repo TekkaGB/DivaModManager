@@ -359,6 +359,7 @@ namespace DivaModManager
                         return;
                     }
                 }
+
                 progressBox = new ProgressBox(cancellationToken);
                 progressBox.progressBar.Value = 0;
                 progressBox.finished = false;

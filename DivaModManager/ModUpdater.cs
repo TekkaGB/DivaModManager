@@ -13,6 +13,8 @@ using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Archives.SevenZip;
 using SharpCompress.Archives;
+using Tomlyn;
+using Tomlyn.Model;
 
 namespace DivaModManager
 {
@@ -329,7 +331,7 @@ namespace DivaModManager
 
             foreach (FileInfo fi in dir.GetFiles())
             {
-                if (fi.Name.ToLowerInvariant() != "mod.json")
+                if (fi.Name.ToLowerInvariant() != "mod.json" || fi.Name.ToLowerInvariant() != "config.toml")
                     fi.Delete();
             }
 
@@ -387,6 +389,9 @@ namespace DivaModManager
                 {
                     Global.logger.WriteLine($"Couldn't extract {fileName}. ({e.Message})", LoggerType.Error);
                 }
+                TomlTable oldConfig = null;
+                if (File.Exists($@"{output}{Global.s}config.toml"))
+                    oldConfig = Toml.ToModel(File.ReadAllText($@"{output}{Global.s}config.toml"));
                 foreach (var folder in Directory.GetDirectories(ArchiveDestination, "*", SearchOption.AllDirectories).Where(x => File.Exists($@"{x}{Global.s}config.toml")))
                 {
                     MoveDirectory(folder, output);
@@ -397,6 +402,19 @@ namespace DivaModManager
                     metadata.lastupdate = updateTime;
                     string metadataString = JsonSerializer.Serialize(metadata, new JsonSerializerOptions { WriteIndented = true });
                     File.WriteAllText($@"{output}{Global.s}mod.json", metadataString);
+                }
+                // Use all old config values that aren't metadata to be shown
+                if (oldConfig != null && File.Exists($@"{output}{Global.s}config.toml"))
+                {
+                    var newConfig = Toml.ToModel(File.ReadAllText($@"{output}{Global.s}config.toml"));
+                    foreach (var key in oldConfig.Keys)
+                    {
+                        if (key.ToLowerInvariant() != "name" && key.ToLowerInvariant() != "author" && key.ToLowerInvariant() != "version" &&
+                            key.ToLowerInvariant() != "date" && key.ToLowerInvariant() != "description" && newConfig.ContainsKey(key))
+                            newConfig[key] = oldConfig[key];
+                    }
+                    var configString = Toml.FromModel(newConfig);
+                    File.WriteAllText($@"{output}{Global.s}config.toml", configString);
                 }
                 File.Delete(_ArchiveSource);
                 Directory.Delete(ArchiveDestination, true);
