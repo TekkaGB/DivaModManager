@@ -14,6 +14,7 @@ using System.Reflection;
 using System.IO;
 using DivaModManager.UI;
 using Octokit;
+using Onova.Models;
 using System.Windows.Media.Imaging;
 
 namespace DivaModManager
@@ -53,7 +54,8 @@ namespace DivaModManager
                         // Notify that the update is about to happen
                         MessageBox.Show($"Finished downloading {fileName}!\nDiva Mod Manager will now restart.", "Notification", MessageBoxButton.OK);
                         // Update DMM
-                        UpdateManager updateManager = new UpdateManager(new LocalPackageResolver($"{Global.assemblyLocation}{Global.s}Downloads{Global.s}DMMUpdate"), new ZipExtractor());
+                        UpdateManager updateManager = new UpdateManager(AssemblyMetadata.FromAssembly(Assembly.GetEntryAssembly(), Process.GetCurrentProcess().MainModule.FileName), 
+                            new LocalPackageResolver($"{Global.assemblyLocation}{Global.s}Downloads{Global.s}DMMUpdate"), new ZipExtractor());
                         if (!Version.TryParse(onlineVersion, out Version version))
                         {
                             MessageBox.Show($"Error parsing {onlineVersion}!\nCancelling update.", "Notification", MessageBoxButton.OK);
@@ -96,9 +98,9 @@ namespace DivaModManager
                     await httpClient.DownloadAsync(uri, fs, fileName, progress, cancellationToken.Token);
                 }
                 // Rename the file
-                if (!File.Exists($@"{Global.assemblyLocation}{Global.s}Downloads{Global.s}DMMUpdate{Global.s}{version}.7z"))
+                if (!File.Exists($@"{Global.assemblyLocation}{Global.s}Downloads{Global.s}DMMUpdate{Global.s}{version}.zip"))
                 {
-                    File.Move($@"{Global.assemblyLocation}{Global.s}Downloads{Global.s}DMMUpdate{Global.s}{fileName}", $@"{Global.assemblyLocation}{Global.s}Downloads{Global.s}DMMUpdate{Global.s}{version}.7z");
+                    File.Move($@"{Global.assemblyLocation}{Global.s}Downloads{Global.s}DMMUpdate{Global.s}{fileName}", $@"{Global.assemblyLocation}{Global.s}Downloads{Global.s}DMMUpdate{Global.s}{version}.zip");
                 }
                 progressBox.Close();
             }

@@ -20,42 +20,46 @@ namespace DivaModManager
         {
             try
             {
-                using (var archive = SevenZipArchive.Open(sourceFilePath))
+                if (Path.GetExtension(sourceFilePath).Equals(".7z", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
+                    using (var archive = SevenZipArchive.Open(sourceFilePath))
                     {
-                        entry.WriteToDirectory(destDirPath, new ExtractionOptions()
+                        var reader = archive.ExtractAllEntries();
+                        while (reader.MoveToNextEntry())
                         {
-                            ExtractFullPath = true,
-                            Overwrite = true
-                        });
+                            if (!reader.Entry.IsDirectory)
+                                reader.WriteEntryToDirectory(destDirPath, new ExtractionOptions()
+                                {
+                                    ExtractFullPath = true,
+                                    Overwrite = true
+                                });
+                        }
+                    }
+                }
+                else
+                {
+                    using (Stream stream = File.OpenRead(sourceFilePath))
+                    using (var reader = ReaderFactory.Open(stream))
+                    {
+                        while (reader.MoveToNextEntry())
+                        {
+                            if (!reader.Entry.IsDirectory)
+                            {
+                                reader.WriteEntryToDirectory(destDirPath, new ExtractionOptions()
+                                {
+                                    ExtractFullPath = true,
+                                    Overwrite = true
+                                });
+                            }
+                        }
                     }
                 }
             }
             catch
             {
-                using (Stream stream = File.OpenRead(sourceFilePath))
-                using (var reader = ReaderFactory.Open(stream))
-                {
-                    while (reader.MoveToNextEntry())
-                    {
-                        if (!reader.Entry.IsDirectory)
-                        {
-                            reader.WriteEntryToDirectory(destDirPath, new ExtractionOptions()
-                            {
-                                ExtractFullPath = true,
-                                Overwrite = true
-                            });
-                        }
-                    }
-                }
+                Global.logger.WriteLine("Failed to extract update", LoggerType.Error);
             }
             File.Delete(@$"{sourceFilePath}");
-            // Move the folders to the right place
-            string parentPath = Directory.GetParent(destDirPath).FullName;
-            Directory.Move(Directory.GetDirectories(destDirPath)[0], $@"{parentPath}{Global.s}DivaModManager");
-            Directory.Delete(destDirPath);
-            Directory.Move($@"{parentPath}{Global.s}DivaModManager", destDirPath);
         }
 
     }
