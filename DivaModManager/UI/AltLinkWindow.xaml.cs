@@ -31,12 +31,12 @@ namespace DivaModManager.UI
                 $"select one to manually download.\nTo update, delete the previous files from and extract the downloaded archive into:"
                 : $"Links from the Alternate File Sources section were found. You can " +
                 $"select one to manually download.\nTo install, extract the downloaded archive into:";
-            PathText.Text = update ? $"{Global.assemblyLocation}{Global.s}Mods{Global.s}{game}{Global.s}{packageName}" 
-                : $"{Global.assemblyLocation}{Global.s}Mods{Global.s}{game}";
+            PathText.Text = update ? $"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{packageName}" 
+                : Global.config.Configs[Global.config.CurrentGame].ModsFolder;
             FetchDescription.Text = update ? $"To fetch GameBanana metadata for the manual update, Right click {packageName} > " +
-                $"Fetch Metadata, and use the link:"
+                $"Fetch GameBanana Metadata, and use the link:"
                 : $"To fetch GameBanana metadata from the manual download, Right click row > " +
-                $"Fetch Metadata, and use the link:";
+                $"Fetch GameBanana Metadata, and use the link:";
             UrlText.Text = url;
         }
 
