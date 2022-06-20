@@ -174,7 +174,7 @@ namespace DivaModManager
                                 while (reader.MoveToNextEntry())
                                 {
                                     if (!reader.Entry.IsDirectory && (reader.Entry.Key.ToLowerInvariant() == "dinput8.dll"
-                                    || reader.Entry.Key.ToLowerInvariant() == "config.toml"))
+                                    || (reader.Entry.Key.ToLowerInvariant() == "config.toml") && !File.Exists($"{ArchiveDestination}{Global.s}config.toml")))
                                         reader.WriteEntryToDirectory(ArchiveDestination, new ExtractionOptions()
                                         {
                                             ExtractFullPath = false,
@@ -191,7 +191,7 @@ namespace DivaModManager
                                 while (reader.MoveToNextEntry())
                                 {
                                     if (!reader.Entry.IsDirectory && (reader.Entry.Key.ToLowerInvariant() == "dinput8.dll"
-                                    || reader.Entry.Key.ToLowerInvariant() == "config.toml"))
+                                    || (reader.Entry.Key.ToLowerInvariant() == "config.toml") && !File.Exists($"{ArchiveDestination}{Global.s}config.toml")))
                                         reader.WriteEntryToDirectory(ArchiveDestination, new ExtractionOptions()
                                         {
                                             ExtractFullPath = false,
@@ -208,6 +208,7 @@ namespace DivaModManager
                     Global.config.Configs[Global.config.CurrentGame].ModLoaderVersion = version;
                     Global.UpdateConfig();
                     File.Delete(_ArchiveSource);
+                    Global.logger.WriteLine($"Finished updating DivaModLoader.", LoggerType.Info);
                 }
             });
 
