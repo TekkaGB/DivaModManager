@@ -11,26 +11,23 @@ using System.Windows.Input;
 namespace DivaModManager.UI
 {
     /// <summary>
-    /// Interaction logic for EditWindow.xaml
+    /// Interaction logic for LoadoutWindow.xaml
     /// </summary>
-    public partial class EditWindow : Window
+    public partial class LoadoutWindow : Window
     {
-        public string _name;
-        public bool _folder;
-        public string newName;
-        public string loadout = null;
-        public EditWindow(string name, bool folder)
+        public Mod _mod;
+        public string directory = null;
+        public LoadoutWindow(Mod mod)
         {
             InitializeComponent();
-            _folder = folder;
-            if (!String.IsNullOrEmpty(name))
+            if (mod != null)
             {
-                _name = name;
-                NameBox.Text = name;
-                Title = $"Edit {name}";
+                _mod = mod;
+                NameBox.Text = _mod.name;
+                Title = $"Edit {_mod.name}";
             }
             else
-                Title = "Create New Loadout";
+                Title = $"Create Name of New Mod for {Global.config.CurrentGame}";
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -40,31 +37,27 @@ namespace DivaModManager.UI
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_folder)
-                EditFolderName();
+            if (_mod != null)
+                EditName();
             else
-                CreateLoadoutName();
+                CreateName();
         }
-        private void CreateLoadoutName()
+        private void CreateName()
         {
-            if (String.IsNullOrWhiteSpace(NameBox.Text))
+            var newDirectory = $"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{NameBox.Text}";
+            if (!Directory.Exists(newDirectory))
             {
-                Global.logger.WriteLine($"Invalid loadout name", LoggerType.Error);
-                return;
-            }
-            if (!Global.config.Configs[Global.config.CurrentGame].Loadouts.ContainsKey(NameBox.Text))
-            {
-                loadout = NameBox.Text;
+                directory = newDirectory;
                 Close();
             }
             else
-                Global.logger.WriteLine($"{NameBox.Text} already exists", LoggerType.Error);
+                Global.logger.WriteLine($"{newDirectory} already exists", LoggerType.Error);
         }
-        private void EditFolderName()
+        private void EditName()
         {
-            if (!NameBox.Text.Equals(_name, StringComparison.InvariantCultureIgnoreCase))
+            if (!NameBox.Text.Equals(_mod.name, StringComparison.InvariantCultureIgnoreCase))
             {
-                var oldDirectory = $"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{Global.s}{_name}";
+                var oldDirectory = $"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{Global.s}{_mod.name}";
                 var newDirectory = $"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{Global.s}{NameBox.Text}";
                 if (!Directory.Exists(newDirectory))
                 {
@@ -87,10 +80,10 @@ namespace DivaModManager.UI
         {
             if (e.Key == Key.Return)
             {
-                if (_folder)
-                    EditFolderName();
+                if (_mod != null)
+                    EditName();
                 else
-                    CreateLoadoutName();
+                    CreateName();
             }
         }
     }

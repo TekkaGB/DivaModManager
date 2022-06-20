@@ -12,20 +12,15 @@ using System.Reflection;
 using System.Windows.Documents;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
-using System.Xml.Linq;
 using System.Net.Http;
-using System.Windows.Media;
 using DivaModManager.UI;
 using System.Windows.Controls.Primitives;
-using System.Security.Cryptography;
-using Microsoft.Win32;
 using System.Windows.Input;
 using System.Text.Json;
 using Tomlyn;
 using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Archives.SevenZip;
-using SharpCompress.Archives;
 using System.Threading;
 using WpfAnimatedGif;
 
@@ -44,7 +39,7 @@ namespace DivaModManager
         private string defaultText = "Welcome to Diva Mod Manager!\n\n" +
             "To show metadata here:\nRight Click Row > Configure Mod and add author, version, and/or date fields" +
             "\nand/or Right Click Row > Fetch Metadata and confirm the GameBanana URL of the mod";
-        private ObservableCollection<String> LauncherOptions = new ObservableCollection<String>(new string[] { " Executable", " Steam" });
+        private ObservableCollection<String> LauncherOptions = new ObservableCollection<String>(new string[] { "Executable", "Steam" });
         public MainWindow()
         {
             InitializeComponent();
@@ -111,13 +106,20 @@ namespace DivaModManager
             else
                 GameBox.SelectedIndex = Global.games.IndexOf(Global.config.CurrentGame);
 
-            if (GameBox.SelectedIndex == 5)
-                DiscordButton.Visibility = Visibility.Collapsed;
+            if (String.IsNullOrEmpty(Global.config.Configs[Global.config.CurrentGame].CurrentLoadout))
+                Global.config.Configs[Global.config.CurrentGame].CurrentLoadout = "Default";
+            if (Global.config.Configs[Global.config.CurrentGame].Loadouts == null)
+                Global.config.Configs[Global.config.CurrentGame].Loadouts = new();
+            if (!Global.config.Configs[Global.config.CurrentGame].Loadouts.ContainsKey(Global.config.Configs[Global.config.CurrentGame].CurrentLoadout))
+                Global.config.Configs[Global.config.CurrentGame].Loadouts.Add(Global.config.Configs[Global.config.CurrentGame].CurrentLoadout, new());
+            else if (Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout] == null)
+                Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout] = new();
+            Global.ModList = Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout];
 
-            if (Global.config.Configs[Global.config.CurrentGame].ModList == null)
-                Global.config.Configs[Global.config.CurrentGame].ModList = new();
+            Global.LoadoutItems = new ObservableCollection<String>(Global.config.Configs[Global.config.CurrentGame].Loadouts.Keys);
 
-            Global.ModList = Global.config.Configs[Global.config.CurrentGame].ModList;
+            LoadoutBox.ItemsSource = Global.LoadoutItems;
+            LoadoutBox.SelectedItem = Global.config.Configs[Global.config.CurrentGame].CurrentLoadout;
 
             if (String.IsNullOrEmpty(Global.config.Configs[Global.config.CurrentGame].ModsFolder)
                 || !Directory.Exists(Global.config.Configs[Global.config.CurrentGame].ModsFolder))
@@ -227,7 +229,7 @@ namespace DivaModManager
                     $"{StringConverters.FormatSize(new DirectoryInfo(currentModDirectory).GetDirectorySize())} • v{version}";
                 });
             });
-            Global.config.Configs[Global.config.CurrentGame].ModList = Global.ModList;
+            Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout] = Global.ModList;
             Global.logger.WriteLine("Refreshed!", LoggerType.Info);
         }
 
@@ -241,13 +243,13 @@ namespace DivaModManager
             if (mod != null)
             {
                 mod.enabled = true;
-                List<Mod> temp = Global.config.Configs[Global.config.CurrentGame].ModList.ToList();
+                List<Mod> temp = Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout].ToList();
                 foreach (var m in temp)
                 {
                     if (m.name == mod.name)
                         m.enabled = true;
                 }
-                Global.config.Configs[Global.config.CurrentGame].ModList = new ObservableCollection<Mod>(temp);
+                Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout] = new ObservableCollection<Mod>(temp);
                 Global.UpdateConfig();
             }
         }
@@ -260,13 +262,13 @@ namespace DivaModManager
             if (mod != null)
             {
                 mod.enabled = false;
-                List<Mod> temp = Global.config.Configs[Global.config.CurrentGame].ModList.ToList();
+                List<Mod> temp = Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout].ToList();
                 foreach (var m in temp)
                 {
                     if (m.name == mod.name)
                         m.enabled = false;
                 }
-                Global.config.Configs[Global.config.CurrentGame].ModList = new ObservableCollection<Mod>(temp);
+                Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout] = new ObservableCollection<Mod>(temp);
                 Global.UpdateConfig();
             }
         }
@@ -304,7 +306,7 @@ namespace DivaModManager
         private async void Setup_Click(object sender, RoutedEventArgs e)
         {
             GameBox.IsEnabled = false;
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
                 var index = 0;
                 Application.Current.Dispatcher.Invoke(() =>
@@ -356,7 +358,7 @@ namespace DivaModManager
                 Directory.CreateDirectory(Global.config.Configs[Global.config.CurrentGame].ModsFolder);
                 Global.logger.WriteLine($"Building loadout for {Global.config.CurrentGame}", LoggerType.Info);
 
-                var mods = Global.config.Configs[Global.config.CurrentGame].ModList.Where(x => x.enabled).ToList();
+                var mods = Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout].Where(x => x.enabled).ToList();
                 await Task.Run(() => ModLoader.Build(mods));
                 ModLoader.Build(mods);
                 ModGrid.IsEnabled = true;
@@ -466,7 +468,7 @@ namespace DivaModManager
                 element.ContextMenu.Visibility = Visibility.Visible;
         }
 
-        private void DeleteItem_Click(object sender, RoutedEventArgs e)
+        private async void DeleteItem_Click(object sender, RoutedEventArgs e)
         {
             var selectedMods = ModGrid.SelectedItems;
             var temp = new Mod[selectedMods.Count];
@@ -479,8 +481,8 @@ namespace DivaModManager
                     {
                         try
                         {
-                            Directory.Delete($@"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{row.name}", true);
                             Global.logger.WriteLine($@"Deleting {row.name}.", LoggerType.Info);
+                            await Task.Run(() => Directory.Delete($@"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{row.name}", true));
                             ShowMetadata(null);
                         }
                         catch (Exception ex)
@@ -544,7 +546,7 @@ namespace DivaModManager
             foreach (var row in temp)
                 if (row != null)
                 {
-                    EditWindow ew = new EditWindow(row);
+                    EditWindow ew = new EditWindow(row.name, true);
                     ew.ShowDialog();
                 }
         }
@@ -1651,6 +1653,108 @@ namespace DivaModManager
                 Global.UpdateConfig();
             }
         }
+        private void LoadoutsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!IsLoaded)
+                return;
+            // Change the loadout
+            else if (LoadoutBox.SelectedItem != null)
+            {
+                Global.config.Configs[Global.config.CurrentGame].CurrentLoadout = LoadoutBox.SelectedItem.ToString();
+
+                // Create loadout if it doesn't exist
+                if (!Global.config.Configs[Global.config.CurrentGame].Loadouts.ContainsKey(Global.config.Configs[Global.config.CurrentGame].CurrentLoadout))
+                    Global.config.Configs[Global.config.CurrentGame].Loadouts.Add(Global.config.Configs[Global.config.CurrentGame].CurrentLoadout, new());
+                else if (Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout] == null)
+                    Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout] = new();
+
+                Global.ModList = Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout];
+                //ModGrid.ItemsSource = Global.ModList;
+                Global.UpdateConfig();
+                Global.logger.WriteLine($"Loadout changed to {LoadoutBox.SelectedItem}", LoggerType.Info);
+                Refresh();
+            }
+        }
+        private void EditLoadouts_Click(object sender, RoutedEventArgs e)
+        {
+            var choices = new List<Choice>();
+            choices.Add(new Choice()
+            {
+                OptionText = "Add New Loadout",
+                OptionSubText = "Adds a new loadout to switch priority",
+                Index = 0
+            });
+            choices.Add(new Choice()
+            {
+                OptionText = $"Rename Current Loadout",
+                OptionSubText = $"Changes the name of the current loadout",
+                Index = 1
+            });
+            choices.Add(new Choice()
+            {
+                OptionText = $"Delete Current Loadout",
+                OptionSubText = $"Deletes current loadout and switch to first available one",
+                Index = 2
+            });
+            Dispatcher.Invoke(() =>
+            {
+                var choice = new ChoiceWindow(choices, $"Loadout Options for {Global.config.CurrentGame}");
+                choice.ShowDialog();
+                if (choice.choice != null)
+                {
+                    switch ((int)choice.choice)
+                    {
+                        // Add new loadout
+                        case 0:
+                            var newLoadoutWindow = new EditWindow(null, false);
+                            newLoadoutWindow.ShowDialog();
+                            if (!String.IsNullOrEmpty(newLoadoutWindow.loadout))
+                            {
+                                Global.LoadoutItems.Add(newLoadoutWindow.loadout);
+                                LoadoutBox.SelectedItem = newLoadoutWindow.loadout;
+                            }
+                            break;
+                        // Rename current loadout
+                        case 1:
+                            var renameLoadoutWindow = new EditWindow(Global.config.Configs[Global.config.CurrentGame].CurrentLoadout, false);
+                            renameLoadoutWindow.ShowDialog();
+                            if (!String.IsNullOrEmpty(renameLoadoutWindow.loadout))
+                            {
+                                // Insert new name at index of original loadout
+                                Global.LoadoutItems.Insert(Global.LoadoutItems.IndexOf(Global.config.Configs[Global.config.CurrentGame].CurrentLoadout), renameLoadoutWindow.loadout);
+                                // Copy over current loadout
+                                Global.config.Configs[Global.config.CurrentGame].Loadouts.Add(renameLoadoutWindow.loadout, Global.ModList);
+                                // Delete current loadout
+                                Global.LoadoutItems.Remove(Global.config.Configs[Global.config.CurrentGame].CurrentLoadout);
+                                Global.config.Configs[Global.config.CurrentGame].Loadouts.Remove(Global.config.Configs[Global.config.CurrentGame].CurrentLoadout);
+                                // Trigger selection changed event
+                                LoadoutBox.SelectedItem = renameLoadoutWindow.loadout;
+                            }
+                            break;
+                        // Delete current loadout
+                        case 2:
+                            if (Global.config.Configs[Global.config.CurrentGame].Loadouts.Count == 1)
+                            {
+                                Global.logger.WriteLine("Unable to delete current loadout since there is only one", LoggerType.Warning);
+                                return;
+                            }
+                            else
+                            {
+                                Global.LoadoutItems.Remove(Global.config.Configs[Global.config.CurrentGame].CurrentLoadout);
+                                Global.config.Configs[Global.config.CurrentGame].Loadouts.Remove(Global.config.Configs[Global.config.CurrentGame].CurrentLoadout);
+                                LoadoutBox.SelectedIndex = 0; // Triggers selection changed event?
+                                /*
+                                Global.config.Configs[Global.config.CurrentGame].CurrentLoadout = LoadoutBox.SelectedItem.ToString();
+                                Global.ModList = Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout];
+                                ModGrid.ItemsSource = Global.ModList;
+                                Global.UpdateConfig();
+                                */
+                            }
+                            break;
+                    }
+                }
+            });
+        }
         private async void GameBox_DropDownClosed(object sender, EventArgs e)
         {
             if (handle)
@@ -1664,9 +1768,11 @@ namespace DivaModManager
                 {
                     Global.ModList = new();
                     Global.config.Configs.Add(Global.config.CurrentGame, new());
+                    Global.config.Configs[Global.config.CurrentGame].CurrentLoadout = "Default";
+                    Global.config.Configs[Global.config.CurrentGame].Loadouts.Add(Global.config.Configs[Global.config.CurrentGame].CurrentLoadout, new());
                 }
                 else
-                    Global.ModList = Global.config.Configs[Global.config.CurrentGame].ModList;
+                    Global.ModList = Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout];
                 var currentModDirectory = Global.config.Configs[Global.config.CurrentGame].ModsFolder;
                 Directory.CreateDirectory(currentModDirectory);
                 ModsWatcher.Path = currentModDirectory;

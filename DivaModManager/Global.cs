@@ -18,9 +18,10 @@ namespace DivaModManager
         public static string assemblyLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static List<string> games;
         public static ObservableCollection<Mod> ModList;
+        public static ObservableCollection<String> LoadoutItems;
         public static void UpdateConfig()
         {
-            config.Configs[config.CurrentGame].ModList = ModList;
+            config.Configs[config.CurrentGame].Loadouts[config.Configs[config.CurrentGame].CurrentLoadout] = ModList;
             string configString = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
             try
             {

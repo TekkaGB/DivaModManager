@@ -45,7 +45,8 @@ namespace DivaModManager
         public bool FirstOpen { get; set; }
         public string ModsFolder { get; set; }
         public string ModLoaderVersion { get; set; }
-        public ObservableCollection<Mod> ModList { get; set; }
+        public string CurrentLoadout { get; set; }
+        public Dictionary<string, ObservableCollection<Mod>> Loadouts { get; set; }
     }
     public class Choice
     {

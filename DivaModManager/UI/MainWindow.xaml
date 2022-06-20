@@ -411,8 +411,10 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Margin="10,0,0,0" Name="GameBox" Height="35" MinWidth="55" Width="55" FontSize="18" FontWeight="Medium" SelectionChanged="GameBox_SelectionChanged" DropDownClosed="GameBox_DropDownClosed"
+                        <ComboBox Margin="10,0,0,0" Name="GameBox" Height="35" MinWidth="55" Width="65" FontSize="18" FontWeight="Medium" SelectionChanged="GameBox_SelectionChanged" DropDownClosed="GameBox_DropDownClosed"
                                   VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                             <ComboBoxItem IsSelected="True">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -421,14 +423,16 @@
                                 </StackPanel>
                             </ComboBoxItem>
                         </ComboBox>
-                        <Button FontSize="18" FontWeight="Medium" Name="ConfigButton" Margin="10,0,10,0" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Content="Setup" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2" Click="Setup_Click" />
-                        <Button FontSize="18" FontWeight="Medium" Name="LaunchButton" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="2" Content="Launch" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2" Click="Launch_Click"/>
-                        <Button FontSize="18" FontWeight="Medium" Name="OpenModsButton" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="4" Content="Create Mod" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2" Click="CreateMod_Click"/>
-                        <Button FontSize="18" FontWeight="Medium" Name="UpdateButton" Margin="0,0,10,0"  Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="5" Content="Check for Updates" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2" Click="Update_Click"/>
+                        <Button FontSize="18" FontWeight="Medium" Name="EditLoadoutsButton" Margin="0,0,10,0" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="2" Content="Edit Loadouts" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2" Click="EditLoadouts_Click" />
+                        <Button FontSize="18" FontWeight="Medium" Name="ConfigButton" Margin="0,0,10,0" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="3" Content="Setup" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2" Click="Setup_Click" />
+                        <Button FontSize="18" FontWeight="Medium" Name="LaunchButton" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="4" Content="Launch" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2" Click="Launch_Click"/>
+                        <Button FontSize="18" FontWeight="Medium" Name="OpenModsButton" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="6" Content="Create Mod" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2" Click="CreateMod_Click"/>
+                        <Button FontSize="18" FontWeight="Medium" Name="UpdateButton" Margin="0,0,10,0"  Height="34" VerticalAlignment="Center" Grid.Column="7" Content="Check for Updates" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2" Click="Update_Click"/>
 
-                        <ComboBox Grid.Column="3" Margin="0,0,10,0" Height="35" FontSize="18" FontWeight="Medium" Name="LauncherOptionsBox" SelectionChanged="LauncherOptionsBox_SelectionChanged"/>
+                        <ComboBox Grid.Column="5" Margin="0,0,10,0" Height="35" FontSize="18" FontWeight="Medium" Name="LauncherOptionsBox" SelectionChanged="LauncherOptionsBox_SelectionChanged"/>
+                        <ComboBox Grid.Column="1" Margin="10,0,10,0" Height="35" FontSize="18" FontWeight="Medium" Name="LoadoutBox" SelectionChanged="LoadoutsBox_SelectionChanged"/>
 
-                        <Grid Name="MiddleGrid" Grid.Row="1" Grid.ColumnSpan="7">
+                        <Grid Name="MiddleGrid" Grid.Row="1" Grid.ColumnSpan="8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1.8*"/>
                                 <ColumnDefinition Width="Auto"/>
@@ -457,16 +461,16 @@
                                         <Setter Property="FontWeight" Value="SemiBold"/>
                                     </Style>
                                 </DataGrid.Resources>
-				<DataGrid.ColumnHeaderStyle>
-					<Style TargetType="DataGridColumnHeader">
-						<Setter Property="Background" Value="#303030" />
-						<Setter Property="Foreground" Value="#f2f2f2"/>
-						<Setter Property="Height" Value="17"/>
-						<Setter Property="FontSize" Value="12"/>
-						<Setter Property="FontWeight" Value="SemiBold"/>
-						<EventSetter Event="Click" Handler="SortAlphabeticallyAndGroupEnabled_Click"/>
-					</Style>
-				</DataGrid.ColumnHeaderStyle>
+                                <DataGrid.ColumnHeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="#303030" />
+                                        <Setter Property="Foreground" Value="#f2f2f2"/>
+                                        <Setter Property="Height" Value="17"/>
+                                        <Setter Property="FontSize" Value="12"/>
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                        <EventSetter Event="Click" Handler="SortAlphabeticallyAndGroupEnabled_Click"/>
+                                    </Style>
+                                </DataGrid.ColumnHeaderStyle>
                                 <DataGrid.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem Header="Configure Mod" IsCheckable="False" Click="ConfigureModItem_Click"/>
@@ -513,9 +517,9 @@
                              FontWeight="Medium"/>
                             </Grid>
                         </Grid>
-                        <GridSplitter Grid.Row="2" Grid.ColumnSpan="6" HorizontalAlignment="Stretch" Height="10" Background="Transparent" />
+                        <GridSplitter Grid.Row="2" Grid.ColumnSpan="8" HorizontalAlignment="Stretch" Height="10" Background="Transparent" />
 
-                        <RichTextBox FontFamily="{StaticResource Monospace}" FontSize="12" Margin="10,3,10,10" Name="ConsoleWindow" Background="#202020" BorderBrush="#424242" ClipToBounds="False" Grid.Row="3" Grid.Column="0" VerticalScrollBarVisibility="Auto" IsReadOnly="True" Grid.ColumnSpan="7" TextChanged="ScrollToBottom">
+                        <RichTextBox FontFamily="{StaticResource Monospace}" FontSize="12" Margin="10,3,10,10" Name="ConsoleWindow" Background="#202020" BorderBrush="#424242" ClipToBounds="False" Grid.Row="3" Grid.Column="0" VerticalScrollBarVisibility="Auto" IsReadOnly="True" Grid.ColumnSpan="8" TextChanged="ScrollToBottom">
                             <RichTextBox.Resources>
                                 <Style TargetType="{x:Type Paragraph}">
                                     <Setter Property="Margin" Value="0" />
@@ -571,7 +575,7 @@
                                 <TextBlock Name="BigCaptionText" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" FontSize="18" Foreground="#f2f2f2" Padding="5"/>
                             </StackPanel>
                         </Border>
-                            <StackPanel Grid.ColumnSpan="2" Margin="20" Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <StackPanel Grid.ColumnSpan="2" Margin="20" Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Center">
                             <Button Click="CloseMedia_Click" Content="Close" Height="50" Width="200" FontSize="20" FontWeight="SemiBold" Foreground="#f2f2f2">
                                 <Button.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -662,30 +666,30 @@
                     </ComboBox>
                     <ComboBox Margin="5,0,0,0" Grid.Column="1" IsEnabled="False" Name="FilterBox" Height="35" MinWidth="130" HorizontalAlignment="Stretch" FontSize="18"  FontWeight="Medium" SelectionChanged="FilterSelectionChanged"/>
                     <ComboBox Margin="5,0,0,0" Grid.Column="2" IsEnabled="False" FontWeight="Medium" FontSize="18" Name="TypeBox" Height="35" HorizontalAlignment="Stretch" MinWidth="100" SelectionChanged="TypeFilterSelectionChanged">
-                            <ComboBoxItem xml:space="preserve" IsSelected="True"> Mods</ComboBoxItem>
-                            <ComboBoxItem xml:space="preserve"> WiPs</ComboBoxItem>
-                            <ComboBoxItem xml:space="preserve"> Sounds</ComboBoxItem>
-                        </ComboBox>
+                        <ComboBoxItem xml:space="preserve" IsSelected="True"> Mods</ComboBoxItem>
+                        <ComboBoxItem xml:space="preserve"> WiPs</ComboBoxItem>
+                        <ComboBoxItem xml:space="preserve"> Sounds</ComboBoxItem>
+                    </ComboBox>
                     <ComboBox Margin="5,0,0,0" Grid.Column="3" IsEnabled="False" Name="CatBox" Height="35" HorizontalAlignment="Stretch" MinWidth="150" SelectionChanged="MainFilterSelectionChanged">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate >
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Margin="0,0,5,0" VerticalAlignment="Center" Height="25" Source="{Binding Path=Icon}"/>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate >
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Margin="0,0,5,0" VerticalAlignment="Center" Height="25" Source="{Binding Path=Icon}"/>
                                     <TextBlock VerticalAlignment="Center" FontSize="15" FontWeight="Medium" Text="{Binding Path=Name}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                     <ComboBox Margin="5,0,0,0" Grid.Column="4" IsEnabled="False" Name="SubCatBox" Height="35" HorizontalAlignment="Stretch" MinWidth="200" SelectionChanged="SubFilterSelectionChanged">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate >
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Margin="0,0,5,0" VerticalAlignment="Center" Height="25" Source="{Binding Path=Icon}"/>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate >
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Margin="0,0,5,0" VerticalAlignment="Center" Height="25" Source="{Binding Path=Icon}"/>
                                     <TextBlock VerticalAlignment="Center" FontSize="15" FontWeight="Medium" Text="{Binding Path=Name}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                     <TextBox Margin="5,0,35,0" Padding="4,0,0,0" Grid.Column="5" IsEnabled="False" KeyDown="SearchBar_KeyDown" Name="SearchBar" Height="35" MinWidth="200" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
                     <TextBlock Margin="5,0,35,0" Padding="7,5.5,3,3" Grid.Column="5" IsHitTestVisible="False" Height="35" MinWidth="200" HorizontalAlignment="Left" Text="Search..." VerticalAlignment="Center" Foreground="#303030">
                         <TextBlock.Style>
@@ -699,8 +703,8 @@
                         </TextBlock.Style>
                     </TextBlock>
                     <Button Grid.Column="5" IsEnabled="False" HorizontalAlignment="Right" Click="SearchButton_Click" Name="SearchButton" Height="35" Width="35">
-                            <fa5:ImageAwesome Icon="Solid_Search" Foreground="#f2f2f2" Margin="3"/>
-                        </Button>
+                        <fa5:ImageAwesome Icon="Solid_Search" Foreground="#f2f2f2" Margin="3"/>
+                    </Button>
                     <StackPanel Grid.Column="6" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5,0,0,0" >
                         <CheckBox Name="NSFWCheckbox" IsEnabled="False" Unchecked="NSFWCheckbox_Checked" Checked="NSFWCheckbox_Checked"  Margin="0,0,5,0" VerticalAlignment="Center" />
                         <TextBlock Foreground="#f2f2f2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" FontWeight="Medium">
