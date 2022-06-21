@@ -15,14 +15,6 @@ jobs:
     steps:
       - name: Checkout and Initialise
         uses: actions/checkout@v2
-      # Get Date and time
-      # (Currently unused)
-      - name: Set Date Output
-        id: date
-        shell: pwsh
-        run: |
-          echo "::set-output name=date-month::$(Get-Date -Format 'yyyy-MM')"
-          echo "::set-output name=date-time::$(Get-Date -Format 'yyyy-MM-dd_HH-mm')"
 
       - name: Build release
         run: dotnet publish -c Release -p:PublishSingleFile=true --self-contained false
