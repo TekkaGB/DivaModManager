@@ -362,7 +362,7 @@ namespace DivaModManager
                 EditLoadoutsButton.IsEnabled = false;
                 Refresh();
                 Directory.CreateDirectory(Global.config.Configs[Global.config.CurrentGame].ModsFolder);
-                Global.logger.WriteLine($"Building loadout for {Global.config.CurrentGame}", LoggerType.Info);
+                Global.logger.WriteLine($"Saving loadout for {Global.config.CurrentGame}", LoggerType.Info);
 
                 var mods = Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout].Where(x => x.enabled).ToList();
                 await Task.Run(() => ModLoader.Build(mods));
@@ -379,7 +379,7 @@ namespace DivaModManager
             }
             else
             {
-                Global.logger.WriteLine("Please click Setup before building!", LoggerType.Warning);
+                Global.logger.WriteLine("Please click Setup before saving!", LoggerType.Warning);
                 return;
             }
         }
@@ -1657,11 +1657,6 @@ namespace DivaModManager
         }
         private void LauncherOptionsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (LauncherOptionsBox.SelectedIndex == 1
-                && Global.config.CurrentGame.Equals("Shin Megami Tensei V", StringComparison.InvariantCultureIgnoreCase))
-                LaunchButton.Content = "Build";
-            else
-                LaunchButton.Content = "Launch";
             if (!handle)
             {
                 Global.config.Configs[Global.config.CurrentGame].LauncherOptionIndex = LauncherOptionsBox.SelectedIndex;
