@@ -12,23 +12,6 @@ jobs:
       # (Probably not needed as we don't use actions/setup-dotnet, but it doesn't hurt.)
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
-    steps:
-      - name: Checkout and Initialise
-        uses: actions/checkout@v2
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.0.x
-
-      # Get Date and time
-      # (Currently unused)
-      - name: Set Date Output
-        id: date
-        shell: pwsh
-        run: |
-          echo "::set-output name=date-month::$(Get-Date -Format 'yyyy-MM')"
-          echo "::set-output name=date-time::$(Get-Date -Format 'yyyy-MM-dd_HH-mm')"
-
       - name: Build release
         run: dotnet publish -c Release -p:PublishSingleFile=true --self-contained false
 
@@ -38,5 +21,5 @@ jobs:
         with:
           name: DMM-singlefile-${{ github.sha }}
           path: |
-            DivaModManager/bin/Release/net5.0-windows/win10-x64/publish
-            !DivaModManager/bin/Release/net5.0-windows/win10-x64/publish/DivaModManager
+            DivaModManager/bin/Release/net6.0-windows/win10-x64/publish
+            !DivaModManager/bin/Release/net6.0-windows/win10-x64/publish/DivaModManager
