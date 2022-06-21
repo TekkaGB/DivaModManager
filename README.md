@@ -16,7 +16,7 @@ Before you can manage and load some mods, you have to install some.
 
 There are 3 methods of doing this:
 1. Using the built in Mod Browser tab to download mods found on GameBanana
-2. Using 1-click install buttons (once they're added in) from browsing mods directly from the GameBanana website
+2. Using 1-click install buttons from browsing mods directly from the GameBanana website
 3. Downloading mods from other sources such as the Discord server and dragging and dropping them onto the mod grid for easy install.
 
 ### Managing Mods
