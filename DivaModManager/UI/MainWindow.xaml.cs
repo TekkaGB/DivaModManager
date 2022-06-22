@@ -23,6 +23,7 @@ using SharpCompress.Readers;
 using SharpCompress.Archives.SevenZip;
 using System.Threading;
 using WpfAnimatedGif;
+using System.Windows.Data;
 
 namespace DivaModManager
 {
@@ -555,12 +556,18 @@ namespace DivaModManager
             var selectedMods = ModGrid.SelectedItems;
             var temp = new Mod[selectedMods.Count];
             selectedMods.CopyTo(temp, 0);
+
+            // Stop refreshing while renaming folders
+            ModsWatcher.EnableRaisingEvents = false;
             foreach (var row in temp)
                 if (row != null)
                 {
                     EditWindow ew = new EditWindow(row.name, true);
                     ew.ShowDialog();
                 }
+            ModsWatcher.EnableRaisingEvents = true;
+            Global.UpdateConfig();
+            ModGrid.Items.Refresh();
         }
         private void ConfigureModItem_Click(object sender, RoutedEventArgs e)
         {
@@ -1679,7 +1686,6 @@ namespace DivaModManager
                     Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout] = new();
 
                 Global.ModList = Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout];
-                //ModGrid.ItemsSource = Global.ModList;
                 Global.UpdateConfig();
                 Global.logger.WriteLine($"Loadout changed to {LoadoutBox.SelectedItem}", LoggerType.Info);
                 Refresh();
