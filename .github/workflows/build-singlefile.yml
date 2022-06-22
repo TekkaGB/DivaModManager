@@ -1,0 +1,29 @@
+name: Debug Build and Test
+
+on: [push, pull_request]
+
+jobs:
+  build-release:
+    runs-on: windows-latest
+
+    env:
+      #/ Skips dotnet's initial cache populating.
+      #\ Since this is a CI, doing this is unnecessary.
+      # (Probably not needed as we don't use actions/setup-dotnet, but it doesn't hurt.)
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
+    steps:
+      - name: Checkout and Initialise
+        uses: actions/checkout@v2
+
+      - name: Build release
+        run: dotnet publish -c Release -p:PublishSingleFile=true --self-contained false
+
+      # Upload build artifact
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3.0.0
+        with:
+          name: DMM-singlefile-${{ github.sha }}
+          path: |
+            DivaModManager/bin/Release/net6.0-windows/win10-x64/publish
+            !DivaModManager/bin/Release/net6.0-windows/win10-x64/publish/DivaModManager
