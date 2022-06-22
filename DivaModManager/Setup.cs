@@ -89,9 +89,10 @@ namespace DivaModManager
                     return true;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                Global.logger.WriteLine(ex.Message, LoggerType.Error);
+                return false;
             }
             return true;
         }
@@ -307,10 +308,6 @@ namespace DivaModManager
             }
             var parent = Path.GetDirectoryName(defaultPath);
             var ModsFolder = $"{parent}{Global.s}mods";
-            Directory.CreateDirectory(ModsFolder);
-            Global.config.Configs[Global.config.CurrentGame].ModsFolder = ModsFolder;
-            Global.config.Configs[Global.config.CurrentGame].Launcher = defaultPath;
-            Global.UpdateConfig();
             // Check for DML update
             if (!File.Exists($"{parent}{Global.s}config.toml")
                 || !File.Exists($"{parent}{Global.s}dinput8.dll"))
@@ -323,7 +320,13 @@ namespace DivaModManager
                 {
                     task = CheckForDMLUpdate(new CancellationTokenSource());
                 });
-            return task.Result;
+            if (!task.Result)
+                return false;
+            Directory.CreateDirectory(ModsFolder);
+            Global.config.Configs[Global.config.CurrentGame].ModsFolder = ModsFolder;
+            Global.config.Configs[Global.config.CurrentGame].Launcher = defaultPath;
+            Global.UpdateConfig();
+            return true;
         }
     }
 }

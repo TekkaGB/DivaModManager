@@ -72,9 +72,9 @@ namespace DivaModManager
                 else
                     Global.logger.WriteLine("No update for Diva Mod Manager available.", LoggerType.Info);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                Global.logger.WriteLine(ex.Message, LoggerType.Error);
             }
             return false;
         }

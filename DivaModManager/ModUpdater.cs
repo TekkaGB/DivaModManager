@@ -42,7 +42,7 @@ namespace DivaModManager
             }
             var cancellationToken = new CancellationTokenSource();
             var requestUrls = new Dictionary<string, List<string>>();
-            var mods = Directory.GetDirectories(path).Where(x => File.Exists($"{x}/mod.json")).ToList();
+            var mods = Directory.GetDirectories(path).Where(x => File.Exists($"{x}{Global.s}mod.json")).ToList();
             var modList = new Dictionary<string, List<string>>();
             var urlCounts = new Dictionary<string, int>();
             foreach (var mod in mods)
@@ -116,15 +116,15 @@ namespace DivaModManager
                 {
                     foreach (var requestUrl in type.Value)
                     {
-                        var responseString = await client.GetStringAsync(requestUrl);
                         try
                         {
+                            var responseString = await client.GetStringAsync(requestUrl);
                             var partialResponse = JsonSerializer.Deserialize<List<GameBananaAPIV4>>(responseString);
                             response = response.Concat(partialResponse).ToList();
                         }
                         catch (Exception e)
                         {
-                            Global.logger.WriteLine($"{requestUrl} {e.Message}", LoggerType.Error);
+                            Global.logger.WriteLine(e.Message, LoggerType.Error);
                             main.GameBox.IsEnabled = true;
                             main.ModGrid.IsEnabled = true;
                             main.ConfigButton.IsEnabled = true;
