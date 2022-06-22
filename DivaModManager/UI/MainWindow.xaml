@@ -9,9 +9,8 @@
         Background="#131313"
         Title="Diva Mod Manager" SizeChanged="OnResize"
         mc:Ignorable="d" Closing="Window_Closing" WindowStartupLocation="CenterScreen"
-        Height="750" Width="1280" MinHeight="750" MinWidth="825" Loaded="WindowLoaded">
+        Height="750" Width="1280" MinHeight="750" MinWidth="925" Loaded="WindowLoaded">
     <Window.Resources>
-        <FontFamily x:Key="Monospace">../Assets/#Roboto Mono</FontFamily>
         <DataTemplate x:Key="ModTemplate">
             <Border CornerRadius="5" Margin="5">
                 <Border.BorderBrush>
@@ -32,7 +31,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock VerticalAlignment="Center" Panel.ZIndex="4" FontSize="40" FontWeight="Medium" HorizontalAlignment="Center" Foreground="#f2f2f2">
+                    <TextBlock FontFamily="{StaticResource AnekLatin}" VerticalAlignment="Center" Panel.ZIndex="4" FontSize="40" FontWeight="Medium" HorizontalAlignment="Center" Foreground="#f2f2f2">
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Visibility" Value="Collapsed" />
@@ -88,7 +87,7 @@
                             <ImageBrush ImageSource="{Binding Path=Image,Mode=OneWay,IsAsync=True}"/>
                         </Rectangle.OpacityMask>
                     </Rectangle>
-                    <TextBlock x:Name="Title" Margin="5" Grid.Row="1" FontWeight="Medium" TextTrimming="WordEllipsis" Background="Transparent" VerticalAlignment="Center"  Foreground="#f2f2f2" Text="{Binding Path=Title}"/>
+                    <TextBlock x:Name="Title" FontFamily="{StaticResource AnekLatin}" Margin="5" Grid.Row="1" FontWeight="Medium" TextTrimming="WordEllipsis" Background="Transparent" VerticalAlignment="Center"  Foreground="#f2f2f2" Text="{Binding Path=Title}"/>
                     <Popup PlacementTarget="{Binding ElementName=Title}" IsOpen="{Binding IsMouseDirectlyOver, ElementName=Title, Mode=OneWay}" AllowsTransparency="True">
                         <Border CornerRadius="5" Panel.ZIndex="0" Margin="10">
                             <Border.BorderBrush>
@@ -97,13 +96,13 @@
                             <Border.Background>
                                 <SolidColorBrush Color="#101010" Opacity="0.9"/>
                             </Border.Background>
-                            <TextBlock Margin="10" Text="{Binding Path=Title}" Foreground="#f2f2f2" FontWeight="Medium" FontSize="18" VerticalAlignment="Center" />
+                            <TextBlock Margin="10" FontFamily="{StaticResource AnekLatin}" Text="{Binding Path=Title}" Foreground="#f2f2f2" FontWeight="Medium" FontSize="20" VerticalAlignment="Center" />
                         </Border>
                     </Popup>
                     <Image Name="LoadingBar" Grid.Row="0" gif:ImageBehavior.AnimatedSource="../Assets/load.gif" Panel.ZIndex="1" VerticalAlignment="Center" HorizontalAlignment="Center" Height="100"/>
                     <StackPanel Grid.Row="2" Margin="10,-5,10,5" Orientation="Horizontal">
                         <Image VerticalAlignment="Center" Source="{Binding Path=Owner.Avatar}" Margin="0,0,10,0" Height="35"/>
-                        <TextBlock VerticalAlignment="Center" Foreground="#909090" Text="{Binding Path=Owner.Name}">
+                        <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource AnekLatin}" Foreground="#909090" Text="{Binding Path=Owner.Name}">
                             <TextBlock.Style>
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="Visibility" Value="Visible" />
@@ -123,7 +122,7 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Image Name="CatIcon" Grid.Column="0" VerticalAlignment="Center" Source="{Binding Path=Category.Icon}" Margin="0,0,10,0" Stretch="Uniform" Height="35" Width="35"/>
-                        <TextBlock Name="CatText" Grid.ColumnSpan="2" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=CategoryName}" TextTrimming="WordEllipsis">
+                        <TextBlock Name="CatText" FontFamily="{StaticResource AnekLatin}" Grid.ColumnSpan="2" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=CategoryName}" TextTrimming="WordEllipsis">
                             <TextBlock.Style>
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="Grid.Column" Value="1"/>
@@ -164,7 +163,7 @@
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
                                     <Image Grid.Column="0" VerticalAlignment="Center" Source="{Binding Path=Category.Icon}" Margin="0,0,10,0" Stretch="Uniform" Height="35" />
-                                    <TextBlock Grid.ColumnSpan="2" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold" Foreground="#f2f2f2" Text="{Binding Path=CategoryName}" >
+                                    <TextBlock FontFamily="{StaticResource AnekLatin}" Grid.ColumnSpan="2" VerticalAlignment="Center" FontSize="20" FontWeight="SemiBold" Foreground="#f2f2f2" Text="{Binding Path=CategoryName}" >
                                         <TextBlock.Style>
                                             <Style TargetType="{x:Type TextBlock}">
                                                 <Setter Property="Grid.Column" Value="0"/>
@@ -202,10 +201,10 @@
                             <Border.Background>
                                 <SolidColorBrush Color="#101010" Opacity="0.9"/>
                             </Border.Background>
-                            <TextBlock Margin="10" Text="{Binding Path=Description}" Foreground="#f2f2f2" TextWrapping="Wrap" FontSize="18" VerticalAlignment="Center" />
+                            <TextBlock FontFamily="{StaticResource AnekLatin}" Margin="10" Text="{Binding Path=Description}" Foreground="#f2f2f2" TextWrapping="Wrap" FontSize="20" VerticalAlignment="Center" />
                         </Border>
                     </Popup>
-                    <TextBlock Name="Desc" Margin="5,0,5,2" TextWrapping="Wrap" Grid.Row="3" Height="50" TextTrimming="WordEllipsis" Background="Transparent" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=Description}"/>
+                    <TextBlock Name="Desc" FontFamily="{StaticResource AnekLatin}" Margin="5,0,5,2" TextWrapping="Wrap" Grid.Row="3" Height="50" TextTrimming="WordEllipsis" Background="Transparent" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=Description}"/>
                     <StackPanel Grid.Row="6" Margin="0,0,0,5"  HorizontalAlignment="Center" VerticalAlignment="Center">
                         <StackPanel Background="Transparent" Name="DateAddedPanel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" >
                             <StackPanel.Style>
@@ -219,7 +218,7 @@
                                 </Style>
                             </StackPanel.Style>
                             <fa5:ImageAwesome Name="DateAddedIcon" Margin="0,0,5,0" Height="15" Icon="Solid_Plus" Foreground="#f2f2f2"/>
-                            <TextBlock Name="DateAddedText" Margin="5,0,0,0" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=DateAddedFormatted}" />
+                            <TextBlock Name="DateAddedText" FontFamily="{StaticResource AnekLatin}" Margin="5,0,0,0" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=DateAddedFormatted}" />
                         </StackPanel>
                         <StackPanel Background="Transparent" Name="DateUpdatedPanel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center"  >
                             <StackPanel.Style>
@@ -233,7 +232,7 @@
                                 </Style>
                             </StackPanel.Style>
                             <fa5:ImageAwesome Name="DateUpdatedIcon" Margin="0,0,5,0" Height="15" Icon="Solid_Sync" Foreground="#f2f2f2"/>
-                            <TextBlock Name="DateUpdatedText" Margin="5,0,0,0" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=DateUpdatedAgo}"/>
+                            <TextBlock Name="DateUpdatedText" FontFamily="{StaticResource AnekLatin}" Margin="5,0,0,0" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=DateUpdatedAgo}"/>
                         </StackPanel>
                     </StackPanel>
                     <Popup PlacementTarget="{Binding ElementName=DateAddedPanel}" HorizontalAlignment="Center" AllowsTransparency="True">
@@ -259,7 +258,7 @@
                             <Border.Background>
                                 <SolidColorBrush Color="#101010" Opacity="0.9"/>
                             </Border.Background>
-                            <TextBlock Margin="10" Foreground="#f2f2f2" FontWeight="Medium" FontSize="18" VerticalAlignment="Center" Text="{Binding Path=DateAdded,StringFormat={}Added {0}}"/>
+                            <TextBlock Margin="10" FontFamily="{StaticResource AnekLatin}" Foreground="#f2f2f2" FontWeight="Medium" FontSize="20" VerticalAlignment="Center" Text="{Binding Path=DateAdded,StringFormat={}Added {0}}"/>
                         </Border>
                     </Popup>
                     <Popup PlacementTarget="{Binding ElementName=DateUpdatedPanel}" HorizontalAlignment="Center" AllowsTransparency="True">
@@ -285,16 +284,16 @@
                             <Border.Background>
                                 <SolidColorBrush Color="#101010" Opacity="0.9"/>
                             </Border.Background>
-                            <TextBlock Margin="10" Foreground="#f2f2f2" FontWeight="Medium" FontSize="18" VerticalAlignment="Center" Text="{Binding Path=DateUpdated,StringFormat={}Updated {0}}"/>
+                            <TextBlock Margin="10" FontFamily="{StaticResource AnekLatin}" Foreground="#f2f2f2" FontWeight="Medium" FontSize="20" VerticalAlignment="Center" Text="{Binding Path=DateUpdated,StringFormat={}Updated {0}}"/>
                         </Border>
                     </Popup>
                     <StackPanel Name="StatPanel" Background="Transparent" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="4">
                         <fa5:ImageAwesome Name="DownloadIcon" Margin="0,0,5,0" Height="15" Icon="Solid_Download" Foreground="#f2f2f2"/>
-                        <TextBlock Name="DownloadText" Margin="5,0,10,0" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=DownloadString}" />
+                        <TextBlock Name="DownloadText" FontFamily="{StaticResource AnekLatin}" Margin="5,0,10,0" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=DownloadString}" />
                         <fa5:ImageAwesome Name="LikeIcon" Margin="5,0,5,0" Height="15" Icon="Solid_Heart" Foreground="#f2f2f2"/>
-                        <TextBlock Name="LikeText" Margin="5,0,10,0" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=LikeString}" />
+                        <TextBlock Name="LikeText" FontFamily="{StaticResource AnekLatin}" Margin="5,0,10,0" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=LikeString}" />
                         <fa5:ImageAwesome Name="ViewIcon" Margin="5,0,5,0" Height="15" Icon="Solid_Eye" Foreground="#f2f2f2"/>
-                        <TextBlock Name="ViewText" Margin="5,0,0,0" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=ViewString}" />
+                        <TextBlock Name="ViewText" FontFamily="{StaticResource AnekLatin}" Margin="5,0,0,0" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=ViewString}" />
                     </StackPanel>
                     <Popup PlacementTarget="{Binding ElementName=StatPanel}" HorizontalAlignment="Center" AllowsTransparency="True">
                         <Popup.Style>
@@ -323,7 +322,7 @@
                             <Border.Background>
                                 <SolidColorBrush Color="#101010" Opacity="0.9"/>
                             </Border.Background>
-                            <TextBlock Margin="10" Foreground="#f2f2f2" FontWeight="Medium" FontSize="18" VerticalAlignment="Center" >
+                            <TextBlock Margin="10" FontFamily="{StaticResource AnekLatin}" Foreground="#f2f2f2" FontWeight="Medium" FontSize="20" VerticalAlignment="Center" >
                                 <TextBlock.Text>
                                     <MultiBinding StringFormat="{}{0:N0} Downloads • {1:N0} Likes • {2:N0} Views">
                                         <Binding Path="Downloads"/>
@@ -339,8 +338,8 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Foreground="#f2f2f2" FontWeight="Medium" Height="30" Width="95" Background="#303030" BorderBrush="#353535" VerticalAlignment="Bottom" Content="More Info" Click="MoreInfo_Click"/>
-                        <Button Grid.Column="1" Foreground="#f2f2f2" FontWeight="Medium" Height="30" Width="95" Background="#303030" BorderBrush="#353535" VerticalAlignment="Top" Content="Download" IsEnabled="{Binding Path=Compatible}" Click="Download_Click"/>
+                        <Button Grid.Column="0" Foreground="#f2f2f2" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" Height="30" Width="95" Background="#303030" BorderBrush="#353535" VerticalAlignment="Bottom" Content="More Info" Click="MoreInfo_Click"/>
+                        <Button Grid.Column="1" Foreground="#f2f2f2" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" Height="30" Width="95" Background="#303030" BorderBrush="#353535" VerticalAlignment="Top" Content="Download" IsEnabled="{Binding Path=Compatible}" Click="Download_Click"/>
                     </Grid>
                 </Grid>
             </Border>
@@ -350,10 +349,10 @@
     <Grid>
         <StackPanel Panel.ZIndex="3" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.ColumnSpan="5">
             <StackPanel Background="Transparent" Margin="0,0,5,0" Orientation="Horizontal" Name="DiscordButton" PreviewMouseLeftButtonDown="Discord_Click" Cursor="Hand">
-                <fa5:ImageAwesome Icon="Brands_Discord" Height="27" Foreground="#f2f2f2"/>
-                <TextBlock Text="Join the Discord!" FontSize="18" Margin="5" Background="Transparent" Foreground="#f2f2f2" FontWeight="Medium"/>
+                <fa5:ImageAwesome Icon="Brands_Discord" Height="25" Foreground="#f2f2f2"/>
+                <TextBlock Text="Join the Discord!" FontSize="20" FontFamily="{StaticResource AnekLatin}" Margin="5" Background="Transparent" Foreground="#f2f2f2" FontWeight="Medium"/>
             </StackPanel>
-            <TextBox BorderThickness="0" FontSize="18" Margin="5" Background="Transparent" BorderBrush="Transparent" IsReadOnly="True" Foreground="#f2f2f2" FontWeight="Medium" Name="Stats" />
+            <TextBox BorderThickness="0" FontSize="20" FontFamily="{StaticResource AnekLatin}" Margin="5" Background="Transparent" BorderBrush="Transparent" IsReadOnly="True" Foreground="#f2f2f2" FontWeight="Medium" Name="Stats" />
         </StackPanel>
         <TabControl Grid.ColumnSpan="5" Background="#202020" BorderBrush="#353535">
             <TabControl.Resources>
@@ -373,7 +372,7 @@
                                         <ContentPresenter x:Name="ContentSite"
                                                           Width="Auto" Height="Auto"
                                                           Margin="8,3,8,3" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                          ContentSource="Header" TextElement.FontFamily="Arial" TextElement.FontWeight="Medium" TextElement.FontSize="15pt" TextElement.Foreground="#f2f2f2"/>
+                                                          ContentSource="Header" TextElement.FontFamily="{StaticResource AnekLatin}" TextElement.FontWeight="Medium" TextElement.FontSize="15pt" TextElement.Foreground="#f2f2f2"/>
                                     </Border>
                                 </Border>
                                 <ControlTemplate.Triggers>
@@ -395,7 +394,7 @@
                     </Setter>
                 </Style>
             </TabControl.Resources>
-            <TabItem Name="ModManager" Selector.Selected="OnManagerTabSelected" FontSize="18" HorizontalAlignment="Center" Header="Manage Mods">
+            <TabItem Name="ModManager" Selector.Selected="OnManagerTabSelected" FontSize="20" HorizontalAlignment="Center" Header="Manage Mods">
                 <TabItem.Content>
                     <Grid Name="MainGrid">
                         <Grid.RowDefinitions>
@@ -415,34 +414,34 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Margin="10,0,0,0" Name="GameBox" Height="35" MinWidth="55" Width="65" FontSize="18" FontWeight="Medium" SelectionChanged="GameBox_SelectionChanged" DropDownClosed="GameBox_DropDownClosed"
+                        <ComboBox Margin="10,0,0,0" Name="GameBox" Height="35" MinWidth="55" Width="65" FontSize="20" FontWeight="Medium" SelectionChanged="GameBox_SelectionChanged" DropDownClosed="GameBox_DropDownClosed"
                                   VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                             <ComboBoxItem IsSelected="True">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                     <Image Source="../Assets/Icons/mmplus.png" Width="27" Margin="4,0,10,0"/>
-                                    <TextBlock Text="Project DIVA Mega Mix+" VerticalAlignment="Center" FontWeight="Medium"/>
+                                    <TextBlock Text="Project DIVA Mega Mix+" FontFamily="{StaticResource AnekLatin}" VerticalAlignment="Center" FontWeight="Medium"/>
                                 </StackPanel>
                             </ComboBoxItem>
                         </ComboBox>
                         <Button Name="EditLoadoutsButton" Margin="0,0,10,0" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="2" Background="#181818" BorderBrush="#252525" Click="EditLoadouts_Click">
-                            <TextBlock Text="Edit Loadouts" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium"/>
+                            <TextBlock Text="Edit Loadouts" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontFamily="{StaticResource AnekLatin}" FontSize="20" FontWeight="Medium"/>
                         </Button>
                         <Button Name="ConfigButton" Margin="0,0,10,0" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="3" Background="#181818" BorderBrush="#252525" Click="Setup_Click">
-                            <TextBlock Text="Setup" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium"/>
+                            <TextBlock Text="Setup" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontFamily="{StaticResource AnekLatin}" FontSize="20" FontWeight="Medium"/>
                         </Button>
                         <Button Name="BuildButton" Margin="0,0,10,0" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="4" Background="#181818" BorderBrush="#252525" Click="Build_Click">
-                            <TextBlock Text="Save" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium"/>
+                            <TextBlock Text="Save" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontFamily="{StaticResource AnekLatin}" FontSize="20" FontWeight="Medium"/>
                         </Button>
-                        <Button Name="LaunchButton" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium" Content="Launch" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="5" Background="#181818" BorderBrush="#252525" Click="Launch_Click"/>
+                        <Button Name="LaunchButton" Foreground="#f2f2f2" FontSize="20" FontWeight="Medium" Content="Launch" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="5" Background="#181818" BorderBrush="#252525" Click="Launch_Click"/>
                         <Button Name="OpenModsButton" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="7" Background="#181818" BorderBrush="#252525" Click="CreateMod_Click">
-                            <TextBlock Text="Create Mod" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium"/>
+                            <TextBlock Text="Create Mod" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontFamily="{StaticResource AnekLatin}" FontSize="20" FontWeight="Medium"/>
                         </Button>
                         <Button FontWeight="Medium" Name="UpdateButton" Margin="0,0,10,0"  Height="34" VerticalAlignment="Center" Grid.Column="8" Background="#181818" BorderBrush="#252525"  Click="Update_Click">
-                            <TextBlock Text="Update" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontSize="18" FontWeight="Medium"/>
+                            <TextBlock Text="Update" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontFamily="{StaticResource AnekLatin}" FontSize="20" FontWeight="Medium"/>
                         </Button>
 
-                        <ComboBox Grid.Column="6" Margin="0,0,10,0" Height="35" FontSize="18" FontWeight="Medium" Name="LauncherOptionsBox" SelectionChanged="LauncherOptionsBox_SelectionChanged"/>
-                        <ComboBox Grid.Column="1" Margin="10,0,10,0" Height="35" FontSize="18" FontWeight="Medium" Name="LoadoutBox" SelectionChanged="LoadoutsBox_SelectionChanged"/>
+                        <ComboBox Grid.Column="6" Margin="0,0,10,0" Height="35" FontSize="20" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" Name="LauncherOptionsBox" SelectionChanged="LauncherOptionsBox_SelectionChanged"/>
+                        <ComboBox Grid.Column="1" Margin="10,0,10,0" Height="35" FontSize="20" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" Name="LoadoutBox" SelectionChanged="LoadoutsBox_SelectionChanged"/>
 
                         <Grid Name="MiddleGrid" Grid.Row="1" Grid.ColumnSpan="9">
                             <Grid.ColumnDefinitions>
@@ -459,8 +458,8 @@
                           CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" AlternatingRowBackground="#2A2A2A"
                           dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" HeadersVisibility="Column" 
                           SelectionMode="Extended" RowBackground="#202020" Foreground="#f2f2f2" LoadingRow="ModGrid_LoadingRow" HorizontalScrollBarVisibility="Hidden"
-                          HorizontalAlignment="Center" Background="#202020" Grid.Column="0" FontSize="12" PreviewKeyDown="ModGrid_PreviewKeyDown"
-                          ContextMenuOpening="ModGrid_ContextMenuOpening" SelectionChanged="ModGrid_SelectionChanged" ItemsSource="{Binding Path=., Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}">
+                          HorizontalAlignment="Center" Background="#202020" Grid.Column="0" FontSize="15" PreviewKeyDown="ModGrid_PreviewKeyDown"
+                          ContextMenuOpening="ModGrid_ContextMenuOpening" SelectionChanged="ModGrid_SelectionChanged"  FontFamily="{StaticResource AnekLatin}">
                                 <DataGrid.Resources>
                                     <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#115F58"/>
                                     <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#f2f2f2"/>
@@ -469,8 +468,8 @@
                                         <Setter Property="Background" Value="#303030" />
                                         <Setter Property="Foreground" Value="#f2f2f2"/>
                                         <Setter Property="Height" Value="17"/>
-                                        <Setter Property="FontSize" Value="12"/>
-                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                        <Setter Property="FontSize" Value="15"/>
+                                        <Setter Property="FontWeight" Value="Medium"/>
                                     </Style>
                                 </DataGrid.Resources>
                                 <DataGrid.ColumnHeaderStyle>
@@ -478,8 +477,8 @@
                                         <Setter Property="Background" Value="#303030" />
                                         <Setter Property="Foreground" Value="#f2f2f2"/>
                                         <Setter Property="Height" Value="17"/>
-                                        <Setter Property="FontSize" Value="12"/>
-                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                        <Setter Property="FontSize" Value="15"/>
+                                        <Setter Property="FontWeight" Value="Medium"/>
                                         <EventSetter Event="Click" Handler="SortAlphabeticallyAndGroupEnabled_Click"/>
                                     </Style>
                                 </DataGrid.ColumnHeaderStyle>
@@ -493,7 +492,7 @@
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
                                 <DataGrid.Columns>
-                                    <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding enabled, Mode=TwoWay}" IsReadOnly="False" Width="52">
+                                    <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding enabled, Mode=TwoWay}" IsReadOnly="False" Width="58">
                                         <DataGridCheckBoxColumn.CellStyle>
                                             <Style TargetType="DataGridCell">
                                                 <EventSetter Event="CheckBox.Checked" Handler="OnChecked"/>
@@ -524,7 +523,7 @@
                                 </Image>
 
                                 <Image Grid.Row="0" gif:ImageBehavior.AnimatedSource="../Assets/load.gif" Panel.ZIndex="-1" VerticalAlignment="Center" HorizontalAlignment="Center" Height="90"/>
-                                <RichTextBox FontSize="12" Padding="10" Grid.Row="1" Margin="3,5,10,3" Name="DescriptionWindow" Foreground="#F2F2F2" Background="#202020" BorderBrush="#424242" ClipToBounds="False"
+                                <RichTextBox FontSize="15" FontFamily="{StaticResource AnekLatin}" Padding="10" Grid.Row="1" Margin="3,5,10,3" Name="DescriptionWindow" Foreground="#F2F2F2" Background="#202020" BorderBrush="#424242" ClipToBounds="False"
                      VerticalContentAlignment="Center" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" IsReadOnly="True" Grid.ColumnSpan="5" IsDocumentEnabled="True"
                              FontWeight="Medium"/>
                             </Grid>
@@ -541,7 +540,7 @@
                     </Grid>
                 </TabItem.Content>
             </TabItem>
-            <TabItem Name="ModBrowser" Selector.Selected="OnBrowserTabSelected" FontSize="18" HorizontalAlignment="Center" Header="Browse Mods">
+            <TabItem Name="ModBrowser" Selector.Selected="OnBrowserTabSelected" FontSize="20" HorizontalAlignment="Center" Header="Browse Mods">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="50"/>
@@ -579,16 +578,16 @@
                                         <ColumnDefinition/>
                                         <ColumnDefinition Width="0.15*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Button HorizontalAlignment="Right" VerticalAlignment="Center" Click="ImageLeft_Click" Name="BigImageLeft" Content="&lt;" Height="50" Width="50" FontWeight="SemiBold" FontSize="20"/>
+                                    <Button HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="{StaticResource AnekLatin}" Click="ImageLeft_Click" Name="BigImageLeft" Content="&lt;" Height="50" Width="50" FontWeight="SemiBold" FontSize="20"/>
                                     <Image Grid.Column="1" Name="BigScreenshot" Stretch="Uniform" Margin="20,0,20,0" VerticalAlignment="Center"/>
                                     <Image Grid.Column="1" gif:ImageBehavior.AnimatedSource="../Assets/load.gif" Panel.ZIndex="-1" VerticalAlignment="Center" HorizontalAlignment="Center" Height="90"/>
-                                    <Button Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Click="ImageRight_Click" Name="BigImageRight" Content=">" Height="50" Width="50" FontWeight="SemiBold" FontSize="20"/>
+                                    <Button Grid.Column="2" HorizontalAlignment="Left" FontFamily="{StaticResource AnekLatin}" VerticalAlignment="Center" Click="ImageRight_Click" Name="BigImageRight" Content=">" Height="50" Width="50" FontWeight="SemiBold" FontSize="20"/>
                                 </Grid>
-                                <TextBlock Name="BigCaptionText" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" FontSize="18" Foreground="#f2f2f2" Padding="5"/>
+                                <TextBlock Name="BigCaptionText" FontFamily="{StaticResource AnekLatin}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" FontSize="20" Foreground="#f2f2f2" Padding="5"/>
                             </StackPanel>
                         </Border>
                         <StackPanel Grid.ColumnSpan="2" Margin="20" Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Center">
-                            <Button Click="CloseMedia_Click" Content="Close" Height="50" Width="200" FontSize="20" FontWeight="SemiBold" Foreground="#f2f2f2">
+                            <Button Click="CloseMedia_Click" FontFamily="{StaticResource AnekLatin}" Content="Close" Height="50" Width="200" FontSize="20" FontWeight="SemiBold" Foreground="#f2f2f2">
                                 <Button.Resources>
                                     <Style TargetType="{x:Type Border}">
                                         <Setter Property="CornerRadius" Value="2"/>
@@ -617,7 +616,7 @@
                             </Border.Background>
                         </Border>
                         <Border Grid.ColumnSpan="2" BorderThickness="0">
-                            <TextBlock Grid.ColumnSpan="2" VerticalAlignment="Center" Text="{Binding Path=Title}" TextTrimming="WordEllipsis" Foreground="#f2f2f2" FontWeight="SemiBold" FontSize="40" Padding="6,3,3,3"/>
+                            <TextBlock Grid.ColumnSpan="2" FontFamily="{StaticResource AnekLatin}" VerticalAlignment="Center" Text="{Binding Path=Title}" TextTrimming="WordEllipsis" Foreground="#f2f2f2" FontWeight="SemiBold" FontSize="40" Padding="6,3,3,3"/>
                         </Border>
                         <StackPanel Name="ImagePanel" Visibility="Collapsed" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2">
                             <Grid HorizontalAlignment="Center" >
@@ -626,17 +625,17 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="0.15*"/>
                                 </Grid.ColumnDefinitions>
-                                <Button HorizontalAlignment="Right" VerticalAlignment="Center" Click="ImageLeft_Click" Name="ImageLeft" Content="&lt;" Height="50" Width="50" FontWeight="SemiBold" FontSize="20"/>
+                                <Button HorizontalAlignment="Right" VerticalAlignment="Center" Click="ImageLeft_Click" Name="ImageLeft" FontFamily="{StaticResource AnekLatin}" Content="&lt;" Height="50" Width="50" FontWeight="SemiBold" FontSize="20"/>
                                 <Image Grid.Column="1" Cursor="Hand" PreviewMouseLeftButtonDown="Image_Click" Name="Screenshot" Stretch="Uniform" MaxHeight="400" Margin="20,0,20,0" VerticalAlignment="Center"/>
                                 <Image Grid.Column="1" gif:ImageBehavior.AnimatedSource="../Assets/load.gif" Panel.ZIndex="-1" VerticalAlignment="Center" HorizontalAlignment="Center" Height="90"/>
-                                <Button Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Click="ImageRight_Click" Name="ImageRight" Content=">" Height="50" Width="50" FontWeight="SemiBold" FontSize="20"/>
+                                <Button Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Click="ImageRight_Click" Name="ImageRight" FontFamily="{StaticResource AnekLatin}" Content=">" Height="50" Width="50" FontWeight="SemiBold" FontSize="20"/>
                             </Grid>
-                            <TextBlock Name="CaptionText" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" FontSize="18" Foreground="#f2f2f2" Padding="5"/>
+                            <TextBlock Name="CaptionText" FontFamily="{StaticResource AnekLatin}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" FontSize="20" Foreground="#f2f2f2" Padding="5"/>
                         </StackPanel>
                         <Border Grid.Row="1" Grid.ColumnSpan="2" Background="#404040"/>
-                        <RichTextBox Margin="5" Name="DescText" Grid.Row="2" Background="Transparent" BorderThickness="0" IsDocumentEnabled="True" VerticalScrollBarVisibility="Auto" IsReadOnly="True" Foreground="#f2f2f2" Padding="10,0,10,10" FontSize="18"/>
+                        <RichTextBox Margin="5" Name="DescText" Grid.Row="2" FontFamily="{StaticResource AnekLatin}" Background="Transparent" BorderThickness="0" IsDocumentEnabled="True" VerticalScrollBarVisibility="Auto" IsReadOnly="True" Foreground="#f2f2f2" Padding="10,0,10,10" FontSize="20"/>
                         <StackPanel Grid.ColumnSpan="2" Margin="20" Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Center">
-                            <Button Name="AltButton" Click="AltDownload_Click" Content="Alt. Downloads" IsEnabled="{Binding Path=Compatible}" Margin="0,0,20,0" Height="50" Width="200" FontSize="20" FontWeight="SemiBold" Foreground="#f2f2f2">
+                            <Button Name="AltButton" FontFamily="{StaticResource AnekLatin}" Click="AltDownload_Click" Content="Alt. Downloads" IsEnabled="{Binding Path=Compatible}" Margin="0,0,20,0" Height="50" Width="200" FontSize="25" FontWeight="SemiBold" Foreground="#f2f2f2">
                                 <Button.Resources>
                                     <Style TargetType="{x:Type Border}">
                                         <Setter Property="CornerRadius" Value="2"/>
@@ -644,7 +643,7 @@
                                 </Button.Resources>
                             </Button>
                             <Border Name="DownloadButton" Margin="0,0,20,0" Height="50" Width="200" CornerRadius="2" Background="#006ac1">
-                                <Button Margin="3" Click="Download_Click" Content="Download" IsEnabled="{Binding Path=Compatible}" FontSize="20" FontWeight="SemiBold" Foreground="#f2f2f2">
+                                <Button Margin="3" Click="Download_Click" Content="Download" FontFamily="{StaticResource AnekLatin}" IsEnabled="{Binding Path=Compatible}" FontSize="25" FontWeight="SemiBold" Foreground="#f2f2f2">
                                     <Button.Resources>
                                         <Style TargetType="{x:Type Border}">
                                             <Setter Property="CornerRadius" Value="2"/>
@@ -652,14 +651,14 @@
                                     </Button.Resources>
                                 </Button>
                             </Border>
-                            <Button Name="HomepageButton" Click="Homepage_Click" Margin="0,0,20,0" Height="50" Width="200" FontSize="20" FontWeight="SemiBold" Foreground="#f2f2f2">
+                            <Button Name="HomepageButton" FontFamily="{StaticResource AnekLatin}" Click="Homepage_Click" Margin="0,0,20,0" Height="50" Width="200" FontSize="25" FontWeight="SemiBold" Foreground="#f2f2f2">
                                 <Button.Resources>
                                     <Style TargetType="{x:Type Border}">
                                         <Setter Property="CornerRadius" Value="2"/>
                                     </Style>
                                 </Button.Resources>
                             </Button>
-                            <Button Click="CloseDesc_Click" Content="Close" Height="50" Width="200" FontSize="20" FontWeight="SemiBold" Foreground="#f2f2f2">
+                            <Button Click="CloseDesc_Click" FontFamily="{StaticResource AnekLatin}" Content="Close" Height="50" Width="200" FontSize="25" FontWeight="SemiBold" Foreground="#f2f2f2">
                                 <Button.Resources>
                                     <Style TargetType="{x:Type Border}">
                                         <Setter Property="CornerRadius" Value="2"/>
@@ -668,16 +667,16 @@
                             </Button>
                         </StackPanel>
                     </Grid>
-                    <ComboBox Margin="10,0,0,0" IsEnabled="False" Name="GameFilterBox" Height="35" Width="65" HorizontalAlignment="Stretch" FontSize="18" FontWeight="Medium" SelectionChanged="GameFilterSelectionChanged">
+                    <ComboBox Margin="10,0,0,0" IsEnabled="False" Name="GameFilterBox" Height="35" Width="65" HorizontalAlignment="Stretch" FontSize="20" FontWeight="Medium" SelectionChanged="GameFilterSelectionChanged">
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <Image Source="../Assets/Icons/mmplus.png" Width="27" Margin="4,0,10,0"/>
-                                <TextBlock Text="Project DIVA Mega Mix+" VerticalAlignment="Center" FontWeight="Medium"/>
+                                <TextBlock Text="Project DIVA Mega Mix+" FontFamily="{StaticResource AnekLatin}" VerticalAlignment="Center" FontWeight="Medium"/>
                             </StackPanel>
                         </ComboBoxItem>
                     </ComboBox>
-                    <ComboBox Margin="5,0,0,0" Grid.Column="1" IsEnabled="False" Name="FilterBox" Height="35" MinWidth="130" HorizontalAlignment="Stretch" FontSize="18"  FontWeight="Medium" SelectionChanged="FilterSelectionChanged"/>
-                    <ComboBox Margin="5,0,0,0" Grid.Column="2" IsEnabled="False" FontWeight="Medium" FontSize="18" Name="TypeBox" Height="35" HorizontalAlignment="Stretch" MinWidth="100" SelectionChanged="TypeFilterSelectionChanged">
+                    <ComboBox Margin="5,0,0,0" Grid.Column="1" IsEnabled="False" FontFamily="{StaticResource AnekLatin}" Name="FilterBox" Height="35" MinWidth="130" HorizontalAlignment="Stretch" FontSize="20"  FontWeight="Medium" SelectionChanged="FilterSelectionChanged"/>
+                    <ComboBox Margin="5,0,0,0" Grid.Column="2" IsEnabled="False" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" FontSize="20" Name="TypeBox" Height="35" HorizontalAlignment="Stretch" MinWidth="100" SelectionChanged="TypeFilterSelectionChanged">
                         <ComboBoxItem xml:space="preserve" IsSelected="True"> Mods</ComboBoxItem>
                         <ComboBoxItem xml:space="preserve"> WiPs</ComboBoxItem>
                         <ComboBoxItem xml:space="preserve"> Sounds</ComboBoxItem>
@@ -687,7 +686,7 @@
                             <DataTemplate >
                                 <StackPanel Orientation="Horizontal">
                                     <Image Margin="0,0,5,0" VerticalAlignment="Center" Height="25" Source="{Binding Path=Icon}"/>
-                                    <TextBlock VerticalAlignment="Center" FontSize="15" FontWeight="Medium" Text="{Binding Path=Name}"/>
+                                    <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource AnekLatin}" FontSize="20" FontWeight="Medium" Text="{Binding Path=Name}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
@@ -697,13 +696,13 @@
                             <DataTemplate >
                                 <StackPanel Orientation="Horizontal">
                                     <Image Margin="0,0,5,0" VerticalAlignment="Center" Height="25" Source="{Binding Path=Icon}"/>
-                                    <TextBlock VerticalAlignment="Center" FontSize="15" FontWeight="Medium" Text="{Binding Path=Name}"/>
+                                    <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource AnekLatin}" FontSize="20" FontWeight="Medium" Text="{Binding Path=Name}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                    <TextBox Margin="5,0,35,0" Padding="4,0,0,0" Grid.Column="5" IsEnabled="False" KeyDown="SearchBar_KeyDown" Name="SearchBar" Height="35" MinWidth="200" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
-                    <TextBlock Margin="5,0,35,0" Padding="7,5.5,3,3" Grid.Column="5" IsHitTestVisible="False" Height="35" MinWidth="200" HorizontalAlignment="Left" Text="Search..." VerticalAlignment="Center" Foreground="#303030">
+                    <TextBox Margin="5,0,35,0" Padding="4,0,0,0" Grid.Column="5" FontFamily="{StaticResource AnekLatin}" IsEnabled="False" KeyDown="SearchBar_KeyDown" Name="SearchBar" Height="35" MinWidth="200" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+                    <TextBlock Margin="5,0,35,0" Padding="7,8,3,3" Grid.Column="5" FontFamily="{StaticResource AnekLatin}" IsHitTestVisible="False" Height="35" MinWidth="200" HorizontalAlignment="Left" Text="Search..." VerticalAlignment="Center" Foreground="#303030">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>
@@ -719,7 +718,7 @@
                     </Button>
                     <StackPanel Grid.Column="6" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5,0,0,0" >
                         <CheckBox Name="NSFWCheckbox" IsEnabled="False" Unchecked="NSFWCheckbox_Checked" Checked="NSFWCheckbox_Checked"  Margin="0,0,5,0" VerticalAlignment="Center" />
-                        <TextBlock Foreground="#f2f2f2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" FontWeight="Medium">
+                        <TextBlock Foreground="#f2f2f2" FontFamily="{StaticResource AnekLatin}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontWeight="Medium">
                             Include<LineBreak/>
                             NSFW
                         </TextBlock>
@@ -733,27 +732,27 @@
                             <Border.Background>
                                 <SolidColorBrush Color="#101010" Opacity="0.9"/>
                             </Border.Background>
-                            <TextBlock Margin="10" Text="Go to gamebanana.com" Foreground="#f2f2f2" FontWeight="Medium" FontSize="18" VerticalAlignment="Center" />
+                            <TextBlock Margin="10" FontFamily="{StaticResource AnekLatin}" Text="Go to gamebanana.com" Foreground="#f2f2f2" FontWeight="Medium" FontSize="20" VerticalAlignment="Center" />
                         </Border>
                     </Popup>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.ColumnSpan="8" Grid.Row="2">
-                        <Button IsEnabled="False" Name="PageLeft" Click="DecrementPage" Content="&lt;" HorizontalAlignment="Right" Margin="0,0,15,0" FontSize="18" FontWeight="Medium"  Height="35" Width="35" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2"/>
-                        <TextBlock Name="Page" Text="Page 1" Foreground="#f2f2f2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="18" FontWeight="Medium" />
-                        <Button IsEnabled="False" Name="PageRight" Click="IncrementPage" Content=">" HorizontalAlignment="Left" Margin="15,0,0,0" FontSize="18" FontWeight="Medium" Height="35" Width="35" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2"/>
-                        <ComboBox IsEnabled="False" Margin="15,0,15,0" Name="PageBox" SelectionChanged="PageBox_SelectionChanged" Height="35" VerticalAlignment="Center"/>
+                        <Button IsEnabled="False" FontFamily="{StaticResource AnekLatin}" Name="PageLeft" Click="DecrementPage" Content="&lt;" HorizontalAlignment="Right" Margin="0,0,15,0" FontSize="20" FontWeight="Medium"  Height="35" Width="35" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2"/>
+                        <TextBlock Name="Page" Text="Page 1" Foreground="#f2f2f2" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="{StaticResource AnekLatin}" FontSize="20" FontWeight="Medium" />
+                        <Button IsEnabled="False" FontFamily="{StaticResource AnekLatin}" Name="PageRight" Click="IncrementPage" Content=">" HorizontalAlignment="Left" Margin="15,0,0,0" FontSize="20" FontWeight="Medium" Height="35" Width="35" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2"/>
+                        <ComboBox IsEnabled="False" Margin="15,0,15,0" FontFamily="{StaticResource AnekLatin}" Name="PageBox" SelectionChanged="PageBox_SelectionChanged" Height="35" VerticalAlignment="Center"/>
                     </StackPanel>
                     <StackPanel Margin="5,5,10,5" Grid.ColumnSpan="8" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
-                        <Button Margin="0,0,15,0" Click="ClearCache" Name="ClearCacheButton" Content="Refresh" HorizontalAlignment="center" FontSize="18" FontWeight="Medium"  Height="35" Width="80" Background="#181818" BorderBrush="#252525" IsEnabled="False" Foreground="#f2f2f2">
+                        <Button Margin="0,0,15,0" Click="ClearCache" Name="ClearCacheButton" Content="Refresh" HorizontalAlignment="center" FontFamily="{StaticResource AnekLatin}" FontSize="20" FontWeight="Medium"  Height="35" Width="80" Background="#181818" BorderBrush="#252525" IsEnabled="False" Foreground="#f2f2f2">
                             <Button.Resources>
                                 <Style TargetType="{x:Type Border}">
                                     <Setter Property="CornerRadius" Value="5"/>
                                 </Style>
                             </Button.Resources>
                         </Button>
-                        <TextBlock Margin="0,0,15,0" Foreground="#f2f2f2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="18" FontWeight="Medium">
+                        <TextBlock Margin="0,0,15,0" FontFamily="{StaticResource AnekLatin}" Foreground="#f2f2f2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontWeight="Medium">
                             Per Page:
                         </TextBlock>
-                        <ComboBox IsEnabled="False" Name="PerPageBox" SelectionChanged="PerPageSelectionChanged" Height="35" VerticalAlignment="Center">
+                        <ComboBox IsEnabled="False" FontFamily="{StaticResource AnekLatin}" Name="PerPageBox" SelectionChanged="PerPageSelectionChanged" Height="35" VerticalAlignment="Center">
                             <ComboBoxItem>10</ComboBoxItem>
                             <ComboBoxItem IsSelected="True">20</ComboBoxItem>
                             <ComboBoxItem>30</ComboBoxItem>
@@ -764,8 +763,8 @@
 
                     <Image Name="LoadingBar" Grid.ColumnSpan="8" Grid.Row="1" gif:ImageBehavior.AnimatedSource="../Assets/load.gif" Panel.ZIndex="1" VerticalAlignment="Center" HorizontalAlignment="Center" Height="150"/>
                     <StackPanel Name="ErrorPanel" Grid.ColumnSpan="8" Grid.Row="1" Panel.ZIndex="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock Name="BrowserMessage" HorizontalAlignment="Center"  Opacity="1" Background="Transparent" Foreground="#f2f2f2" FontWeight="Medium" TextWrapping="Wrap" Width="800" TextAlignment="Center" FontSize="25"/>
-                        <Button Margin="10" Click="BrowserRefresh" Name="BrowserRefreshButton" Content="Retry" HorizontalAlignment="center" FontSize="18" FontWeight="Medium"  Height="40" Width="140" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2">
+                        <TextBlock Name="BrowserMessage" HorizontalAlignment="Center" FontFamily="{StaticResource AnekLatin}" Opacity="1" Background="Transparent" Foreground="#f2f2f2" FontWeight="Medium" TextWrapping="Wrap" Width="800" TextAlignment="Center" FontSize="25"/>
+                        <Button Margin="10" Click="BrowserRefresh" Name="BrowserRefreshButton" Content="Retry" HorizontalAlignment="center" FontFamily="{StaticResource AnekLatin}" FontSize="20" FontWeight="Medium"  Height="40" Width="140" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2">
                             <Button.Resources>
                                 <Style TargetType="{x:Type Border}">
                                     <Setter Property="CornerRadius" Value="5"/>

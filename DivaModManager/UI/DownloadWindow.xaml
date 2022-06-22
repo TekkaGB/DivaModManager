@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DivaModManager" WindowStartupLocation="CenterScreen"
-        mc:Ignorable="d" Background="#202020" ResizeMode="NoResize"
+        mc:Ignorable="d" Background="#202020" ResizeMode="NoResize" FontFamily="{StaticResource AnekLatin}"
         Title="Download" SizeToContent="Height" Width="375">
     <Grid>
         <Grid.RowDefinitions>
@@ -17,10 +17,10 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <TextBlock Name="DownloadText" TextAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Center" FontSize="16" Foreground="#f2f2f2" TextWrapping="Wrap"/>
+        <TextBlock Name="DownloadText" TextAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center" FontWeight="SemiBold" HorizontalAlignment="Center" FontSize="16" Foreground="#f2f2f2" TextWrapping="Wrap"/>
         <Image Name="Preview" Width="350" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2"/>
-        <TextBlock Grid.ColumnSpan="2" Grid.Row="2" VerticalAlignment="Center" Text="Would you like to install?" Foreground="#f2f2f2" FontSize="16" FontWeight="Bold" TextAlignment="Center"/>
-        <Button Grid.Row="3" Grid.Column="0" Content="Yes" FontSize="16" FontWeight="Bold" Foreground="#f2f2f2" Background="#494949" Margin="20,5,20,5" Click="Yes_Click"/>
-        <Button Grid.Row="3" Grid.Column="1" Content="No" FontSize="16" FontWeight="Bold" Foreground="#f2f2f2" Background="#494949" Margin="20,5,20,5" Click="No_Click"/>
+        <TextBlock Grid.ColumnSpan="2" Grid.Row="2" VerticalAlignment="Center" Text="Would you like to install?" Foreground="#f2f2f2" FontSize="16" FontWeight="SemiBold" TextAlignment="Center"/>
+        <Button Grid.Row="3" Grid.Column="0" Content="Yes" FontSize="16" FontWeight="SemiBold" Foreground="#f2f2f2" Background="#494949" Margin="20,5,20,5" Click="Yes_Click"/>
+        <Button Grid.Row="3" Grid.Column="1" Content="No" FontSize="16" FontWeight="SemiBold" Foreground="#f2f2f2" Background="#494949" Margin="20,5,20,5" Click="No_Click"/>
     </Grid>
 </Window>

@@ -12,6 +12,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\AnekLatin-Medium.ttf" />
+    <None Remove="Assets\AnekLatin-Regular.ttf" />
+    <None Remove="Assets\AnekLatin-SemiBold.ttf" />
     <None Remove="Assets\dml.png" />
     <None Remove="Assets\Icons\mmplus.png" />
     <None Remove="Assets\load.gif" />
@@ -36,6 +39,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\AnekLatin-Medium.ttf" />
+    <Resource Include="Assets\AnekLatin-Regular.ttf" />
+    <Resource Include="Assets\AnekLatin-SemiBold.ttf" />
     <Resource Include="Assets\dml.png" />
     <Resource Include="Assets\GameBanana.png" />
     <Resource Include="Assets\Icons\mmplus.png" />
@@ -61,9 +67,6 @@
     <Page Update="UI\ConfigureModWindow.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="UI\LoadoutWindow.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="UI\FetchWindow.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>

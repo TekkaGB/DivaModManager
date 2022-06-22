@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DivaModManager" FocusManager.FocusedElement="{Binding ElementName=NameBox}"
-        mc:Ignorable="d" Background="#202020" WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d" Background="#202020" WindowStartupLocation="CenterScreen" FontFamily="{StaticResource AnekLatin}"
         Height="120" Width="500" MinHeight="120" MinWidth="500">
     <Grid>
         <Grid.RowDefinitions>
@@ -15,7 +15,7 @@
             <ColumnDefinition Width="50"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <TextBlock Foreground="#f2f2f2" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" >Name</TextBlock>
+        <TextBlock Foreground="#f2f2f2" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="SemiBold" >Name</TextBlock>
         <TextBox Name="NameBox" Height="20" Margin="0,0,15,0" Background="#303030" BorderBrush="#353535" Foreground="#f2f2f2" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" KeyDown="NameBox_KeyDown"/>
         <Grid Grid.Row="1" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>

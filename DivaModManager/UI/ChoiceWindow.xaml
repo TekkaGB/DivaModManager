@@ -7,7 +7,7 @@
         xmlns:fa5="http://schemas.fontawesome.com/icons/"
         mc:Ignorable="d"
         Title="Diva Mod Manager" WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize" Width="400"
+        ResizeMode="NoResize" Width="400" FontFamily="{StaticResource AnekLatin}"
         Background="#202020" ShowActivated="True" Closing="Window_Closing" SizeToContent="WidthAndHeight">
     <Window.Resources>
         <DataTemplate x:Key="ChoiceTemplate">
@@ -49,7 +49,7 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <Button Grid.Row="1" HorizontalContentAlignment="Stretch" Margin="5" Name="CancelButton" Content=" Cancel" FontSize="18" FontWeight="Bold" HorizontalAlignment="Stretch"  VerticalAlignment="Bottom" Height="40"  Background="#494949" Foreground="#f2f2f2" Click="CancelButton_Click">
+        <Button Grid.Row="1" HorizontalContentAlignment="Stretch" Margin="5" Name="CancelButton" Content=" Cancel" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Stretch"  VerticalAlignment="Bottom" Height="40"  Background="#494949" Foreground="#f2f2f2" Click="CancelButton_Click">
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="2"/>

@@ -5,6 +5,12 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    <FontFamily x:Key="Monospace">../Assets/#Roboto Mono</FontFamily>
+                    <FontFamily x:Key="AnekLatin">../Assets/#Anek Latin</FontFamily>
+                </ResourceDictionary>
                 <ResourceDictionary Source="Controls/Button.xaml"/>
                 <ResourceDictionary Source="Controls/ComboBox.xaml"/>
                 <ResourceDictionary Source="Controls/ScrollViewer.xaml"/>

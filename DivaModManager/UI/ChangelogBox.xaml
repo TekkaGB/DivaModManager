@@ -32,14 +32,14 @@
                             <Label 
                             Content="{Binding Category}"
                             Foreground="{Binding Category, Converter={StaticResource CategoryColorConverter}}"
-                            FontSize="15"
+                            FontSize="18" FontFamily="{StaticResource AnekLatin}"
                             Background="#3c4044"
                             VerticalAlignment="Center"
                             />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn IsReadOnly="True" Binding="{Binding Text}" MaxWidth="300">
+                <DataGridTextColumn IsReadOnly="True" FontFamily="{StaticResource AnekLatin}" FontSize="15" Binding="{Binding Text}" MaxWidth="300">
                     <DataGridTextColumn.ElementStyle>
                         <Style>
                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -79,16 +79,16 @@
         <ScrollViewer Grid.Row="4" MaxHeight="150" VerticalScrollBarVisibility="Auto">
         <TextBlock MaxWidth="500" Name="UpdateText" Padding="10" Foreground="White" VerticalAlignment="Center"  TextWrapping="Wrap" FontSize="15"/>
         </ScrollViewer>
-        <TextBlock MaxWidth="500" Grid.Row="5" Padding="10" Foreground="White" TextAlignment="Center" Text="Would you like to update?" VerticalAlignment="Center"  TextWrapping="Wrap" FontSize="15"/>
+        <TextBlock MaxWidth="500" FontFamily="{StaticResource AnekLatin}" Grid.Row="5" Padding="10" Foreground="White" TextAlignment="Center" Text="Would you like to update?" VerticalAlignment="Center"  TextWrapping="Wrap" FontSize="15"/>
         <Grid Grid.Row="6" Grid.Column="1" Margin="0, 0, 0, 15">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="YesButton" Content="Yes" Background="#494949" Foreground="#f2f2f2" Height="25" Width="80" VerticalAlignment="Center" HorizontalAlignment="Center" Click="YesButton_Click" IsDefault="True" Grid.Column="0"/>
-            <Button x:Name="NoButton" Content="No" Background="#494949" Foreground="#f2f2f2" Height="25" Width="80" VerticalAlignment="Center" HorizontalAlignment="Center" Click="NoButton_Click" Grid.Column="1"/>
-            <Button x:Name="SkipButton" Visibility="Collapsed" Content="Skip Update" Background="#494949" Foreground="#f2f2f2" Height="25" Width="80" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Skip_Button_Click" Grid.Column="2"/>
+            <Button x:Name="YesButton" FontFamily="{StaticResource AnekLatin}" Content="Yes" Background="#494949" Foreground="#f2f2f2" Height="25" Width="80" VerticalAlignment="Center" HorizontalAlignment="Center" Click="YesButton_Click" IsDefault="True" Grid.Column="0"/>
+            <Button x:Name="NoButton" FontFamily="{StaticResource AnekLatin}" Content="No" Background="#494949" Foreground="#f2f2f2" Height="25" Width="80" VerticalAlignment="Center" HorizontalAlignment="Center" Click="NoButton_Click" Grid.Column="1"/>
+            <Button x:Name="SkipButton" FontFamily="{StaticResource AnekLatin}" Visibility="Collapsed" Content="Skip Update" Background="#494949" Foreground="#f2f2f2" Height="25" Width="80" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Skip_Button_Click" Grid.Column="2"/>
         </Grid>
     </Grid>
 </Window>

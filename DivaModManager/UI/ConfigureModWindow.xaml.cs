@@ -50,6 +50,7 @@ namespace DivaModManager.UI
             }
             File.WriteAllText(configPath, ConfigBox.Text);
             Global.logger.WriteLine($"Successfully saved config!", LoggerType.Info);
+            Close();
         }
     }
 }

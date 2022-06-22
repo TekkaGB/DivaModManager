@@ -7,7 +7,7 @@
         xmlns:fa5="http://schemas.fontawesome.com/icons/"
         mc:Ignorable="d"
         Title="Diva Mod Manager" WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize" MinWidth="600" MaxWidth="750"
+        ResizeMode="NoResize" MinWidth="600" MaxWidth="750" FontFamily="{StaticResource AnekLatin}"
         Background="#202020" ShowActivated="True" Closing="Window_Closing" SizeToContent="WidthAndHeight">
     <Window.Resources>
         <DataTemplate x:Key="FileTemplate">
@@ -22,7 +22,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" FontSize="18" FontWeight="Bold" Foreground="#f2f2f2" Text="{Binding Path=Description}"/>
+                    <TextBlock Grid.Row="0" FontSize="18" FontWeight="SemiBold" Foreground="#f2f2f2" Text="{Binding Path=Description}"/>
                     <TextBlock Grid.Row="1" FontSize="13" TextWrapping="WrapWithOverflow" Foreground="#a2a2a2" Text="{Binding Path=Url}"/>
                 </Grid>
             </Button>
@@ -38,11 +38,11 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Padding="10,2,10,2" Background="Transparent" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25" FontWeight="Bold" TextWrapping="Wrap" Name="TitleBox"/>
+        <TextBlock Grid.Row="0" Padding="10,2,10,2" Background="Transparent" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25" FontWeight="SemiBold" TextWrapping="Wrap" Name="TitleBox"/>
         <TextBlock Name="Description" Grid.Row="1" TextWrapping="Wrap" Margin="10,2,10,2" Background="Transparent" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16"/>
-        <TextBox BorderThickness="0" IsReadOnly="True" Name="PathText" Grid.Row="2" TextWrapping="WrapWithOverflow" FontWeight="Bold" Margin="8,0,8,0" TextAlignment="Left" Background="Transparent" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16"/>
+        <TextBox BorderThickness="0" IsReadOnly="True" Name="PathText" Grid.Row="2" TextWrapping="WrapWithOverflow" FontWeight="SemiBold" Margin="8,0,8,0" TextAlignment="Left" Background="Transparent" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16"/>
         <TextBlock Name="FetchDescription" Grid.Row="3" TextWrapping="Wrap" Margin="10,2,10,2" Background="Transparent" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16"/>
-        <TextBox BorderThickness="0" IsReadOnly="True" Name="UrlText" Grid.Row="4" TextWrapping="WrapWithOverflow" FontWeight="Bold" Margin="8,0,8,0" TextAlignment="Left" Background="Transparent" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16"/>
+        <TextBox BorderThickness="0" IsReadOnly="True" Name="UrlText" Grid.Row="4" TextWrapping="WrapWithOverflow" FontWeight="SemiBold" Margin="8,0,8,0" TextAlignment="Left" Background="Transparent" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16"/>
         <ListView MaxHeight="500" Style="{StaticResource ListviewStyle}" Name="FileList" Grid.Row="5" Background="Transparent" BorderThickness="0" ItemTemplate="{StaticResource FileTemplate}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
@@ -59,7 +59,7 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <Button Grid.Row="6" HorizontalContentAlignment="Stretch" Margin="5" Name="CancelButton" Content=" Cancel" FontSize="18" FontWeight="Bold" HorizontalAlignment="Stretch"  VerticalAlignment="Bottom" Height="40"  Background="#494949" Foreground="#f2f2f2" Click="CancelButton_Click">
+        <Button Grid.Row="6" HorizontalContentAlignment="Stretch" Margin="5" Name="CancelButton" Content=" Cancel" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Stretch"  VerticalAlignment="Bottom" Height="40"  Background="#494949" Foreground="#f2f2f2" Click="CancelButton_Click">
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="2"/>

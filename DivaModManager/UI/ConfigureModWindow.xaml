@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:DivaModManager.UI"
         mc:Ignorable="d"
         Title="Diva Mod Manager" WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize" MinWidth="400" MaxWidth="750"
+        ResizeMode="NoResize" MinWidth="400" MaxWidth="550"
         Background="#202020" ShowActivated="True" SizeToContent="WidthAndHeight">
     <Window.Resources>
         <local:FileNameConverter x:Key="FileNameConverter"/>
@@ -37,15 +37,15 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <TextBox Name="ConfigBox" AcceptsReturn="True" Height="400" Grid.ColumnSpan="2" Background="#303030" BorderBrush="#353535" Foreground="#f2f2f2" Margin="5" ClipToBounds="False" VerticalScrollBarVisibility="Auto"/>
-        <Button Grid.Row="1" Grid.Column="1" HorizontalContentAlignment="Stretch" Margin="5" Name="CloseButton" Content=" Close" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Stretch"  VerticalAlignment="Center" Height="30"  Background="#494949" Foreground="#f2f2f2" Click="CloseButton_Click">
+        <TextBox Name="ConfigBox" FontFamily="{StaticResource Monospace}" TextWrapping="Wrap" AcceptsReturn="True" Height="400" Grid.ColumnSpan="2" Background="#303030" BorderBrush="#353535" Foreground="#f2f2f2" Margin="5" ClipToBounds="False" VerticalScrollBarVisibility="Auto"/>
+        <Button Grid.Row="1" Grid.Column="1" FontFamily="{StaticResource AnekLatin}" HorizontalContentAlignment="Stretch" Margin="5" Name="CloseButton" Content=" Close" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Stretch"  VerticalAlignment="Center" Height="30"  Background="#494949" Foreground="#f2f2f2" Click="CloseButton_Click">
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="2"/>
                 </Style>
             </Button.Resources>
         </Button>
-        <Button Grid.Row="1" Grid.Column="0" HorizontalContentAlignment="Stretch" Margin="5" Name="SaveButton" Content=" Save" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Stretch"  VerticalAlignment="Center" Height="30"  Background="#494949" Foreground="#f2f2f2" Click="SaveButton_Click">
+        <Button Grid.Row="1" Grid.Column="0" FontFamily="{StaticResource AnekLatin}" HorizontalContentAlignment="Stretch" Margin="5" Name="SaveButton" Content=" Save" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Stretch"  VerticalAlignment="Center" Height="30"  Background="#494949" Foreground="#f2f2f2" Click="SaveButton_Click">
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="2"/>

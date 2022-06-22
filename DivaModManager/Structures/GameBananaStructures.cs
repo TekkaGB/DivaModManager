@@ -195,7 +195,7 @@ namespace DivaModManager
         [JsonPropertyName("_sDescription")]
         public string Description { get; set; }
         [JsonIgnore]
-        public bool HasDescription => Description.Length > 100;
+        public bool HasDescription => Description.Length > 40;
         [JsonPropertyName("_sText")]
         public string Text { get; set; }
         [JsonIgnore]
