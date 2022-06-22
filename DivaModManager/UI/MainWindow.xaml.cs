@@ -24,6 +24,7 @@ using SharpCompress.Archives.SevenZip;
 using System.Threading;
 using WpfAnimatedGif;
 using System.Windows.Data;
+using Tomlyn.Model;
 
 namespace DivaModManager
 {
@@ -178,7 +179,6 @@ namespace DivaModManager
         private void OnModified(object sender, FileSystemEventArgs e)
         {
             Refresh();
-            Global.UpdateConfig();
             // Bring window to front after download is done
             App.Current.Dispatcher.Invoke((Action)delegate
             {
@@ -195,19 +195,59 @@ namespace DivaModManager
                 return;
             }
             var currentModDirectory = Global.config.Configs[Global.config.CurrentGame].ModsFolder;
-            // Add new folders found in Mods to the ModList
+            
             foreach (var mod in Directory.GetDirectories(currentModDirectory))
             {
+                // Add new folders found in Mods to the ModList
                 if (Global.ModList.ToList().Where(x => x.name == Path.GetFileName(mod)).Count() == 0)
                 {
                     Mod m = new Mod();
                     m.name = Path.GetFileName(mod);
-                    m.enabled = true;
+                    if (File.Exists($"{mod}{Global.s}config.toml"))
+                    {
+                        var configString = File.ReadAllText($"{mod}{Global.s}config.toml");
+                        var config = Toml.ToModel(configString);
+                        if (config.ContainsKey("enabled"))
+                            m.enabled = (bool)config["enabled"];
+                        else
+                        {
+                            // Add enabled field to be true if it doesn't exist
+                            m.enabled = true;
+                            config.Add("enabled", true);
+                            File.WriteAllText($"{mod}{Global.s}config.toml", Toml.FromModel(config));
+                        }
+                    }
+                    else
+                    {
+                        // Create config.toml with enabled field to be true
+                        m.enabled = true;
+                        TomlTable config = new();
+                        config.Add("enabled", true);
+                        File.WriteAllText($"{mod}{Global.s}config.toml", Toml.FromModel(config));
+                    }
                     App.Current.Dispatcher.Invoke((Action)delegate
                     {
                         Global.ModList.Add(m);
                     });
                     Global.logger.WriteLine($"Added {Path.GetFileName(mod)}", LoggerType.Info);
+                }
+                // Check if enabled field is changed in existing mods (different loadouts)
+                else
+                {
+                    var index = Global.ModList.ToList().FindIndex(x => x.name == Path.GetFileName(mod));
+                    TomlTable config;
+                    if (File.Exists($"{mod}{Global.s}config.toml"))
+                    {
+                        var configString = File.ReadAllText($"{mod}{Global.s}config.toml");
+                        config = Toml.ToModel(configString);
+                    }
+                    else
+                        config = new();
+                    if (config.ContainsKey("enabled"))
+                        config["enabled"] = Global.ModList[index].enabled;
+                    else
+                        config.Add("enabled", Global.ModList[index].enabled);
+                    File.WriteAllText($"{mod}{Global.s}config.toml", Toml.FromModel(config));
                 }
             }
             // Remove deleted folders that are still in the ModList
@@ -229,11 +269,16 @@ namespace DivaModManager
                 App.Current.Dispatcher.Invoke((Action)delegate
                 {
                     ModGrid.ItemsSource = Global.ModList;
-                    Stats.Text = $"{Global.ModList.Count} mods • {Directory.GetFiles(currentModDirectory, "*", SearchOption.AllDirectories).Length.ToString("N0")} files • " +
-                    $"{StringConverters.FormatSize(new DirectoryInfo(currentModDirectory).GetDirectorySize())} • v{version}";
+                    ModGrid.Items.Refresh();
+                    var stats = $"{Global.ModList.Count} mods • {Directory.GetFiles(currentModDirectory, "*", SearchOption.AllDirectories).Length.ToString("N0")} files • " +
+                    $"{StringConverters.FormatSize(new DirectoryInfo(currentModDirectory).GetDirectorySize())}";
+                    if (!String.IsNullOrEmpty(Global.config.Configs[Global.config.CurrentGame].ModLoaderVersion))
+                        stats += $" • DML v{Global.config.Configs[Global.config.CurrentGame].ModLoaderVersion}";
+                    stats += $" • DMM v{version}";
+                    Stats.Text = stats;
                 });
             });
-            Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout] = Global.ModList;
+            Global.UpdateConfig();
             Global.logger.WriteLine("Refreshed!", LoggerType.Info);
         }
 
@@ -251,7 +296,28 @@ namespace DivaModManager
                 foreach (var m in temp)
                 {
                     if (m.name == mod.name)
+                    {
                         m.enabled = true;
+                        var configPath = $"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{mod.name}{Global.s}config.toml";
+                        if (File.Exists(configPath))
+                        {
+                            var configString = File.ReadAllText(configPath);
+                            var config = Toml.ToModel(configString);
+                            if (config.ContainsKey("enabled"))
+                                config["enabled"] = true;
+                            else
+                                // Add enabled field to be true if it doesn't exist
+                                config.Add("enabled", true);
+                             File.WriteAllText(configPath, Toml.FromModel(config));
+                        }
+                        else
+                        {
+                            // Create config.toml with enabled field to be true
+                            TomlTable config = new();
+                            config.Add("enabled", true);
+                            File.WriteAllText(configPath, Toml.FromModel(config));
+                        }
+                    }
                 }
                 Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout] = new ObservableCollection<Mod>(temp);
                 Global.UpdateConfig();
@@ -270,7 +336,28 @@ namespace DivaModManager
                 foreach (var m in temp)
                 {
                     if (m.name == mod.name)
+                    {
                         m.enabled = false;
+                        var configPath = $"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{mod.name}{Global.s}config.toml";
+                        if (File.Exists(configPath))
+                        {
+                            var configString = File.ReadAllText(configPath);
+                            var config = Toml.ToModel(configString);
+                            if (config.ContainsKey("enabled"))
+                                config["enabled"] = false;
+                            else
+                                // Add enabled field to be false if it doesn't exist
+                                config.Add("enabled", false);
+                             File.WriteAllText(configPath, Toml.FromModel(config));
+                        }
+                        else
+                        {
+                            // Create config.toml with enabled field to be false
+                            TomlTable config = new();
+                            config.Add("enabled", false);
+                            File.WriteAllText(configPath, Toml.FromModel(config));
+                        }
+                    }
                 }
                 Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout] = new ObservableCollection<Mod>(temp);
                 Global.UpdateConfig();
@@ -1691,9 +1778,8 @@ namespace DivaModManager
                     Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout] = new();
 
                 Global.ModList = Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout];
-                Global.UpdateConfig();
-                Global.logger.WriteLine($"Loadout changed to {LoadoutBox.SelectedItem}", LoggerType.Info);
                 Refresh();
+                Global.logger.WriteLine($"Loadout changed to {LoadoutBox.SelectedItem}", LoggerType.Info);
             }
         }
         private void EditLoadouts_Click(object sender, RoutedEventArgs e)
@@ -1702,7 +1788,7 @@ namespace DivaModManager
             choices.Add(new Choice()
             {
                 OptionText = "Add New Loadout",
-                OptionSubText = "Adds a new loadout starting with all mods enabled in alphanumeric order",
+                OptionSubText = "Adds a new loadout starting with all mods in the same current enabled state in alphanumeric order",
                 Index = 0
             });
             choices.Add(new Choice()
@@ -1794,7 +1880,6 @@ namespace DivaModManager
                 ModsWatcher.Path = currentModDirectory;
                 Global.logger.WriteLine($"Game switched to {Global.config.CurrentGame}", LoggerType.Info);
                 Refresh();
-                Global.UpdateConfig();
                 if (String.IsNullOrEmpty(Global.config.Configs[Global.config.CurrentGame].ModsFolder)
                     || String.IsNullOrEmpty(Global.config.Configs[Global.config.CurrentGame].Launcher) || !File.Exists(Global.config.Configs[Global.config.CurrentGame].Launcher))
                 {

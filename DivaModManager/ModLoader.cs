@@ -21,7 +21,7 @@ namespace DivaModManager
                 priorityList.Add(mod.name);
             config["priority"] = priorityList.ToArray();
             File.WriteAllText(configPath, Toml.FromModel(config));
-            Global.logger.WriteLine("Finished building!", LoggerType.Info);
+            Global.logger.WriteLine("Finished saving!", LoggerType.Info);
         }
     }
 }
