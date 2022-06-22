@@ -304,8 +304,11 @@ namespace DivaModManager
                     await client.DownloadAsync(uri, fs, fileName, progress, cancellationToken.Token);
                 }
                 progressBox.Close();
-                ClearDirectory(mod);
-                await Task.Run(() => ExtractFile(fileName, mod, updateTime));
+                await Task.Run(() =>
+                {
+                    ClearDirectory(mod);
+                    ExtractFile(fileName, mod, updateTime);
+                });
             }
             catch (OperationCanceledException)
             {

@@ -42,7 +42,7 @@ namespace DivaModManager
                 }
                 if (UpdateAvailable(onlineVersion, localVersion))
                 {
-                    ChangelogBox notification = new ChangelogBox(release, "Diva Mod Manager", $"A new version of Diva Mod Manager is available (v{onlineVersion})!", null, false, true);
+                    ChangelogBox notification = new ChangelogBox(release, "Diva Mod Manager", $"A new version of Diva Mod Manager is available (v{onlineVersion})!", null, false);
                     notification.ShowDialog();
                     notification.Activate();
                     if (notification.YesNo)

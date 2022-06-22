@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\dml.png" />
     <None Remove="Assets\Icons\mmplus.png" />
     <None Remove="Assets\load.gif" />
     <None Remove="Assets\load.webp" />
@@ -34,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\dml.png" />
     <Resource Include="Assets\GameBanana.png" />
     <Resource Include="Assets\Icons\mmplus.png" />
     <Resource Include="Assets\load.gif" />
