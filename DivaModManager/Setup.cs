@@ -28,7 +28,7 @@ namespace DivaModManager
         private static GitHubClient client = new GitHubClient(new ProductHeaderValue("DivaModManager"));
         public static async Task<bool> CheckForDMLUpdate(CancellationTokenSource cancellationToken)
         {
-            var gameFolder = Path.GetDirectoryName(Global.config.Configs[Global.config.CurrentGame].ModsFolder);
+            var gameFolder = Path.GetDirectoryName(Global.config.Configs[Global.config.CurrentGame].Launcher);
             if (!File.Exists($"{gameFolder}{Global.s}config.toml") || !File.Exists($"{gameFolder}{Global.s}dinput8.dll"))
             {
                 Global.config.Configs[Global.config.CurrentGame].ModLoaderVersion = null;
@@ -132,7 +132,7 @@ namespace DivaModManager
                     await client.DownloadAsync(uri, fs, fileName, progress, cancellationToken.Token);
                 }
                 progressBox.Close();
-                var outputPath = Path.GetDirectoryName(Global.config.Configs[Global.config.CurrentGame].ModsFolder);
+                var outputPath = Path.GetDirectoryName(Global.config.Configs[Global.config.CurrentGame].Launcher);
                 await ExtractFile(downloadName, outputPath, version);
             }
             catch (OperationCanceledException)
@@ -307,7 +307,7 @@ namespace DivaModManager
                     return false;
             }
             var parent = Path.GetDirectoryName(defaultPath);
-            var ModsFolder = $"{parent}{Global.s}mods";
+            Global.config.Configs[Global.config.CurrentGame].Launcher = defaultPath;
             // Check for DML update
             if (!File.Exists($"{parent}{Global.s}config.toml")
                 || !File.Exists($"{parent}{Global.s}dinput8.dll"))
@@ -322,9 +322,9 @@ namespace DivaModManager
                 });
             if (!task.Result)
                 return false;
+            var ModsFolder = $"{parent}{Global.s}mods";
             Directory.CreateDirectory(ModsFolder);
             Global.config.Configs[Global.config.CurrentGame].ModsFolder = ModsFolder;
-            Global.config.Configs[Global.config.CurrentGame].Launcher = defaultPath;
             Global.UpdateConfig();
             return true;
         }
