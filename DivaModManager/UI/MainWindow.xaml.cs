@@ -1351,6 +1351,11 @@ namespace DivaModManager
             else
                 RefreshFilter();
         }
+        private void ClearCache(object sender, RoutedEventArgs e)
+        {
+            FeedGenerator.ClearCache();
+            RefreshFilter();
+        }
         private static bool filterSelect;
         private static bool searched = false;
         private async void RefreshFilter()
@@ -1367,6 +1372,7 @@ namespace DivaModManager
             PageRight.IsEnabled = false;
             PageBox.IsEnabled = false;
             PerPageBox.IsEnabled = false;
+            ClearCacheButton.IsEnabled = false;
             ErrorPanel.Visibility = Visibility.Collapsed;
             filterSelect = true;
             PageBox.SelectedValue = page;
@@ -1374,8 +1380,6 @@ namespace DivaModManager
             Page.Text = $"Page {page}";
             LoadingBar.Visibility = Visibility.Visible;
             FeedBox.Visibility = Visibility.Collapsed;
-            PageLeft.IsEnabled = false;
-            PageRight.IsEnabled = false;
             var search = searched ? SearchBar.Text : null;
             await FeedGenerator.GetFeed(page, (GameFilter)GameFilterBox.SelectedIndex, (TypeFilter)TypeBox.SelectedIndex, (FeedFilter)FilterBox.SelectedIndex, (GameBananaCategory)CatBox.SelectedItem,
                 (GameBananaCategory)SubCatBox.SelectedItem, (PerPageBox.SelectedIndex + 1) * 10, (bool)NSFWCheckbox.IsChecked, search);
@@ -1435,6 +1439,7 @@ namespace DivaModManager
             SearchBar.IsEnabled = true;
             SearchButton.IsEnabled = true;
             NSFWCheckbox.IsEnabled = true;
+            ClearCacheButton.IsEnabled = true;
         }
 
         private void FilterSelectionChanged(object sender, SelectionChangedEventArgs e)
