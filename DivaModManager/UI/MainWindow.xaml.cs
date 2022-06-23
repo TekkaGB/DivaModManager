@@ -959,7 +959,7 @@ namespace DivaModManager
                             para.Inlines.Add(image);
                         }
                         else
-                            para.Inlines.Add($"{metadata.submitter}\n");
+                            para.Inlines.Add($"{metadata.submitter}");
                         descFlow.Blocks.Add(para);
                     }
                 }
@@ -975,6 +975,7 @@ namespace DivaModManager
                         descFlow.Blocks.Add(init);
                     }
                     text = String.Empty;
+                    para = new Paragraph();
                     para.Inlines.Add("Category: ");
                     if (metadata.caticon != null && metadata.caticon.ToString().Length > 0)
                     {
