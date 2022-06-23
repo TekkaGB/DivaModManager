@@ -393,7 +393,7 @@ namespace DivaModManager
                 }
                 TomlTable oldConfig = null;
                 if (File.Exists($@"{output}{Global.s}config.toml"))
-                    oldConfig = Toml.ToModel(File.ReadAllText($@"{output}{Global.s}config.toml"));
+                    Toml.TryToModel(File.ReadAllText($@"{output}{Global.s}config.toml"), out oldConfig, out var diagnostics);
                 foreach (var folder in Directory.GetDirectories(ArchiveDestination, "*", SearchOption.AllDirectories).Where(x => File.Exists($@"{x}{Global.s}config.toml")))
                 {
                     MoveDirectory(folder, output);

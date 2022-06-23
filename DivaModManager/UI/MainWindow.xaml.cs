@@ -200,23 +200,35 @@ namespace DivaModManager
             
             foreach (var mod in Directory.GetDirectories(currentModDirectory))
             {
+                var configPath = $"{mod}{Global.s}config.toml";
                 // Add new folders found in Mods to the ModList
                 if (Global.ModList.ToList().Where(x => x.name == Path.GetFileName(mod)).Count() == 0)
                 {
                     Mod m = new Mod();
                     m.name = Path.GetFileName(mod);
-                    if (File.Exists($"{mod}{Global.s}config.toml"))
+                    if (File.Exists(configPath))
                     {
-                        var configString = File.ReadAllText($"{mod}{Global.s}config.toml");
-                        var config = Toml.ToModel(configString);
-                        if (config.ContainsKey("enabled"))
-                            m.enabled = (bool)config["enabled"];
+                        var configString = File.ReadAllText(configPath);
+                        if (Toml.TryToModel(configString, out TomlTable config, out var diagnostics))
+                        {
+                            if (config.ContainsKey("enabled"))
+                                m.enabled = (bool)config["enabled"];
+                            else
+                            {
+                                // Add enabled field to be true if it doesn't exist
+                                m.enabled = true;
+                                config.Add("enabled", true);
+                                File.WriteAllText(configPath, Toml.FromModel(config));
+                            }
+                        }
                         else
                         {
-                            // Add enabled field to be true if it doesn't exist
+                            Global.logger.WriteLine($"{diagnostics[0].Message} for {m.name}. Rewriting {configPath} with only enabled field", LoggerType.Warning);
+                            // Create config.toml with enabled field to be true if failed to parse
                             m.enabled = true;
+                            config = new();
                             config.Add("enabled", true);
-                            File.WriteAllText($"{mod}{Global.s}config.toml", Toml.FromModel(config));
+                            File.WriteAllText(configPath, Toml.FromModel(config));
                         }
                     }
                     else
@@ -225,7 +237,7 @@ namespace DivaModManager
                         m.enabled = true;
                         TomlTable config = new();
                         config.Add("enabled", true);
-                        File.WriteAllText($"{mod}{Global.s}config.toml", Toml.FromModel(config));
+                        File.WriteAllText(configPath, Toml.FromModel(config));
                     }
                     App.Current.Dispatcher.Invoke((Action)delegate
                     {
@@ -238,10 +250,14 @@ namespace DivaModManager
                 {
                     var index = Global.ModList.ToList().FindIndex(x => x.name == Path.GetFileName(mod));
                     TomlTable config;
-                    if (File.Exists($"{mod}{Global.s}config.toml"))
+                    if (File.Exists(configPath))
                     {
-                        var configString = File.ReadAllText($"{mod}{Global.s}config.toml");
-                        config = Toml.ToModel(configString);
+                        var configString = File.ReadAllText(configPath);
+                        if (!Toml.TryToModel(configString, out config, out var diagnostics))
+                        {
+                            Global.logger.WriteLine($"{diagnostics[0].Message} for {Global.ModList[index].name}. Rewriting {configPath} with only enabled field", LoggerType.Warning);
+                            config = new();
+                        }
                     }
                     else
                         config = new();
@@ -305,13 +321,23 @@ namespace DivaModManager
                         if (File.Exists(configPath))
                         {
                             var configString = File.ReadAllText(configPath);
-                            var config = Toml.ToModel(configString);
-                            if (config.ContainsKey("enabled"))
-                                config["enabled"] = true;
+                            if (Toml.TryToModel(configString, out TomlTable config, out var diagnostics))
+                            {
+                                if (config.ContainsKey("enabled"))
+                                    config["enabled"] = true;
+                                else
+                                    // Add enabled field to be true if it doesn't exist
+                                    config.Add("enabled", true);
+                                File.WriteAllText(configPath, Toml.FromModel(config));
+                            }
                             else
-                                // Add enabled field to be true if it doesn't exist
+                            {
+                                Global.logger.WriteLine($"{diagnostics[0].Message} for {mod.name}. Rewriting {configPath} with only enabled field", LoggerType.Warning);
+                                // Create config.toml with enabled field to be true if failed to parse
+                                config = new();
                                 config.Add("enabled", true);
-                             File.WriteAllText(configPath, Toml.FromModel(config));
+                                File.WriteAllText(configPath, Toml.FromModel(config));
+                            }
                         }
                         else
                         {
@@ -356,13 +382,23 @@ namespace DivaModManager
                         if (File.Exists(configPath))
                         {
                             var configString = File.ReadAllText(configPath);
-                            var config = Toml.ToModel(configString);
-                            if (config.ContainsKey("enabled"))
-                                config["enabled"] = false;
+                            if (Toml.TryToModel(configString, out TomlTable config, out var diagnostics))
+                            {
+                                if (config.ContainsKey("enabled"))
+                                    config["enabled"] = false;
+                                else
+                                    // Add enabled field to be true if it doesn't exist
+                                    config.Add("enabled", false);
+                                File.WriteAllText(configPath, Toml.FromModel(config));
+                            }
                             else
-                                // Add enabled field to be false if it doesn't exist
+                            {
+                                Global.logger.WriteLine($"{diagnostics[0].Message} for {mod.name}. Rewriting {configPath} with only enabled field", LoggerType.Warning);
+                                // Create config.toml with enabled field to be true if failed to parse
+                                config = new();
                                 config.Add("enabled", false);
-                             File.WriteAllText(configPath, Toml.FromModel(config));
+                                File.WriteAllText(configPath, Toml.FromModel(config));
+                            }
                         }
                         else
                         {
@@ -881,11 +917,19 @@ namespace DivaModManager
                     metadata = JsonSerializer.Deserialize<Metadata>(metadataString);
                 }
 
-                Tomlyn.Model.TomlTable config = null;
+                TomlTable config = null;
                 if (File.Exists($"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{mod}{Global.s}config.toml"))
                 {
-                    var configString = File.ReadAllText($"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{mod}{Global.s}config.toml");
-                    config = Toml.ToModel(configString);
+                    var configPath = $"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{mod}{Global.s}config.toml";
+                    var configString = File.ReadAllText(configPath);
+                    if (!Toml.TryToModel(configString, out config, out var diagnostics))
+                    {
+                        Global.logger.WriteLine($"{diagnostics[0].Message} for {mod}. Rewriting {configPath} with only enabled field", LoggerType.Warning);
+                        config = new();
+                        var enabled = Global.ModList.ToList().Find(x => x.name == mod).enabled;
+                        config.Add("enabled", enabled);
+                        File.WriteAllText(configPath, Toml.FromModel(config));
+                    }
                 }
 
                 var para = new Paragraph();

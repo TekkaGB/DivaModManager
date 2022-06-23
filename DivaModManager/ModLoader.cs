@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text.Json;
 using Tomlyn;
 using System.Threading.Tasks;
+using Tomlyn.Model;
 
 namespace DivaModManager
 {
@@ -37,7 +38,14 @@ namespace DivaModManager
                     }
                 }
             }
-            var config = Toml.ToModel(configString);
+            if (!Toml.TryToModel(configString, out TomlTable config, out var diagnostics))
+            {
+                // Create a new config if it failed to parse
+                config = new();
+                config.Add("enabled", true);
+                config.Add("console", false);
+                config.Add("mods", "mods");
+            }
             var priorityList = new List<string>();
             foreach (var mod in Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout].Where(x => x.enabled).ToList())
                 priorityList.Add(mod.name);
