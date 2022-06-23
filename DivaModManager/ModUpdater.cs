@@ -416,12 +416,18 @@ namespace DivaModManager
                 // Use all old config values that aren't metadata to be shown
                 if (oldConfig != null && File.Exists($@"{output}{Global.s}config.toml"))
                 {
-                    var newConfig = Toml.ToModel(File.ReadAllText($@"{output}{Global.s}config.toml"));
-                    foreach (var key in oldConfig.Keys)
+                    if (Toml.TryToModel(File.ReadAllText($@"{output}{Global.s}config.toml"), out TomlTable newConfig, out var diagnostics))
+                        foreach (var key in oldConfig.Keys)
+                        {
+                            if (key.ToLowerInvariant() != "name" && key.ToLowerInvariant() != "author" && key.ToLowerInvariant() != "version" &&
+                                key.ToLowerInvariant() != "date" && key.ToLowerInvariant() != "description" && newConfig.ContainsKey(key))
+                                newConfig[key] = oldConfig[key];
+                        }
+                    else
                     {
-                        if (key.ToLowerInvariant() != "name" && key.ToLowerInvariant() != "author" && key.ToLowerInvariant() != "version" &&
-                            key.ToLowerInvariant() != "date" && key.ToLowerInvariant() != "description" && newConfig.ContainsKey(key))
-                            newConfig[key] = oldConfig[key];
+                        Global.logger.WriteLine($"{diagnostics[0].Message} for {Path.GetFileName(output)}'s updated config.toml. Reusing former config.toml", LoggerType.Warning);
+                        // Reuse old config if new config failed to parse
+                        newConfig = oldConfig;
                     }
                     var configString = Toml.FromModel(newConfig);
                     File.WriteAllText($@"{output}{Global.s}config.toml", configString);
