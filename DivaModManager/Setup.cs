@@ -19,6 +19,8 @@ using Onova.Services;
 using SharpCompress.Archives.SevenZip;
 using SharpCompress.Readers;
 using SharpCompress.Common;
+using Tomlyn;
+using Tomlyn.Model;
 
 namespace DivaModManager
 {
@@ -322,7 +324,27 @@ namespace DivaModManager
                 });
             if (!task.Result)
                 return false;
-            var ModsFolder = $"{parent}{Global.s}mods";
+            if (Toml.TryToModel(File.ReadAllText($"{parent}{Global.s}config.toml"), out TomlTable config, out var diagnostics))
+            {
+                // Write default config.toml if mods field is missing for some reason
+                if (!config.ContainsKey("mods"))
+                {
+                    config["enabled"] = true;
+                    config["console"] = false;
+                    config["mods"] = "mods";
+                    File.WriteAllText($"{parent}{Global.s}config.toml", Toml.FromModel(config));
+                }
+            }
+            else
+            {
+                // Write default config.toml if failed to parse
+                config = new();
+                config.Add("enabled", true);
+                config.Add("console", false);
+                config.Add("mods", "mods");
+                File.WriteAllText($"{parent}{Global.s}config.toml", Toml.FromModel(config));
+            }
+            var ModsFolder = $"{parent}{Global.s}{config["mods"]}";
             Directory.CreateDirectory(ModsFolder);
             Global.config.Configs[Global.config.CurrentGame].ModsFolder = ModsFolder;
             Global.UpdateConfig();
