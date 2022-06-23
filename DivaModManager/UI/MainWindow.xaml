@@ -412,7 +412,6 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <ComboBox Margin="10,0,0,0" Name="GameBox" Height="35" MinWidth="55" Width="65" FontSize="20" FontWeight="Medium" SelectionChanged="GameBox_SelectionChanged" DropDownClosed="GameBox_DropDownClosed"
                                   VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center">
@@ -429,18 +428,15 @@
                         <Button Name="ConfigButton" Margin="0,0,10,0" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="3" Background="#181818" BorderBrush="#252525" Click="Setup_Click">
                             <TextBlock Text="Setup" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontFamily="{StaticResource AnekLatin}" FontSize="20" FontWeight="Medium"/>
                         </Button>
-                        <Button Name="BuildButton" Margin="0,0,10,0" Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="4" Background="#181818" BorderBrush="#252525" Click="Build_Click">
-                            <TextBlock Text="Save" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontFamily="{StaticResource AnekLatin}" FontSize="20" FontWeight="Medium"/>
-                        </Button>
-                        <Button Name="LaunchButton" Foreground="#f2f2f2" FontSize="20" FontWeight="Medium" Content="Launch" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="5" Background="#181818" BorderBrush="#252525" Click="Launch_Click"/>
-                        <Button Name="OpenModsButton" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="7" Background="#181818" BorderBrush="#252525" Click="CreateMod_Click">
+                        <Button Name="LaunchButton" Foreground="#f2f2f2" FontSize="20" FontWeight="Medium" Content="Launch" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="4" Background="#181818" BorderBrush="#252525" Click="Launch_Click"/>
+                        <Button Name="OpenModsButton" Margin="0,0,10,0" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="6" Background="#181818" BorderBrush="#252525" Click="CreateMod_Click">
                             <TextBlock Text="Create Mod" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontFamily="{StaticResource AnekLatin}" FontSize="20" FontWeight="Medium"/>
                         </Button>
-                        <Button FontWeight="Medium" Name="UpdateButton" Margin="0,0,10,0"  Height="34" VerticalAlignment="Center" Grid.Column="8" Background="#181818" BorderBrush="#252525"  Click="Update_Click">
+                        <Button FontWeight="Medium" Name="UpdateButton" Margin="0,0,10,0"  Height="34" VerticalAlignment="Center" Grid.Column="7" Background="#181818" BorderBrush="#252525"  Click="Update_Click">
                             <TextBlock Text="Update" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontFamily="{StaticResource AnekLatin}" FontSize="20" FontWeight="Medium"/>
                         </Button>
 
-                        <ComboBox Grid.Column="6" Margin="0,0,10,0" Height="35" FontSize="20" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" Name="LauncherOptionsBox" SelectionChanged="LauncherOptionsBox_SelectionChanged"/>
+                        <ComboBox Grid.Column="5" Margin="0,0,10,0" Height="35" FontSize="20" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" Name="LauncherOptionsBox" SelectionChanged="LauncherOptionsBox_SelectionChanged"/>
                         <ComboBox Grid.Column="1" Margin="10,0,10,0" Height="35" FontSize="20" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" Name="LoadoutBox" SelectionChanged="LoadoutsBox_SelectionChanged"/>
 
                         <Grid Name="MiddleGrid" Grid.Row="1" Grid.ColumnSpan="9">

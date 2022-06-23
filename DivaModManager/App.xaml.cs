@@ -61,7 +61,6 @@ namespace DivaModManager
             {
                 ((MainWindow)Current.MainWindow).ModGrid.IsEnabled = true;
                 ((MainWindow)Current.MainWindow).ConfigButton.IsEnabled = true;
-                ((MainWindow)Current.MainWindow).BuildButton.IsEnabled = true;
                 ((MainWindow)Current.MainWindow).LaunchButton.IsEnabled = true;
                 ((MainWindow)Current.MainWindow).OpenModsButton.IsEnabled = true;
                 ((MainWindow)Current.MainWindow).UpdateButton.IsEnabled = true;
