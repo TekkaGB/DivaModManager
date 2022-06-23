@@ -22,8 +22,8 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <TextBlock Name="OptionText" Grid.Row="0" FontSize="18" FontWeight="Bold" Foreground="#f2f2f2" Text="{Binding Path=OptionText}"/>
-                    <TextBlock Name="OptionSubText" Grid.Row="1" FontSize="13" TextWrapping="WrapWithOverflow" Foreground="#a2a2a2" Text="{Binding Path=OptionSubText}"/>
+                    <TextBlock Name="OptionText" Grid.Row="0" FontSize="20" FontWeight="Bold" Foreground="#f2f2f2" Text="{Binding Path=OptionText}"/>
+                    <TextBlock Name="OptionSubText" Grid.Row="1" FontSize="16" TextWrapping="WrapWithOverflow" Foreground="#a2a2a2" Text="{Binding Path=OptionSubText}"/>
                 </Grid>
             </Button>
         </DataTemplate>

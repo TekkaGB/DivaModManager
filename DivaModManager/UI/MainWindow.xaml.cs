@@ -272,7 +272,7 @@ namespace DivaModManager
                 {
                     ModGrid.ItemsSource = Global.ModList;
                     ModGrid.Items.Refresh();
-                    var stats = $"{Global.ModList.Count} mods • {Directory.GetFiles(currentModDirectory, "*", SearchOption.AllDirectories).Length.ToString("N0")} files • " +
+                    var stats = $"{Global.ModList.ToList().Where(x => x.enabled).ToList().Count}/{Global.ModList.Count} mods • {Directory.GetFiles(currentModDirectory, "*", SearchOption.AllDirectories).Length.ToString("N0")} files • " +
                     $"{StringConverters.FormatSize(new DirectoryInfo(currentModDirectory).GetDirectorySize())}";
                     if (!String.IsNullOrEmpty(Global.config.Configs[Global.config.CurrentGame].ModLoaderVersion))
                         stats += $" • DML v{Global.config.Configs[Global.config.CurrentGame].ModLoaderVersion}";
@@ -325,9 +325,19 @@ namespace DivaModManager
                 Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout] = new ObservableCollection<Mod>(temp);
                 Global.UpdateConfig();
                 await Task.Run(() => ModLoader.Build());
+
+                App.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    var stats = $"{Global.ModList.ToList().Where(x => x.enabled).ToList().Count}/{Global.ModList.Count} mods • {Directory.GetFiles(Global.config.Configs[Global.config.CurrentGame].ModsFolder, "*", SearchOption.AllDirectories).Length.ToString("N0")} files • " +
+                    $"{StringConverters.FormatSize(new DirectoryInfo(Global.config.Configs[Global.config.CurrentGame].ModsFolder).GetDirectorySize())}";
+                    if (!String.IsNullOrEmpty(Global.config.Configs[Global.config.CurrentGame].ModLoaderVersion))
+                        stats += $" • DML v{Global.config.Configs[Global.config.CurrentGame].ModLoaderVersion}";
+                    stats += $" • DMM v{version}";
+                    Stats.Text = stats;
+                });
             }
         }
-        private async  void OnUnchecked(object sender, RoutedEventArgs e)
+        private async void OnUnchecked(object sender, RoutedEventArgs e)
         {
             var checkBox = e.OriginalSource as CheckBox;
 
@@ -366,6 +376,15 @@ namespace DivaModManager
                 Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout] = new ObservableCollection<Mod>(temp);
                 Global.UpdateConfig();
                 await Task.Run(() => ModLoader.Build());
+                App.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    var stats = $"{Global.ModList.ToList().Where(x => x.enabled).ToList().Count}/{Global.ModList.Count} mods • {Directory.GetFiles(Global.config.Configs[Global.config.CurrentGame].ModsFolder, "*", SearchOption.AllDirectories).Length.ToString("N0")} files • " +
+                    $"{StringConverters.FormatSize(new DirectoryInfo(Global.config.Configs[Global.config.CurrentGame].ModsFolder).GetDirectorySize())}";
+                    if (!String.IsNullOrEmpty(Global.config.Configs[Global.config.CurrentGame].ModLoaderVersion))
+                        stats += $" • DML v{Global.config.Configs[Global.config.CurrentGame].ModLoaderVersion}";
+                    stats += $" • DMM v{version}";
+                    Stats.Text = stats;
+                });
             }
         }
         // Triggered when priority is switched on drag and dropped
