@@ -123,9 +123,11 @@ namespace DivaModManager
             LoadoutBox.SelectedItem = Global.config.Configs[Global.config.CurrentGame].CurrentLoadout;
 
             if (String.IsNullOrEmpty(Global.config.Configs[Global.config.CurrentGame].ModsFolder)
-                || !Directory.Exists(Global.config.Configs[Global.config.CurrentGame].ModsFolder)
-                && !Global.config.Configs[Global.config.CurrentGame].FirstOpen)
-                Global.logger.WriteLine("Please click Setup before installing mods!", LoggerType.Warning);
+                || !Directory.Exists(Global.config.Configs[Global.config.CurrentGame].ModsFolder))
+            {
+                if (Global.config.Configs[Global.config.CurrentGame].FirstOpen)
+                    Global.logger.WriteLine("Please click Setup before installing mods!", LoggerType.Warning);
+            }
             else
             {
                 // Watch mods folder to detect
@@ -190,7 +192,8 @@ namespace DivaModManager
             if (String.IsNullOrEmpty(Global.config.Configs[Global.config.CurrentGame].ModsFolder)
                 || !Directory.Exists(Global.config.Configs[Global.config.CurrentGame].ModsFolder))
             {
-                Global.logger.WriteLine("Please click Setup before installing mods!", LoggerType.Warning);
+                if (Global.config.Configs[Global.config.CurrentGame].FirstOpen)
+                    Global.logger.WriteLine("Please click Setup before installing mods!", LoggerType.Warning);
                 return;
             }
             var currentModDirectory = Global.config.Configs[Global.config.CurrentGame].ModsFolder;
