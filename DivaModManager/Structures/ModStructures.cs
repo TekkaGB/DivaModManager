@@ -18,7 +18,6 @@ namespace DivaModManager
         public Uri upic { get; set; }
         public Uri caticon { get; set; }
         public string cat { get; set; }
-        public string section { get; set; }
         public string description { get; set; }
         public Uri homepage { get; set; }
         public DateTime? lastupdate { get; set; }

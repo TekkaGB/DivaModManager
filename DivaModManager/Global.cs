@@ -23,13 +23,23 @@ namespace DivaModManager
         {
             config.Configs[config.CurrentGame].Loadouts[config.Configs[config.CurrentGame].CurrentLoadout] = ModList;
             string configString = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
-            try
+            var isReady = false;
+            while (!isReady)
             {
-                File.WriteAllText($@"{assemblyLocation}{s}Config.json", configString);
-            }
-            catch (Exception e)
-            {
-                logger.WriteLine($"Couldn't write Config.json ({e.Message})", LoggerType.Error);
+                try
+                {
+                    File.WriteAllText($@"{assemblyLocation}{s}Config.json", configString);
+                    isReady = true;
+                }
+                catch (Exception e)
+                {
+                    // Check if the exception is related to an IO error.
+                    if (e.GetType() != typeof(IOException))
+                    {
+                        Global.logger.WriteLine($"Couldn't write to Config.json ({e.Message})", LoggerType.Error);
+                        break;
+                    }
+                }
             }
         }
     }

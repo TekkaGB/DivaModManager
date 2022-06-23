@@ -208,7 +208,23 @@ namespace DivaModManager
                     m.name = Path.GetFileName(mod);
                     if (File.Exists(configPath))
                     {
-                        var configString = File.ReadAllText(configPath);
+                        var configString = String.Empty;
+                        while (String.IsNullOrEmpty(configString))
+                        {
+                            try
+                            {
+                                configString = File.ReadAllText(configPath);
+                            }
+                            catch (Exception e)
+                            {
+                                // Check if the exception is related to an IO error.
+                                if (e.GetType() != typeof(IOException))
+                                {
+                                    Global.logger.WriteLine($"Couldn't access {configPath} ({e.Message})", LoggerType.Error);
+                                    break;
+                                }
+                            }
+                        }
                         if (Toml.TryToModel(configString, out TomlTable config, out var diagnostics))
                         {
                             if (config.ContainsKey("enabled"))
@@ -218,7 +234,24 @@ namespace DivaModManager
                                 // Add enabled field to be true if it doesn't exist
                                 m.enabled = true;
                                 config.Add("enabled", true);
-                                File.WriteAllText(configPath, Toml.FromModel(config));
+                                var isReady = false;
+                                while (!isReady)
+                                {
+                                    try
+                                    {
+                                        File.WriteAllText(configPath, Toml.FromModel(config));
+                                        isReady = true;
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        // Check if the exception is related to an IO error.
+                                        if (e.GetType() != typeof(IOException))
+                                        {
+                                            Global.logger.WriteLine($"Couldn't access {configPath} ({e.Message})", LoggerType.Error);
+                                            break;
+                                        }
+                                    }
+                                }
                             }
                         }
                         else
@@ -228,7 +261,24 @@ namespace DivaModManager
                             m.enabled = true;
                             config = new();
                             config.Add("enabled", true);
-                            File.WriteAllText(configPath, Toml.FromModel(config));
+                            var isReady = false;
+                            while (!isReady)
+                            {
+                                try
+                                {
+                                    File.WriteAllText(configPath, Toml.FromModel(config));
+                                    isReady = true;
+                                }
+                                catch (Exception e)
+                                {
+                                    // Check if the exception is related to an IO error.
+                                    if (e.GetType() != typeof(IOException))
+                                    {
+                                        Global.logger.WriteLine($"Couldn't access {configPath} ({e.Message})", LoggerType.Error);
+                                        break;
+                                    }
+                                }
+                            }
                         }
                     }
                     else
@@ -237,7 +287,24 @@ namespace DivaModManager
                         m.enabled = true;
                         TomlTable config = new();
                         config.Add("enabled", true);
-                        File.WriteAllText(configPath, Toml.FromModel(config));
+                        var isReady = false;
+                        while (!isReady)
+                        {
+                            try
+                            {
+                                File.WriteAllText(configPath, Toml.FromModel(config));
+                                isReady = true;
+                            }
+                            catch (Exception e)
+                            {
+                                // Check if the exception is related to an IO error.
+                                if (e.GetType() != typeof(IOException))
+                                {
+                                    Global.logger.WriteLine($"Couldn't access {configPath} ({e.Message})", LoggerType.Error);
+                                    break;
+                                }
+                            }
+                        }
                     }
                     App.Current.Dispatcher.Invoke((Action)delegate
                     {
@@ -252,7 +319,23 @@ namespace DivaModManager
                     TomlTable config;
                     if (File.Exists(configPath))
                     {
-                        var configString = File.ReadAllText(configPath);
+                        var configString = String.Empty;
+                        while (String.IsNullOrEmpty(configString))
+                        {
+                            try
+                            {
+                                configString = File.ReadAllText(configPath);
+                            }
+                            catch (Exception e)
+                            {
+                                // Check if the exception is related to an IO error.
+                                if (e.GetType() != typeof(IOException))
+                                {
+                                    Global.logger.WriteLine($"Couldn't access {configPath} ({e.Message})", LoggerType.Error);
+                                    break;
+                                }
+                            }
+                        }
                         if (!Toml.TryToModel(configString, out config, out var diagnostics))
                         {
                             Global.logger.WriteLine($"{diagnostics[0].Message} for {Global.ModList[index].name}. Rewriting {configPath} with only enabled field", LoggerType.Warning);
@@ -265,7 +348,24 @@ namespace DivaModManager
                         config["enabled"] = Global.ModList[index].enabled;
                     else
                         config.Add("enabled", Global.ModList[index].enabled);
-                    File.WriteAllText($"{mod}{Global.s}config.toml", Toml.FromModel(config));
+                    var isReady = false;
+                    while (!isReady)
+                    {
+                        try
+                        {
+                            File.WriteAllText($"{mod}{Global.s}config.toml", Toml.FromModel(config));
+                            isReady = true;
+                        }
+                        catch (Exception e)
+                        {
+                            // Check if the exception is related to an IO error.
+                            if (e.GetType() != typeof(IOException))
+                            {
+                                Global.logger.WriteLine($"Couldn't access {configPath} ({e.Message})", LoggerType.Error);
+                                break;
+                            }
+                        }
+                    }
                 }
             }
             // Remove deleted folders that are still in the ModList
@@ -964,7 +1064,11 @@ namespace DivaModManager
                     }
                 }
                 if (config != null && config.ContainsKey("version") && (config["version"] as string).Length > 0)
-                    text += $"Version: {config["version"]}\n";
+                {
+                    text += $"Version: {config["version"]}";
+                    if (config.ContainsKey("date") && config["date"].ToString().Length > 0)
+                        text += "\n";
+                }
                 if (config != null && config.ContainsKey("date") && config["date"].ToString().Length > 0)
                     text += $"Date: {config["date"]}";
                 if (metadata != null && !String.IsNullOrEmpty(metadata.cat))
@@ -985,7 +1089,7 @@ namespace DivaModManager
                         image.Width = 20;
                         para.Inlines.Add(image);
                     }
-                    para.Inlines.Add($" {metadata.cat} {metadata.section}");
+                    para.Inlines.Add($" {metadata.cat}");
                     descFlow.Blocks.Add(para);
                 }
                 else if (!String.IsNullOrWhiteSpace(text))

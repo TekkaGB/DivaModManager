@@ -100,19 +100,27 @@ namespace DivaModManager
         public static string FormatSingular(string rootCat, string cat)
         {
             if (rootCat == null)
+            {
+                if (cat.EndsWith("es"))
+                    return cat.Substring(0, cat.Length - 2);
                 return cat.TrimEnd('s');
+            }
             rootCat = rootCat.Replace("User Interface", "UI");
 
             if (cat == "Skin Packs")
                 return cat.Substring(0, cat.Length - 1);
 
-            if (rootCat[rootCat.Length - 1] == 's')
+            if (rootCat.EndsWith("es"))
             {
                 if (cat == rootCat)
-                {
-                    rootCat = rootCat.Replace("xes", "xs").Replace("xs/", "xes/");
+                    return rootCat.Substring(0, rootCat.Length - 2);
+                else
+                    return $"{cat} {rootCat.Substring(0, rootCat.Length - 2)}";
+            }
+            else if (rootCat[rootCat.Length - 1] == 's')
+            {
+                if (cat == rootCat)
                     return rootCat.Substring(0, rootCat.Length - 1);
-                }
                 else
                     return $"{cat} {rootCat.Substring(0, rootCat.Length - 1)}";
             }
