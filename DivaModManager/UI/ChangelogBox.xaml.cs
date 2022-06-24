@@ -55,7 +55,7 @@ namespace DivaModManager.UI
             }
             PlayNotificationSound();
         }
-        public ChangelogBox(Release release, string packageName, string text, Uri preview, bool skip = false)
+        public ChangelogBox(Release release, string packageName, string text, Uri preview, bool skip = false, bool loader = false)
         {
             InitializeComponent();
             if (preview != null)
@@ -67,9 +67,15 @@ namespace DivaModManager.UI
                 PreviewImage.Source = bitmap;
                 PreviewImage.Visibility = Visibility.Visible;
             }
-            else
+            else if (loader)
             {
                 var bitmap = new BitmapImage(new Uri("pack://application:,,,/DivaModManager;component/Assets/dml.png"));
+                PreviewImage.Source = bitmap;
+                PreviewImage.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                var bitmap = new BitmapImage(new Uri("pack://application:,,,/DivaModManager;component/Assets/preview.png"));
                 PreviewImage.Source = bitmap;
                 PreviewImage.Visibility = Visibility.Visible;
             }

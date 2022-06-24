@@ -55,7 +55,7 @@ namespace DivaModManager
                     string fileName = release.Assets.First().Name;
                     if (localVersion != null)
                     {
-                        ChangelogBox notification = new ChangelogBox(release, "DivaModLoader", $"A new version of DivaModLoader is available (v{onlineVersion})!", null);
+                        ChangelogBox notification = new ChangelogBox(release, "DivaModLoader", $"A new version of DivaModLoader is available (v{onlineVersion})!", null, false, true);
                         notification.ShowDialog();
                         notification.Activate();
                         if (notification.YesNo)
