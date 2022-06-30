@@ -390,6 +390,7 @@ namespace DivaModManager
                 catch (Exception e)
                 {
                     Global.logger.WriteLine($"Couldn't extract {fileName}. ({e.Message})", LoggerType.Error);
+                    return;
                 }
                 TomlTable oldConfig = null;
                 if (File.Exists($@"{output}{Global.s}config.toml"))
