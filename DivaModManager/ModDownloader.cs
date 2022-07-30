@@ -324,6 +324,7 @@ namespace DivaModManager
                 if (!File.Exists($@"{ArchiveDestination}{Global.s}mod.json"))
                 {
                     Metadata metadata = new Metadata();
+                    metadata.id = post.ID;
                     metadata.submitter = post.User.Name;
                     metadata.description = post.ShortText;
                     metadata.preview = post.Image;

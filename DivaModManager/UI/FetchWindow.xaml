@@ -12,10 +12,10 @@
             <RowDefinition Height="0.7*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="110"/>
+            <ColumnDefinition Width="60"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <TextBlock Foreground="#f2f2f2" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="SemiBold" >GameBanana URL</TextBlock>
+        <TextBlock Foreground="#f2f2f2" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="SemiBold" >URL</TextBlock>
         <TextBox Name="UrlBox" Height="20" Margin="0,0,15,0" Background="#303030" BorderBrush="#353535" Foreground="#f2f2f2" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" KeyDown="UrlBox_KeyDown"/>
         <Grid Grid.Row="1" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>

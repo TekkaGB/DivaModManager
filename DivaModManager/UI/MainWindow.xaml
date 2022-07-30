@@ -9,7 +9,7 @@
         Background="#131313"
         Title="Diva Mod Manager" SizeChanged="OnResize"
         mc:Ignorable="d" Closing="Window_Closing" WindowStartupLocation="CenterScreen"
-        Height="750" Width="1280" MinHeight="750" MinWidth="950" Loaded="WindowLoaded">
+        Height="750" Width="1280" MinHeight="750" MinWidth="1050" Loaded="WindowLoaded">
     <Window.Resources>
         <DataTemplate x:Key="GBModTemplate">
             <Border CornerRadius="5" Margin="5">
@@ -676,7 +676,7 @@
                                         <MenuItem Header="Configure Mod" IsCheckable="False" Click="ConfigureModItem_Click"/>
                                         <MenuItem Header="Rename Mod Folder" IsCheckable="False" Click="EditItem_Click"/>
                                         <MenuItem Header="Open Mod Folder" IsCheckable="False" Click="OpenItem_Click"/>
-                                        <MenuItem Header="Fetch GameBanana Metadata" IsCheckable="False" Click="FetchItem_Click"/>
+                                        <MenuItem Header="Fetch Metadata" IsCheckable="False" Click="FetchItem_Click"/>
                                         <MenuItem Header="Delete Mod" IsCheckable="False" Click="DeleteItem_Click"/>
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
@@ -1001,7 +1001,7 @@
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="3*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
@@ -1115,7 +1115,7 @@
                             </Button>
                         </StackPanel>
                     </Grid>
-                    <ComboBox Margin="0,0,5,0" Grid.Column="0" IsEnabled="False" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" FontSize="20" Name="DMAFilterBox" Height="35" HorizontalAlignment="Right" MinWidth="150" SelectionChanged="DMAFilterSelectionChanged">
+                    <ComboBox Margin="0,0,15,0" Grid.Column="0" IsEnabled="False" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" FontSize="20" Name="DMAFilterBox" Height="35" HorizontalAlignment="Right" MinWidth="150" SelectionChanged="DMAFilterSelectionChanged">
                         <ComboBoxItem IsSelected="True">Latest</ComboBoxItem>
                         <ComboBoxItem>Popular</ComboBoxItem>
                     </ComboBox>
@@ -1134,7 +1134,7 @@
                     <Button Grid.Column="1" IsEnabled="False" HorizontalAlignment="Right" Click="DMASearchButton_Click" Name="DMASearchButton" Height="35" Width="35">
                         <fa5:ImageAwesome Icon="Solid_Search" Foreground="#f2f2f2" Margin="3"/>
                     </Button>
-                    <Image Grid.Column="2" Margin="5,0,0,0" Name="DMA" VerticalAlignment="Center" HorizontalAlignment="Left" Height="35" Source="../Assets/DMA_BLACK.png" Cursor="Hand" MouseLeftButtonDown="DMA_Click"/>
+                    <Image Grid.Column="2" Margin="15,0,0,0" Name="DMA" VerticalAlignment="Center" HorizontalAlignment="Left" Height="35" Source="../Assets/DMA_BLACK.png" Cursor="Hand" MouseLeftButtonDown="DMA_Click"/>
                     <Popup PlacementTarget="{Binding ElementName=DMA}" IsOpen="{Binding IsMouseDirectlyOver, ElementName=DMA, Mode=OneWay}" AllowsTransparency="True">
                         <Border CornerRadius="5" Panel.ZIndex="0" Margin="10">
                             <Border.BorderBrush>

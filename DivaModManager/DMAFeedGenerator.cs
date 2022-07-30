@@ -55,7 +55,6 @@ namespace DivaModManager
                     if (totalPages == 0)
                         totalPages = 1;
                     CurrentFeed.TotalPages = totalPages;
-                    Global.logger.WriteLine(totalPages.ToString(), LoggerType.Info);
                 }
                 catch (Exception e)
                 {

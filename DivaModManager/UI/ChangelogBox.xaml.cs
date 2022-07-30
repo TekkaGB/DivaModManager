@@ -95,6 +95,43 @@ namespace DivaModManager.UI
             }
             PlayNotificationSound();
         }
+        public ChangelogBox(DivaModArchivePost post, string packageName, string text, bool skip = false, bool loader = false)
+        {
+            InitializeComponent();
+            if (post.Image != null)
+            {
+                var bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.UriSource = post.Image;
+                bitmap.EndInit();
+                PreviewImage.Source = bitmap;
+                PreviewImage.Visibility = Visibility.Visible;
+            }
+            else if (loader)
+            {
+                var bitmap = new BitmapImage(new Uri("pack://application:,,,/DivaModManager;component/Assets/dml.png"));
+                PreviewImage.Source = bitmap;
+                PreviewImage.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                var bitmap = new BitmapImage(new Uri("pack://application:,,,/DivaModManager;component/Assets/preview.png"));
+                PreviewImage.Source = bitmap;
+                PreviewImage.Visibility = Visibility.Visible;
+            }
+            Title = $"{packageName}";
+            VersionLabel.Visibility = Visibility.Collapsed;
+            Text.Text = text;
+            UpdateText.Visibility = Visibility.Collapsed;
+            if (skip)
+                SkipButton.Visibility = Visibility.Visible;
+            else
+            {
+                Grid.SetColumnSpan(YesButton, 2);
+                Grid.SetColumnSpan(NoButton, 2);
+            }
+            PlayNotificationSound();
+        }
 
         private void NoButton_Click(object sender, RoutedEventArgs e)
         {

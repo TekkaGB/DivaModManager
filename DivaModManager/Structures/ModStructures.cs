@@ -12,6 +12,7 @@ namespace DivaModManager
     }
     public class Metadata
     {
+        public int? id { get; set; }
         public Uri preview { get; set; }
         public string submitter { get; set; }
         public Uri avi { get; set; }
