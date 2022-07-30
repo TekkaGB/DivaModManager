@@ -64,6 +64,26 @@ namespace DivaModManager
                 }
             }
         }
+        public async void DMABrowserDownload(string game, DivaModArchivePost post)
+        {
+            if (String.IsNullOrEmpty(Global.config.Configs[Global.config.CurrentGame].ModsFolder)
+                || !Directory.Exists(Global.config.Configs[Global.config.CurrentGame].ModsFolder))
+            {
+                MessageBox.Show($"Please click Setup before installing mods!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Global.logger.WriteLine("Please click Setup before installing mods!", LoggerType.Warning);
+                return;
+            }
+            DownloadWindow downloadWindow = new DownloadWindow(post);
+            downloadWindow.ShowDialog();
+            if (downloadWindow.YesNo)
+            {
+                string fileName = post.DownloadUrl.ToString().Split('/').Last();
+                await DownloadFile(post.DownloadUrl.ToString(), fileName, new Progress<DownloadProgress>(ReportUpdateProgress),
+                            CancellationTokenSource.CreateLinkedTokenSource(cancellationToken.Token));
+                if (!cancelled)
+                    await Task.Run(() => ExtractFile(fileName, game, post));
+            }
+        }
         public async void Download(string line, bool running)
         {
             if (String.IsNullOrEmpty(Global.config.Configs[Global.config.CurrentGame].ModsFolder)
@@ -219,6 +239,98 @@ namespace DivaModManager
                     metadata.cat = record.CategoryName;
                     metadata.caticon = record.Category.Icon;
                     metadata.lastupdate = record.DateUpdated;
+                    string metadataString = JsonSerializer.Serialize(metadata, new JsonSerializerOptions { WriteIndented = true });
+                    File.WriteAllText($@"{path}{Global.s}mod.json", metadataString);
+                }
+            }
+            // Check if folder output folder exists, if not nothing was extracted
+            if (!Directory.Exists(ArchiveDestination))
+            {
+                MessageBox.Show($"Didn't extract {fileName} due to improper format", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            else
+            {
+                // Only delete if successfully extracted
+                File.Delete(_ArchiveSource);
+                Directory.Delete(ArchiveDestination, true);
+            }
+        }
+        private void ExtractFile(string fileName, string game, DivaModArchivePost post)
+        {
+            switch (game)
+            {
+                case "Hatsune Miku: Project DIVA Mega Mix+":
+                    game = "Project DIVA Mega Mix+";
+                    break;
+            }
+            string _ArchiveSource = $@"{Global.assemblyLocation}{Global.s}Downloads{Global.s}{fileName}";
+            string _ArchiveType = Path.GetExtension(fileName);
+            string ArchiveDestination = $@"{Global.assemblyLocation}{Global.s}temp";
+            Directory.CreateDirectory(ArchiveDestination);
+            if (File.Exists(_ArchiveSource))
+            {
+                try
+                {
+                    if (Path.GetExtension(_ArchiveSource).Equals(".7z", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        using (var archive = SevenZipArchive.Open(_ArchiveSource))
+                        {
+                            var reader = archive.ExtractAllEntries();
+                            while (reader.MoveToNextEntry())
+                            {
+                                if (!reader.Entry.IsDirectory)
+                                    reader.WriteEntryToDirectory(ArchiveDestination, new ExtractionOptions()
+                                    {
+                                        ExtractFullPath = true,
+                                        Overwrite = true
+                                    });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        using (Stream stream = File.OpenRead(_ArchiveSource))
+                        using (var reader = ReaderFactory.Open(stream))
+                        {
+                            while (reader.MoveToNextEntry())
+                            {
+                                if (!reader.Entry.IsDirectory)
+                                {
+                                    reader.WriteEntryToDirectory(ArchiveDestination, new ExtractionOptions()
+                                    {
+                                        ExtractFullPath = true,
+                                        Overwrite = true
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($"Couldn't extract {fileName}: {e.Message}", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            foreach (var folder in Directory.GetDirectories(ArchiveDestination, "*", SearchOption.AllDirectories).Where(x => File.Exists($@"{x}{Global.s}config.toml")))
+            {
+                string path = $@"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{Path.GetFileName(folder)}";
+                int index = 2;
+                while (Directory.Exists(path))
+                {
+                    path = $@"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{Path.GetFileName(folder)} ({index})";
+                    index += 1;
+                }
+                MoveDirectory(folder, path);
+                if (!File.Exists($@"{ArchiveDestination}{Global.s}mod.json"))
+                {
+                    Metadata metadata = new Metadata();
+                    metadata.submitter = post.User.Name;
+                    metadata.description = post.ShortText;
+                    metadata.preview = post.Image;
+                    metadata.homepage = post.Link;
+                    metadata.avi = post.User.Avatar;
+                    metadata.cat = post.Type;
+                    metadata.lastupdate = post.Date;
                     string metadataString = JsonSerializer.Serialize(metadata, new JsonSerializerOptions { WriteIndented = true });
                     File.WriteAllText($@"{path}{Global.s}mod.json", metadataString);
                 }

@@ -132,5 +132,28 @@ namespace DivaModManager
                     return $"{cat} {rootCat}";
             }
         }
+        public static string TypeToString(int type_tag)
+        {
+            switch (type_tag)
+            {
+                case 0:
+                    return "Plugin";
+                case 1:
+                    return "Module edit";
+                case 2:
+                    return "Module port";
+                case 3:
+                    return "Custom module";
+                case 4:
+                    return "Custom song";
+                case 5:
+                    return "Song port";
+                case 6:
+                    return "UI Edit";
+                case 7:
+                default:
+                    return "Other";
+            }
+        }
     }
 }

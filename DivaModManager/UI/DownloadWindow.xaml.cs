@@ -30,6 +30,16 @@ namespace DivaModManager
             bitmap.EndInit();
             Preview.Source = bitmap;
         }
+        public DownloadWindow(DivaModArchivePost post)
+        {
+            InitializeComponent();
+            DownloadText.Text = $"{post.Name}\nSubmitted by {post.User.Name}";
+            var bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.UriSource = post.Image;
+            bitmap.EndInit();
+            Preview.Source = bitmap;
+        }
         private void Yes_Click(object sender, RoutedEventArgs e)
         {
             YesNo = true;
