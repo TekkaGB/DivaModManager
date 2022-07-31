@@ -1280,7 +1280,15 @@ namespace DivaModManager
                         NavigateUri = new Uri(segment),
                     };
 
-                    hyperlink.RequestNavigate += (sender, args) => Process.Start(segment);
+                    hyperlink.RequestNavigate += (sender, args) =>
+                    {
+                        var ps = new ProcessStartInfo(segment)
+                        {
+                            UseShellExecute = true,
+                            Verb = "open"
+                        };
+                        Process.Start(ps);
+                    };
 
                     paragraph.Inlines.Add(hyperlink);
                 }
