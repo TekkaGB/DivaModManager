@@ -1811,10 +1811,10 @@ namespace DivaModManager
             DMAPageRight.IsEnabled = false;
             DMAPageBox.IsEnabled = false;
             DMAfilterSelect = true;
-            DMAPageBox.SelectedValue = page;
+            DMAPageBox.SelectedValue = DMApage;
             DMAPerPageBox.IsEnabled = false;
             DMAfilterSelect = false;
-            DMAPage.Text = $"Page {page}";
+            DMAPage.Text = $"Page {DMApage}";
             DMAErrorPanel.Visibility = Visibility.Collapsed;
             DMALoadingBar.Visibility = Visibility.Visible;
             DMAFeedBox.Visibility = Visibility.Collapsed;
