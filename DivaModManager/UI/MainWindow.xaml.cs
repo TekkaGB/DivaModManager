@@ -1812,12 +1812,13 @@ namespace DivaModManager
             DMAPageBox.IsEnabled = false;
             DMAfilterSelect = true;
             DMAPageBox.SelectedValue = page;
+            DMAPerPageBox.IsEnabled = false;
             DMAfilterSelect = false;
             DMAPage.Text = $"Page {page}";
             DMAErrorPanel.Visibility = Visibility.Collapsed;
             DMALoadingBar.Visibility = Visibility.Visible;
             DMAFeedBox.Visibility = Visibility.Collapsed;
-            await DMAFeedGenerator.GetFeed(DMApage, (DMAFeedFilter)DMAFilterBox.SelectedIndex, DMASearchBar.Text);
+            await DMAFeedGenerator.GetFeed(DMApage, (DMAFeedFilter)DMAFilterBox.SelectedIndex, DMASearchBar.Text, (DMAPerPageBox.SelectedIndex + 1) * 10);
             DMAFeedBox.ItemsSource = DMAFeedGenerator.CurrentFeed.Posts;
             if (DMAFeedGenerator.error)
             {
@@ -1869,6 +1870,7 @@ namespace DivaModManager
             DMASearchButton.IsEnabled = true;
             DMAClearCacheButton.IsEnabled = true;
             DMAPageBox.IsEnabled = true;
+            DMAPerPageBox.IsEnabled = true;
             DMAselected = true;
         }
         private bool DMAfilterSelect = false;
@@ -1905,6 +1907,14 @@ namespace DivaModManager
             {
                 page = 1;
                 RefreshFilter();
+            }
+        }
+        private void DMAPerPageSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded && !filterSelect)
+            {
+                DMApage = 1;
+                DMARefreshFilter();
             }
         }
         private void GameFilterSelectionChanged(object sender, SelectionChangedEventArgs e)

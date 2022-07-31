@@ -1011,13 +1011,25 @@
                         <Button IsEnabled="False" FontFamily="{StaticResource AnekLatin}" Name="DMAPageRight" Click="DMAIncrementPage" Content=">" HorizontalAlignment="Left" Margin="15,0,0,0" FontSize="20" FontWeight="Medium" Height="35" Width="35" Background="#181818" BorderBrush="#252525" Foreground="#f2f2f2"/>
                         <ComboBox IsEnabled="False" Margin="15,0,15,0" FontFamily="{StaticResource AnekLatin}" Name="DMAPageBox" SelectionChanged="DMAPageBox_SelectionChanged" Height="35" VerticalAlignment="Center"/>
                     </StackPanel>
-                    <Button Margin="5,5,10,5" Grid.Row="2" Click="DMAClearCache" Grid.ColumnSpan="3" Name="DMAClearCacheButton" Content="Refresh" HorizontalAlignment="Right" FontFamily="{StaticResource AnekLatin}" FontSize="20" FontWeight="Medium"  Height="35" Width="80" Background="#181818" BorderBrush="#252525" IsEnabled="False" Foreground="#f2f2f2">
-                        <Button.Resources>
-                            <Style TargetType="{x:Type Border}">
-                                <Setter Property="CornerRadius" Value="5"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
+                    <StackPanel Margin="5,5,10,5" Grid.ColumnSpan="8" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
+                        <Button Margin="0,0,15,0" Click="DMAClearCache" Name="DMAClearCacheButton" Content="Refresh" HorizontalAlignment="center" FontFamily="{StaticResource AnekLatin}" FontSize="20" FontWeight="Medium"  Height="35" Width="80" Background="#181818" BorderBrush="#252525" IsEnabled="False" Foreground="#f2f2f2">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                        <TextBlock Margin="0,0,15,0" FontFamily="{StaticResource AnekLatin}" Foreground="#f2f2f2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontWeight="Medium">
+                            Per Page:
+                        </TextBlock>
+                        <ComboBox IsEnabled="False" FontFamily="{StaticResource AnekLatin}" Name="DMAPerPageBox" SelectionChanged="DMAPerPageSelectionChanged" Height="35" VerticalAlignment="Center">
+                            <ComboBoxItem>10</ComboBoxItem>
+                            <ComboBoxItem IsSelected="True">20</ComboBoxItem>
+                            <ComboBoxItem>30</ComboBoxItem>
+                            <ComboBoxItem>40</ComboBoxItem>
+                            <ComboBoxItem>50</ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
                     <Grid Grid.RowSpan="3" Grid.ColumnSpan="8" Name="DMAMediaPanel" Panel.ZIndex="5" Visibility="Collapsed">
                         <Grid.RowDefinitions>
                             <RowDefinition/>

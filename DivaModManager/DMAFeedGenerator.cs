@@ -27,7 +27,7 @@ namespace DivaModManager
             if (feed != null)
                 feed.Clear();
         }
-        public static async Task GetFeed(int page, DMAFeedFilter filter, string search)
+        public static async Task GetFeed(int page, DMAFeedFilter filter, string search, int limit)
         {
             error = false;
             if (feed == null)
@@ -37,7 +37,7 @@ namespace DivaModManager
                 feed.Remove(feed.Aggregate((l, r) => DateTime.Compare(l.Value.TimeFetched, r.Value.TimeFetched) < 0 ? l : r).Key);
             using (var httpClient = new HttpClient())
             {
-                var requestUrl = GenerateUrl(page, filter, search);
+                var requestUrl = GenerateUrl(page, filter, search, limit);
                 if (feed.ContainsKey(requestUrl) && feed[requestUrl].IsValid)
                 {
                     CurrentFeed = feed[requestUrl];
@@ -51,7 +51,7 @@ namespace DivaModManager
                     CurrentFeed.Posts = posts;
                     response = await httpClient.GetAsync($"https://divamodarchive.xyz/api/v1/posts/post_count?name={search}");
                     var numPosts = Double.Parse(await response.Content.ReadAsStringAsync());
-                    var totalPages = Math.Ceiling(numPosts / 30);
+                    var totalPages = Math.Ceiling(numPosts / limit);
                     if (totalPages == 0)
                         totalPages = 1;
                     CurrentFeed.TotalPages = totalPages;
@@ -68,7 +68,7 @@ namespace DivaModManager
                     feed[requestUrl] = CurrentFeed;
             }
         }
-        private static string GenerateUrl(int page, DMAFeedFilter filter, string search)
+        private static string GenerateUrl(int page, DMAFeedFilter filter, string search, int limit)
         {
             // Base
             var url = "https://divamodarchive.xyz/api/v1/posts/";
@@ -82,8 +82,9 @@ namespace DivaModManager
                     break;
             }
             url += $"?name={search}";
-            var offset = (page - 1) * 30;
+            var offset = (page - 1) * limit;
             url += $"&offset={offset}";
+            url += $"&limit={limit}";
             return url;
         }
     }
