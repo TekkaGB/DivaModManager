@@ -104,11 +104,11 @@ namespace DivaModManager
         [JsonPropertyName("_aFiles")]
         public List<GameBananaItemFile> Files { get; set; }
         [JsonPropertyName("_tsDateUpdated")]
-        public long DateUpdatedLong { get; set; }
+        public long? DateUpdatedLong { get; set; }
         private static readonly DateTime Epoch = new DateTime(1970, 1, 1);
 
         [JsonIgnore]
-        public DateTime DateUpdated => Epoch.AddSeconds(DateUpdatedLong);
+        public DateTime? DateUpdated => DateUpdatedLong != null ? Epoch.AddSeconds((long)DateUpdatedLong) : null;
         [JsonPropertyName("_aAlternateFileSources")]
         public List<GameBananaAlternateFileSource> AlternateFileSources { get; set; }
         [JsonPropertyName("_bHasUpdates")]
