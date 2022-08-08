@@ -174,19 +174,21 @@ namespace DivaModManager
 
             if (DMAresponse.Count > 0)
             {
-                for (int i = 0; i < DMAmodList.Count; i++)
+                //for (int i = 0; i < DMAmodList.Count; i++)
+                foreach (var DMAmod in DMAmodList)
                 {
                     Metadata metadata;
                     try
                     {
-                        metadata = JsonSerializer.Deserialize<Metadata>(File.ReadAllText($"{DMAmodList[i]}{Global.s}mod.json"));
+                        metadata = JsonSerializer.Deserialize<Metadata>(File.ReadAllText($"{DMAmod}{Global.s}mod.json"));
                     }
                     catch (Exception e)
                     {
-                        Global.logger.WriteLine($"Error occurred while getting metadata for {DMAmodList[i]} ({e.Message})", LoggerType.Error);
+                        Global.logger.WriteLine($"Error occurred while getting metadata for {DMAmod} ({e.Message})", LoggerType.Error);
                         continue;
                     }
-                    await ModUpdate(DMAresponse[i], DMAmodList[i], metadata, new Progress<DownloadProgress>(ReportUpdateProgress), CancellationTokenSource.CreateLinkedTokenSource(cancellationToken.Token));
+                    var DMAresponseMod = DMAresponse.Find(x => x.ID == metadata.id);
+                    await ModUpdate(DMAresponseMod, DMAmod, metadata, new Progress<DownloadProgress>(ReportUpdateProgress), CancellationTokenSource.CreateLinkedTokenSource(cancellationToken.Token));
                 }
             }
 
