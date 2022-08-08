@@ -174,7 +174,6 @@ namespace DivaModManager
 
             if (DMAresponse.Count > 0)
             {
-                //for (int i = 0; i < DMAmodList.Count; i++)
                 foreach (var DMAmod in DMAmodList)
                 {
                     Metadata metadata;
