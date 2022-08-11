@@ -186,8 +186,9 @@ namespace DivaModManager
                         Global.logger.WriteLine($"Error occurred while getting metadata for {DMAmod} ({e.Message})", LoggerType.Error);
                         continue;
                     }
-                    var DMAresponseMod = DMAresponse.Find(x => x.ID == metadata.id);
-                    await ModUpdate(DMAresponseMod, DMAmod, metadata, new Progress<DownloadProgress>(ReportUpdateProgress), CancellationTokenSource.CreateLinkedTokenSource(cancellationToken.Token));
+                    var index = DMAresponse.FindIndex(x => x.ID == metadata.id);
+                    if (index != -1)
+                        await ModUpdate(DMAresponse[index], DMAmod, metadata, new Progress<DownloadProgress>(ReportUpdateProgress), CancellationTokenSource.CreateLinkedTokenSource(cancellationToken.Token));
                 }
             }
 
