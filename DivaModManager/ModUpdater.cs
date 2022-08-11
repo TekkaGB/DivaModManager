@@ -189,6 +189,9 @@ namespace DivaModManager
                     var index = DMAresponse.FindIndex(x => x.ID == metadata.id);
                     if (index != -1)
                         await ModUpdate(DMAresponse[index], DMAmod, metadata, new Progress<DownloadProgress>(ReportUpdateProgress), CancellationTokenSource.CreateLinkedTokenSource(cancellationToken.Token));
+                    else
+                        Global.logger.WriteLine($"{Path.GetFileName(DMAmod)} was most likely trashed by the creator and cannot receive anymore updates", LoggerType.Warning);
+
                 }
             }
 
@@ -302,7 +305,7 @@ namespace DivaModManager
                 }
             }
             else if (item.HasUpdates == null)
-                Global.logger.WriteLine($"{mod} was most likely trashed by the creator and cannot receive anymore updates", LoggerType.Warning);
+                Global.logger.WriteLine($"{Path.GetFileName(mod)} was most likely trashed by the creator and cannot receive anymore updates", LoggerType.Warning);
         }
         private static async Task ModUpdate(DivaModArchivePost item, string mod, Metadata metadata, Progress<DownloadProgress> progress, CancellationTokenSource cancellationToken)
         {
