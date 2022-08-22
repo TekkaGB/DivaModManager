@@ -26,6 +26,7 @@ namespace DivaModManager
         private HttpClient client = new();
         private CancellationTokenSource cancellationToken = new();
         private GameBananaAPIV4 response = new();
+        private DivaModArchivePost DMAresponse = new();
         private ProgressBox progressBox;
         public async void BrowserDownload(string game, GameBananaRecord record)
         {
@@ -97,14 +98,29 @@ namespace DivaModManager
             {
                 if (await GetData())
                 {
-                    DownloadWindow downloadWindow = new DownloadWindow(response);
-                    downloadWindow.ShowDialog();
-                    if (downloadWindow.YesNo)
+                    if (URL.Contains("gamebanana", StringComparison.CurrentCultureIgnoreCase))
                     {
-                        await DownloadFile(URL_TO_ARCHIVE, fileName, new Progress<DownloadProgress>(ReportUpdateProgress),
-                            CancellationTokenSource.CreateLinkedTokenSource(cancellationToken.Token));
-                        if (!cancelled)
-                            await Task.Run(() => ExtractFile(fileName, response.Game.Name, response));
+                        DownloadWindow downloadWindow = new DownloadWindow(response);
+                        downloadWindow.ShowDialog();
+                        if (downloadWindow.YesNo)
+                        {
+                            await DownloadFile(URL_TO_ARCHIVE, fileName, new Progress<DownloadProgress>(ReportUpdateProgress),
+                                CancellationTokenSource.CreateLinkedTokenSource(cancellationToken.Token));
+                            if (!cancelled)
+                                await Task.Run(() => ExtractFile(fileName, response.Game.Name, response));
+                        }
+                    }
+                    else if (URL.Contains("divamodarchive", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        DownloadWindow downloadWindow = new DownloadWindow(DMAresponse);
+                        downloadWindow.ShowDialog();
+                        if (downloadWindow.YesNo)
+                        {
+                            await DownloadFile(DMAresponse.DownloadUrl.ToString(), fileName, new Progress<DownloadProgress>(ReportUpdateProgress),
+                                CancellationTokenSource.CreateLinkedTokenSource(cancellationToken.Token));
+                            if (!cancelled)
+                                await Task.Run(() => ExtractFile(fileName, "Project DIVA Mega Mix+", DMAresponse));
+                        }
                     }
                 }
             }
@@ -116,10 +132,22 @@ namespace DivaModManager
         {
             try
             {
-                string responseString = await client.GetStringAsync(URL);
-                response = JsonSerializer.Deserialize<GameBananaAPIV4>(responseString);
-                fileName = response.Files.Where(x => x.Id == DL_ID).ToArray()[0].FileName;
-                return true;
+                if (URL.Contains("gamebanana", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    string responseString = await client.GetStringAsync(URL);
+                    response = JsonSerializer.Deserialize<GameBananaAPIV4>(responseString);
+                    fileName = response.Files.Where(x => x.Id == DL_ID).ToArray()[0].FileName;
+                    return true;
+                }
+                else if (URL.Contains("divamodarchive", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    string responseString = await client.GetStringAsync(URL);
+                    DMAresponse = JsonSerializer.Deserialize<DivaModArchivePost>(responseString);
+                    fileName = DMAresponse.DownloadUrl.ToString().Split('/').Last();
+                    return true;
+                }
+                else
+                    return false;
             }
             catch (Exception e)
             {
@@ -146,14 +174,27 @@ namespace DivaModManager
             {
                 line = line.Replace("divamodmanager:", "");
                 string[] data = line.Split(',');
-                URL_TO_ARCHIVE = data[0];
-                // Used to grab file info from dictionary
-                var match = Regex.Match(URL_TO_ARCHIVE, @"\d*$");
-                DL_ID = match.Value;
-                MOD_TYPE = data[1];
-                MOD_ID = data[2];
-                URL = $"https://gamebanana.com/apiv6/{MOD_TYPE}/{MOD_ID}?_csvProperties=_sName,_aGame,_sProfileUrl,_aPreviewMedia,_sDescription,_aSubmitter,_aCategory,_aSuperCategory,_aFiles,_tsDateUpdated,_aAlternateFileSources,_bHasUpdates,_aLatestUpdates";
-                return true;
+                // GameBanana 1-click install
+                if (data.Length > 1)
+                {
+                    URL_TO_ARCHIVE = data[0];
+                    // Used to grab file info from dictionary
+                    var match = Regex.Match(URL_TO_ARCHIVE, @"\d*$");
+                    DL_ID = match.Value;
+                    MOD_TYPE = data[1];
+                    MOD_ID = data[2];
+                    URL = $"https://gamebanana.com/apiv6/{MOD_TYPE}/{MOD_ID}?_csvProperties=_sName,_aGame,_sProfileUrl,_aPreviewMedia,_sDescription,_aSubmitter,_aCategory,_aSuperCategory,_aFiles,_tsDateUpdated,_aAlternateFileSources,_bHasUpdates,_aLatestUpdates";
+                    return true;
+                }
+                // DivaModArchive 1-click install
+                else if (data.Length == 1)
+                {
+                    MOD_ID = data[0].Replace("dma/", String.Empty);
+                    URL = $"https://divamodarchive.xyz/api/v1/posts/{MOD_ID}";
+                    return true;
+                }
+                else
+                    return false;
             }
             catch (Exception e)
             {

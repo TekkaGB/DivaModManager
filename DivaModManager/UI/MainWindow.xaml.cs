@@ -672,6 +672,22 @@ namespace DivaModManager
                 Global.logger.WriteLine($"Couldn't open up DivaModArchive ({ex.Message})", LoggerType.Error);
             }
         }
+        private void DMADonate_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var ps = new ProcessStartInfo($"https://ko-fi.com/brogamer")
+                {
+                    UseShellExecute = true,
+                    Verb = "open"
+                };
+                Process.Start(ps);
+            }
+            catch (Exception ex)
+            {
+                Global.logger.WriteLine($"Couldn't open up Ko-Fi ({ex.Message})", LoggerType.Error);
+            }
+        }
         private void Discord_Click(object sender, RoutedEventArgs e)
         {
             try

@@ -1158,6 +1158,21 @@
                             <TextBlock Margin="10" FontFamily="{StaticResource AnekLatin}" Text="Go to divamodarchive.xyz" Foreground="#f2f2f2" FontWeight="Medium" FontSize="20" VerticalAlignment="Center" />
                         </Border>
                     </Popup>
+                    <fa5:ImageAwesome Icon="Solid_Coffee" Foreground="#f2f2f2" Grid.Column="2" Margin="60,0,0,0" Name="DMADonate" VerticalAlignment="Center" HorizontalAlignment="Left" Height="25" Cursor="Hand" MouseLeftButtonDown="DMADonate_Click"/>
+                    <Popup PlacementTarget="{Binding ElementName=DMADonate}" IsOpen="{Binding IsMouseDirectlyOver, ElementName=DMADonate, Mode=OneWay}" AllowsTransparency="True">
+                        <Border CornerRadius="5" Panel.ZIndex="0" Margin="10">
+                            <Border.BorderBrush>
+                                <SolidColorBrush Color="#101010" Opacity="0.9"/>
+                            </Border.BorderBrush>
+                            <Border.Background>
+                                <SolidColorBrush Color="#101010" Opacity="0.9"/>
+                            </Border.Background>
+                            <TextBlock Margin="10" FontFamily="{StaticResource AnekLatin}" Foreground="#f2f2f2" FontWeight="Medium" FontSize="20" VerticalAlignment="Center" >
+                                Donate to BroGamer to keep
+                                <LineBreak/>divamodarchive.xyz up and running!
+                            </TextBlock>
+                        </Border>
+                    </Popup>
 
                     <Image Name="DMALoadingBar" Grid.ColumnSpan="8" Grid.Row="1" gif:ImageBehavior.AnimatedSource="../Assets/load.gif" Panel.ZIndex="1" VerticalAlignment="Center" HorizontalAlignment="Center" Height="150"/>
                     <StackPanel Name="DMAErrorPanel" Grid.ColumnSpan="8" Grid.Row="1" Panel.ZIndex="1" HorizontalAlignment="Center" VerticalAlignment="Center">
