@@ -18,6 +18,7 @@
     <None Remove="Assets\DMA_BLACK.png" />
     <None Remove="Assets\dml.png" />
     <None Remove="Assets\Icons\mmplus.png" />
+    <None Remove="Assets\KoFi.png" />
     <None Remove="Assets\load.gif" />
     <None Remove="Assets\load.webp" />
     <None Remove="Assets\preview.png" />
@@ -47,6 +48,7 @@
     <Resource Include="Assets\dml.png" />
     <Resource Include="Assets\GameBanana.png" />
     <Resource Include="Assets\Icons\mmplus.png" />
+    <Resource Include="Assets\KoFi.png" />
     <Resource Include="Assets\load.gif" />
     <Resource Include="Assets\preview.png" />
     <Resource Include="Assets\RobotoMono-Regular.ttf" />
