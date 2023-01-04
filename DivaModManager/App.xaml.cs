@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
-using System.Threading;
 using System;
+using DivaModManager.UI;
 
 namespace DivaModManager
 {
@@ -11,7 +11,7 @@ namespace DivaModManager
     /// </summary>
     public partial class App : Application
     {
-        protected static bool AlreadyRunning()
+        private static bool AlreadyRunning()
         {
             bool running = false;
             try

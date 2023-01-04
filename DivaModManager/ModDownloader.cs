@@ -23,38 +23,42 @@ namespace DivaModManager
         private string MOD_ID;
         private string fileName;
         private bool cancelled;
-        private HttpClient client = new();
-        private CancellationTokenSource cancellationToken = new();
+        private readonly HttpClient client = new();
+        private readonly CancellationTokenSource cancellationToken = new();
         private GameBananaAPIV4 response = new();
-        private DivaModArchivePost DMAresponse = new();
         private ProgressBox progressBox;
         public async void BrowserDownload(string game, GameBananaRecord record)
         {
-            if (String.IsNullOrEmpty(Global.config.Configs[Global.config.CurrentGame].ModsFolder)
+            if (string.IsNullOrEmpty(Global.config.Configs[Global.config.CurrentGame].ModsFolder)
                 || !Directory.Exists(Global.config.Configs[Global.config.CurrentGame].ModsFolder))
             {
-                MessageBox.Show($"Please click Setup before installing mods!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please click Setup before installing mods!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 Global.logger.WriteLine("Please click Setup before installing mods!", LoggerType.Warning);
                 return;
             }
-            DownloadWindow downloadWindow = new DownloadWindow(record);
+            var downloadWindow = new DownloadWindow(record);
             downloadWindow.ShowDialog();
+            
             if (downloadWindow.YesNo)
             {
                 string downloadUrl = null;
                 string fileName = null;
-                if (record.AllFiles.Count == 1)
+                
+                switch (record.AllFiles.Count)
                 {
-                    downloadUrl = record.AllFiles[0].DownloadUrl;
-                    fileName = record.AllFiles[0].FileName;
-                }
-                else if (record.AllFiles.Count > 1)
-                {
-                    UpdateFileBox fileBox = new UpdateFileBox(record.AllFiles, record.Title);
-                    fileBox.Activate();
-                    fileBox.ShowDialog();
-                    downloadUrl = fileBox.chosenFileUrl;
-                    fileName = fileBox.chosenFileName;
+                    case 1:
+                        downloadUrl = record.AllFiles[0].DownloadUrl;
+                        fileName = record.AllFiles[0].FileName;
+                        break;
+                    case > 1:
+                    {
+                        UpdateFileBox fileBox = new UpdateFileBox(record.AllFiles, record.Title);
+                        fileBox.Activate();
+                        fileBox.ShowDialog();
+                        downloadUrl = fileBox.chosenFileUrl;
+                        fileName = fileBox.chosenFileName;
+                        break;
+                    }
                 }
                 if (downloadUrl != null && fileName != null)
                 {
@@ -63,26 +67,6 @@ namespace DivaModManager
                     if (!cancelled)
                         await Task.Run(() => ExtractFile(fileName, game, record));
                 }
-            }
-        }
-        public async void DMABrowserDownload(string game, DivaModArchivePost post)
-        {
-            if (String.IsNullOrEmpty(Global.config.Configs[Global.config.CurrentGame].ModsFolder)
-                || !Directory.Exists(Global.config.Configs[Global.config.CurrentGame].ModsFolder))
-            {
-                MessageBox.Show($"Please click Setup before installing mods!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                Global.logger.WriteLine("Please click Setup before installing mods!", LoggerType.Warning);
-                return;
-            }
-            DownloadWindow downloadWindow = new DownloadWindow(post);
-            downloadWindow.ShowDialog();
-            if (downloadWindow.YesNo)
-            {
-                string fileName = post.DownloadUrl.ToString().Split('/').Last();
-                await DownloadFile(post.DownloadUrl.ToString(), fileName, new Progress<DownloadProgress>(ReportUpdateProgress),
-                            CancellationTokenSource.CreateLinkedTokenSource(cancellationToken.Token));
-                if (!cancelled)
-                    await Task.Run(() => ExtractFile(fileName, game, post));
             }
         }
         public async void Download(string line, bool running)
@@ -110,18 +94,6 @@ namespace DivaModManager
                                 await Task.Run(() => ExtractFile(fileName, response.Game.Name, response));
                         }
                     }
-                    else if (URL.Contains("divamodarchive", StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        DownloadWindow downloadWindow = new DownloadWindow(DMAresponse);
-                        downloadWindow.ShowDialog();
-                        if (downloadWindow.YesNo)
-                        {
-                            await DownloadFile(DMAresponse.DownloadUrl.ToString(), fileName, new Progress<DownloadProgress>(ReportUpdateProgress),
-                                CancellationTokenSource.CreateLinkedTokenSource(cancellationToken.Token));
-                            if (!cancelled)
-                                await Task.Run(() => ExtractFile(fileName, "Project DIVA Mega Mix+", DMAresponse));
-                        }
-                    }
                 }
             }
             if (running)
@@ -132,22 +104,13 @@ namespace DivaModManager
         {
             try
             {
-                if (URL.Contains("gamebanana", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    string responseString = await client.GetStringAsync(URL);
-                    response = JsonSerializer.Deserialize<GameBananaAPIV4>(responseString);
-                    fileName = response.Files.Where(x => x.Id == DL_ID).ToArray()[0].FileName;
-                    return true;
-                }
-                else if (URL.Contains("divamodarchive", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    string responseString = await client.GetStringAsync(URL);
-                    DMAresponse = JsonSerializer.Deserialize<DivaModArchivePost>(responseString);
-                    fileName = DMAresponse.DownloadUrl.ToString().Split('/').Last();
-                    return true;
-                }
-                else
-                    return false;
+                if (!URL.Contains("gamebanana", StringComparison.CurrentCultureIgnoreCase)) return false;
+                
+                var responseString = await client.GetStringAsync(URL);
+                response = JsonSerializer.Deserialize<GameBananaAPIV4>(responseString);
+                fileName = response.Files.Where(x => x.Id == DL_ID).ToArray()[0].FileName;
+                return true;
+
             }
             catch (Exception e)
             {
@@ -173,28 +136,19 @@ namespace DivaModManager
             try
             {
                 line = line.Replace("divamodmanager:", "");
-                string[] data = line.Split(',');
+                var data = line.Split(',');
+                
                 // GameBanana 1-click install
-                if (data.Length > 1)
-                {
-                    URL_TO_ARCHIVE = data[0];
-                    // Used to grab file info from dictionary
-                    var match = Regex.Match(URL_TO_ARCHIVE, @"\d*$");
-                    DL_ID = match.Value;
-                    MOD_TYPE = data[1];
-                    MOD_ID = data[2];
-                    URL = $"https://gamebanana.com/apiv6/{MOD_TYPE}/{MOD_ID}?_csvProperties=_sName,_aGame,_sProfileUrl,_aPreviewMedia,_sDescription,_aSubmitter,_aCategory,_aSuperCategory,_aFiles,_tsDateUpdated,_aAlternateFileSources,_bHasUpdates,_aLatestUpdates";
-                    return true;
-                }
-                // DivaModArchive 1-click install
-                else if (data.Length == 1)
-                {
-                    MOD_ID = data[0].Replace("dma/", String.Empty);
-                    URL = $"https://divamodarchive.xyz/api/v1/posts/{MOD_ID}";
-                    return true;
-                }
-                else
-                    return false;
+                if (data.Length <= 1) return false;
+                
+                URL_TO_ARCHIVE = data[0];
+                // Used to grab file info from dictionary
+                var match = Regex.Match(URL_TO_ARCHIVE, @"\d*$");
+                DL_ID = match.Value;
+                MOD_TYPE = data[1];
+                MOD_ID = data[2];
+                URL = $"https://gamebanana.com/apiv6/{MOD_TYPE}/{MOD_ID}?_csvProperties=_sName,_aGame,_sProfileUrl,_aPreviewMedia,_sDescription,_aSubmitter,_aCategory,_aSuperCategory,_aFiles,_tsDateUpdated,_aAlternateFileSources,_bHasUpdates,_aLatestUpdates";
+                return true;
             }
             catch (Exception e)
             {
@@ -204,16 +158,15 @@ namespace DivaModManager
         }
         private void ExtractFile(string fileName, string game, GameBananaRecord record)
         {
-            switch (game)
+            game = game switch
             {
-                case "Hatsune Miku: Project DIVA Mega Mix+":
-                    game = "Project DIVA Mega Mix+";
-                    break;
-            }
+                "Hatsune Miku: Project DIVA Mega Mix+" => "Project DIVA Mega Mix+",
+                _ => game
+            };
             string _ArchiveSource = $@"{Global.assemblyLocation}{Global.s}Downloads{Global.s}{fileName}";
-            string _ArchiveType = Path.GetExtension(fileName);
             string ArchiveDestination = $@"{Global.assemblyLocation}{Global.s}temp";
             Directory.CreateDirectory(ArchiveDestination);
+            
             if (File.Exists(_ArchiveSource))
             {
                 try
@@ -296,99 +249,7 @@ namespace DivaModManager
                 Directory.Delete(ArchiveDestination, true);
             }
         }
-        private void ExtractFile(string fileName, string game, DivaModArchivePost post)
-        {
-            switch (game)
-            {
-                case "Hatsune Miku: Project DIVA Mega Mix+":
-                    game = "Project DIVA Mega Mix+";
-                    break;
-            }
-            string _ArchiveSource = $@"{Global.assemblyLocation}{Global.s}Downloads{Global.s}{fileName}";
-            string _ArchiveType = Path.GetExtension(fileName);
-            string ArchiveDestination = $@"{Global.assemblyLocation}{Global.s}temp";
-            Directory.CreateDirectory(ArchiveDestination);
-            if (File.Exists(_ArchiveSource))
-            {
-                try
-                {
-                    if (Path.GetExtension(_ArchiveSource).Equals(".7z", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        using (var archive = SevenZipArchive.Open(_ArchiveSource))
-                        {
-                            var reader = archive.ExtractAllEntries();
-                            while (reader.MoveToNextEntry())
-                            {
-                                if (!reader.Entry.IsDirectory)
-                                    reader.WriteEntryToDirectory(ArchiveDestination, new ExtractionOptions()
-                                    {
-                                        ExtractFullPath = true,
-                                        Overwrite = true
-                                    });
-                            }
-                        }
-                    }
-                    else
-                    {
-                        using (Stream stream = File.OpenRead(_ArchiveSource))
-                        using (var reader = ReaderFactory.Open(stream))
-                        {
-                            while (reader.MoveToNextEntry())
-                            {
-                                if (!reader.Entry.IsDirectory)
-                                {
-                                    reader.WriteEntryToDirectory(ArchiveDestination, new ExtractionOptions()
-                                    {
-                                        ExtractFullPath = true,
-                                        Overwrite = true
-                                    });
-                                }
-                            }
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show($"Couldn't extract {fileName}: {e.Message}", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-            }
-            foreach (var folder in Directory.GetDirectories(ArchiveDestination, "*", SearchOption.AllDirectories).Where(x => File.Exists($@"{x}{Global.s}config.toml")))
-            {
-                string path = $@"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{Path.GetFileName(folder)}";
-                int index = 2;
-                while (Directory.Exists(path))
-                {
-                    path = $@"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{Path.GetFileName(folder)} ({index})";
-                    index += 1;
-                }
-                MoveDirectory(folder, path);
-                if (!File.Exists($@"{ArchiveDestination}{Global.s}mod.json"))
-                {
-                    Metadata metadata = new Metadata();
-                    metadata.id = post.ID;
-                    metadata.submitter = post.User.Name;
-                    metadata.description = post.ShortText;
-                    metadata.preview = post.Image;
-                    metadata.homepage = post.Link;
-                    metadata.avi = post.User.Avatar;
-                    metadata.cat = post.Type;
-                    metadata.lastupdate = post.Date;
-                    string metadataString = JsonSerializer.Serialize(metadata, new JsonSerializerOptions { WriteIndented = true });
-                    File.WriteAllText($@"{path}{Global.s}mod.json", metadataString);
-                }
-            }
-            // Check if folder output folder exists, if not nothing was extracted
-            if (!Directory.Exists(ArchiveDestination))
-            {
-                MessageBox.Show($"Didn't extract {fileName} due to improper format", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-            else
-            {
-                // Only delete if successfully extracted
-                File.Delete(_ArchiveSource);
-                Directory.Delete(ArchiveDestination, true);
-            }
-        }
+        
         private static void MoveDirectory(string sourcePath, string targetPath)
         {
             //Copy all the files & Replaces any files with the same name
