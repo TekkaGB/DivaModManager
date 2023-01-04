@@ -7,7 +7,7 @@
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Assets\miku.ico</ApplicationIcon>
     <AssemblyName>DivaModManager</AssemblyName>
-    <AssemblyVersion>1.2.6.0</AssemblyVersion>
+    <AssemblyVersion>1.2.7.0</AssemblyVersion>
     <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
   </PropertyGroup>
 
@@ -15,7 +15,6 @@
     <None Remove="Assets\AnekLatin-Medium.ttf" />
     <None Remove="Assets\AnekLatin-Regular.ttf" />
     <None Remove="Assets\AnekLatin-SemiBold.ttf" />
-    <None Remove="Assets\DMA_BLACK.png" />
     <None Remove="Assets\dml.png" />
     <None Remove="Assets\Icons\mmplus.png" />
     <None Remove="Assets\KoFi.png" />
@@ -44,7 +43,6 @@
     <Resource Include="Assets\AnekLatin-Medium.ttf" />
     <Resource Include="Assets\AnekLatin-Regular.ttf" />
     <Resource Include="Assets\AnekLatin-SemiBold.ttf" />
-    <Resource Include="Assets\DMA_BLACK.png" />
     <Resource Include="Assets\dml.png" />
     <Resource Include="Assets\GameBanana.png" />
     <Resource Include="Assets\Icons\mmplus.png" />
