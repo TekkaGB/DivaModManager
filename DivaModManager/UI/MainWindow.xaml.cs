@@ -1787,14 +1787,7 @@ namespace DivaModManager.UI
         private void UniformGrid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             var grid = sender as UniformGrid;
-            if (grid.ActualWidth > 2000)
-                grid.Columns = 6;
-            else if (grid.ActualWidth > 1600) 
-                grid.Columns = 5;
-            else if (grid.ActualWidth > 1200) 
-                grid.Columns = 4;
-            else 
-                grid.Columns = 3;
+            grid.Columns = (int)grid.ActualWidth / 400 + 1;
         }
         private void OnResize(object sender, RoutedEventArgs e)
         {

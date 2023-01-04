@@ -536,7 +536,7 @@
                     </Grid>
                 </TabItem.Content>
             </TabItem>
-            <TabItem Name="GBModBrowser" Selector.Selected="OnBrowserTabSelected" FontSize="20" HorizontalAlignment="Center" Header="GB Mods">
+            <TabItem Name="GBModBrowser" Selector.Selected="OnBrowserTabSelected" FontSize="20" HorizontalAlignment="Center" Header="GameBanana Mods">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="50"/>
