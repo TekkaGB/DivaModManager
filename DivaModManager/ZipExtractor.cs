@@ -1,14 +1,10 @@
 ﻿using Onova.Services;
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using SevenZipExtractor;
 using SharpCompress.Common;
-using SharpCompress.Archives;
-using SharpCompress.Archives.SevenZip;
 using SharpCompress.Readers;
 
 namespace DivaModManager
@@ -22,18 +18,9 @@ namespace DivaModManager
             {
                 if (Path.GetExtension(sourceFilePath).Equals(".7z", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    using (var archive = SevenZipArchive.Open(sourceFilePath))
+                    using (var archive = new ArchiveFile(sourceFilePath))
                     {
-                        var reader = archive.ExtractAllEntries();
-                        while (reader.MoveToNextEntry())
-                        {
-                            if (!reader.Entry.IsDirectory)
-                                reader.WriteEntryToDirectory(destDirPath, new ExtractionOptions()
-                                {
-                                    ExtractFullPath = true,
-                                    Overwrite = true
-                                });
-                        }
+                        archive.Extract(destDirPath);
                     }
                 }
                 else

@@ -11,6 +11,7 @@ using SharpCompress.Readers;
 using DivaModManager.UI;
 using SharpCompress.Archives.SevenZip;
 using System.Linq;
+using SevenZipExtractor;
 
 namespace DivaModManager
 {
@@ -173,18 +174,9 @@ namespace DivaModManager
                 {
                     if (Path.GetExtension(_ArchiveSource).Equals(".7z", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        using (var archive = SevenZipArchive.Open(_ArchiveSource))
+                        using (var archive = new ArchiveFile(_ArchiveSource))
                         {
-                            var reader = archive.ExtractAllEntries();
-                            while (reader.MoveToNextEntry())
-                            {
-                                if (!reader.Entry.IsDirectory)
-                                    reader.WriteEntryToDirectory(ArchiveDestination, new ExtractionOptions() 
-                                    { 
-                                        ExtractFullPath = true, 
-                                        Overwrite = true 
-                                    });
-                            }
+                            archive.Extract(ArchiveDestination);
                         }
                     }
                     else

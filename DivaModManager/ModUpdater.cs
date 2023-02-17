@@ -7,12 +7,10 @@ using System.Text.Json;
 using System.Net.Http;
 using System.Threading;
 using DivaModManager.UI;
-using System.Reflection;
 using System.Windows;
+using SevenZipExtractor;
 using SharpCompress.Common;
 using SharpCompress.Readers;
-using SharpCompress.Archives.SevenZip;
-using SharpCompress.Archives;
 using Tomlyn;
 using Tomlyn.Model;
 
@@ -360,18 +358,9 @@ namespace DivaModManager
                 {
                     if (Path.GetExtension(_ArchiveSource).Equals(".7z", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        using (var archive = SevenZipArchive.Open(_ArchiveSource))
+                        using (var archive = new ArchiveFile(_ArchiveSource))
                         {
-                            var reader = archive.ExtractAllEntries();
-                            while (reader.MoveToNextEntry())
-                            {
-                                if (!reader.Entry.IsDirectory)
-                                    reader.WriteEntryToDirectory(ArchiveDestination, new ExtractionOptions()
-                                    {
-                                        ExtractFullPath = true,
-                                        Overwrite = true
-                                    });
-                            }
+                            archive.Extract(ArchiveDestination);
                         }
                     }
                     else
