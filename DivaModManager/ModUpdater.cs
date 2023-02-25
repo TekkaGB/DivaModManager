@@ -337,7 +337,7 @@ namespace DivaModManager
 
             foreach (FileInfo fi in dir.GetFiles())
             {
-                if (fi.Name.ToLowerInvariant() != "mod.json" && fi.Name.ToLowerInvariant() != "config.toml")
+                if (fi.Name.ToLowerInvariant() != "mod.json" && fi.Name.ToLowerInvariant() != "config.toml" && !fi.Name.ToLowerInvariant().StartsWith("preview."))
                     fi.Delete();
             }
 
