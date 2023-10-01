@@ -453,6 +453,7 @@
                           EnableColumnVirtualization="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
                           CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" AlternatingRowBackground="#2A2A2A"
                           dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" HeadersVisibility="Column" 
+                          IsTextSearchEnabled="True" TextSearch.TextPath="name"
                           SelectionMode="Extended" RowBackground="#202020" Foreground="#f2f2f2" LoadingRow="ModGrid_LoadingRow" HorizontalScrollBarVisibility="Hidden"
                           HorizontalAlignment="Center" Background="#202020" Grid.Column="0" FontSize="15" PreviewKeyDown="ModGrid_PreviewKeyDown"
                           ContextMenuOpening="ModGrid_ContextMenuOpening" SelectionChanged="ModGrid_SelectionChanged"  FontFamily="{StaticResource AnekLatin}">
