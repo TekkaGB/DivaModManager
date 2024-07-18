@@ -231,6 +231,7 @@ namespace DivaModManager.UI
                                 // Add enabled field to be true if it doesn't exist
                                 m.enabled = true;
                                 config.Add("enabled", true);
+                                AddInclude(config);
                                 var isReady = false;
                                 while (!isReady)
                                 {
@@ -258,6 +259,7 @@ namespace DivaModManager.UI
                             m.enabled = true;
                             config = new();
                             config.Add("enabled", true);
+                            AddInclude(config);
                             var isReady = false;
                             while (!isReady)
                             {
@@ -280,27 +282,14 @@ namespace DivaModManager.UI
                     }
                     else
                     {
-                        // Create config.toml with enabled field to be true
-                        m.enabled = true;
-                        TomlTable config = new();
-                        config.Add("enabled", true);
-                        var isReady = false;
-                        while (!isReady)
+                        // Create config.toml with enabled field to be true and include set, if the user desires
+                        if (!IsWindowOpen<ChoiceWindow>())
                         {
-                            try
-                            {
-                                File.WriteAllText(configPath, Toml.FromModel(config));
-                                isReady = true;
-                            }
-                            catch (Exception e)
-                            {
-                                // Check if the exception is related to an IO error.
-                                if (e.GetType() != typeof(IOException))
-                                {
-                                    Global.logger.WriteLine($"Couldn't access {configPath} ({e.Message})", LoggerType.Error);
-                                    break;
-                                }
-                            }
+                            ConfirmConfigCreation(configPath, m, true);
+                        }
+                        else
+                        {
+                            Global.logger.WriteLine("No config.toml file window triggered but it was already open.", LoggerType.Info);
                         }
                     }
                     App.Current.Dispatcher.Invoke((Action)delegate
@@ -340,27 +329,16 @@ namespace DivaModManager.UI
                         }
                     }
                     else
-                        config = new();
-                    if (config.ContainsKey("enabled"))
-                        config["enabled"] = Global.ModList[index].enabled;
-                    else
-                        config.Add("enabled", Global.ModList[index].enabled);
-                    var isReady = false;
-                    while (!isReady)
                     {
-                        try
+                        if (!IsWindowOpen<ChoiceWindow>())
                         {
-                            File.WriteAllText($"{mod}{Global.s}config.toml", Toml.FromModel(config));
-                            isReady = true;
+                            Mod m = new Mod();
+                            m.name = Path.GetFileName(mod);
+                            ConfirmConfigCreation(configPath, m, true);
                         }
-                        catch (Exception e)
+                        else
                         {
-                            // Check if the exception is related to an IO error.
-                            if (e.GetType() != typeof(IOException))
-                            {
-                                Global.logger.WriteLine($"Couldn't access {configPath} ({e.Message})", LoggerType.Error);
-                                break;
-                            }
+                            Global.logger.WriteLine("No config.toml file window triggered but it was already open.", LoggerType.Info);
                         }
                     }
                 }
@@ -425,6 +403,7 @@ namespace DivaModManager.UI
                                 else
                                     // Add enabled field to be true if it doesn't exist
                                     config.Add("enabled", true);
+                                AddInclude(config);
                                 File.WriteAllText(configPath, Toml.FromModel(config));
                             }
                             else
@@ -433,15 +412,21 @@ namespace DivaModManager.UI
                                 // Create config.toml with enabled field to be true if failed to parse
                                 config = new();
                                 config.Add("enabled", true);
+                                AddInclude(config);
                                 File.WriteAllText(configPath, Toml.FromModel(config));
                             }
                         }
                         else
                         {
-                            // Create config.toml with enabled field to be true
-                            TomlTable config = new();
-                            config.Add("enabled", true);
-                            File.WriteAllText(configPath, Toml.FromModel(config));
+                            // Create config.toml with enabled field to be true and include set, if the user desires
+                            if (!IsWindowOpen<ChoiceWindow>())
+                            {
+                                ConfirmConfigCreation(configPath, m, true);
+                            }
+                            else
+                            {
+                                Global.logger.WriteLine("No config.toml file window triggered but it was already open.", LoggerType.Info);
+                            }
                         }
                     }
                 }
@@ -486,6 +471,7 @@ namespace DivaModManager.UI
                                 else
                                     // Add enabled field to be true if it doesn't exist
                                     config.Add("enabled", false);
+                                AddInclude(config);
                                 File.WriteAllText(configPath, Toml.FromModel(config));
                             }
                             else
@@ -494,15 +480,21 @@ namespace DivaModManager.UI
                                 // Create config.toml with enabled field to be true if failed to parse
                                 config = new();
                                 config.Add("enabled", false);
+                                AddInclude(config);
                                 File.WriteAllText(configPath, Toml.FromModel(config));
                             }
                         }
                         else
                         {
-                            // Create config.toml with enabled field to be false
-                            TomlTable config = new();
-                            config.Add("enabled", false);
-                            File.WriteAllText(configPath, Toml.FromModel(config));
+                            // Create config.toml with enabled field to be true and include set, if the user desires
+                            if (!IsWindowOpen<ChoiceWindow>())
+                            {
+                                ConfirmConfigCreation(configPath, m, false);
+                            }
+                            else
+                            {
+                                Global.logger.WriteLine("No config.toml file window triggered but it was already open.", LoggerType.Info);
+                            }
                         }
                     }
                 }
@@ -525,6 +517,79 @@ namespace DivaModManager.UI
         {
             Global.UpdateConfig();
             await Task.Run(() => ModLoader.Build());
+        }
+        private TomlTable AddInclude(TomlTable config)
+        {
+            if (!config.ContainsKey("include"))
+            {
+                config.Add("include", new string[1] { "." });
+            }
+            else
+            {
+                config["include"] = new string[1] { "." };
+            }
+            return config;
+        }
+
+        public static bool IsWindowOpen<T>(string name = "") where T : Window
+        {
+            return string.IsNullOrEmpty(name)
+               ? Application.Current.Windows.OfType<T>().Any()
+               : Application.Current.Windows.OfType<T>().Any(w => w.Name.Equals(name));
+        }
+
+        private void ConfirmConfigCreation(string configPath, Mod m, bool enabled)
+        {
+            var choices = new List<Choice>();
+            choices.Add(new Choice()
+            {
+                OptionText = "Yes",
+                OptionSubText = $"Create a new config.toml file in mod: {m.name} with the default values. (Recommended if you are testing/creating a mod.",
+                Index = 0
+            });
+            choices.Add(new Choice()
+            {
+                OptionText = $"No",
+                OptionSubText = $"Do not create a new config.toml file in mod: {m.name}. (Recommended if you are still installing this mod)",
+                Index = 1
+            });
+            Dispatcher.Invoke(() =>
+            {
+                var choice = new ChoiceWindow(choices, $"No config.toml file found, create one?");
+                choice.ShowDialog();
+                switch (choice.choice)
+                {
+                    case 0:
+                        m.enabled = true;
+                        TomlTable config = new();
+                        config.Add("enabled", enabled);
+                        AddInclude(config);
+                        var isReady = false;
+                        while (!isReady)
+                        {
+                            try
+                            {
+                                File.WriteAllText(configPath, Toml.FromModel(config));
+                                isReady = true;
+                            }
+                            catch (Exception e)
+                            {
+                                // Check if the exception is related to an IO error.
+                                if (e.GetType() != typeof(IOException))
+                                {
+                                    Global.logger.WriteLine($"Couldn't access {configPath} ({e.Message})", LoggerType.Error);
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    case 1:
+                        Global.logger.WriteLine($"User chose to not create a config.toml file for the aforementioned mod.", LoggerType.Info);
+                        break;
+                    default:
+                        break;
+                }
+            });
         }
 
         private bool SetupGame()
@@ -1021,10 +1086,11 @@ namespace DivaModManager.UI
                     var configString = File.ReadAllText(configPath);
                     if (!Toml.TryToModel(configString, out config, out var diagnostics))
                     {
-                        Global.logger.WriteLine($"{diagnostics[0].Message} for {mod}. Rewriting {configPath} with only enabled field", LoggerType.Warning);
+                        Global.logger.WriteLine($"{diagnostics[0].Message} for {mod}. Rewriting {configPath} with only the enabled & include fields", LoggerType.Warning);
                         config = new();
                         var enabled = Global.ModList.ToList().Find(x => x.name == mod).enabled;
                         config.Add("enabled", enabled);
+                        AddInclude(config);
                         File.WriteAllText(configPath, Toml.FromModel(config));
                     }
                 }
