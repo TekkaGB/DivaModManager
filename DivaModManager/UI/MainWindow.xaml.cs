@@ -2123,30 +2123,41 @@ namespace DivaModManager.UI
             DataGridColumnHeader colHeader = sender as DataGridColumnHeader;
             if (colHeader != null)
             {
-                if (colHeader.Column.Header.Equals("Name"))
+                var colStr = colHeader.Column.Header;
+                var msgRes = MessageBox.Show($"Sort by {colStr}.\nThe priority of the mod will change significantly.\n\nAre you sure?", "Attention.", MessageBoxButton.OKCancel);
+                if (msgRes != MessageBoxResult.OK)
                 {
-                    // Sort alphabetically
-                    Global.ModList = new ObservableCollection<Mod>(Global.ModList.ToList().OrderBy(x => x.name, new NaturalSort()).ToList());
-                    Global.logger.WriteLine("Sorted alphanumerically!", LoggerType.Info);
+                    return;
                 }
-                else if (colHeader.Column.Header.Equals("Enabled"))
+
+                if (colHeader != null)
                 {
-                    // Move all enabled mods to top
-                    Global.ModList = new ObservableCollection<Mod>(Global.ModList.ToList().OrderByDescending(x => x.enabled).ToList());
-                    Global.logger.WriteLine("Moved all enabled mods to the top!", LoggerType.Info);
-                }
-                await Task.Run(() =>
-                {
-                    App.Current.Dispatcher.Invoke((Action)delegate
+                    if (colHeader.Column.Header.Equals("Name"))
                     {
-                        ModGrid.ItemsSource = Global.ModList;
+                        // Sort alphabetically
+                        Global.ModList = new ObservableCollection<Mod>(Global.ModList.ToList().OrderBy(x => x.name, new NaturalSort()).ToList());
+                        Global.logger.WriteLine("Sorted alphanumerically!", LoggerType.Info);
+                    }
+                    else if (colHeader.Column.Header.Equals("Enabled"))
+                    {
+                        // Move all enabled mods to top
+                        Global.ModList = new ObservableCollection<Mod>(Global.ModList.ToList().OrderByDescending(x => x.enabled).ToList());
+                        Global.logger.WriteLine("Moved all enabled mods to the top!", LoggerType.Info);
+                    }
+                    await Task.Run(() =>
+                    {
+                        App.Current.Dispatcher.Invoke((Action)delegate
+                        {
+                            ModGrid.ItemsSource = Global.ModList;
+                        });
                     });
-                });
-                Global.UpdateConfig();
-                await Task.Run(() => ModLoader.Build());
+                    Global.UpdateConfig();
+                    await Task.Run(() => ModLoader.Build());
+                }
+                e.Handled = true;
             }
-            e.Handled = true;
         }
+
         private void Search()
         {
             if (!filterSelect && IsLoaded && !String.IsNullOrWhiteSpace(SearchBar.Text))
