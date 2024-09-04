@@ -524,10 +524,6 @@ namespace DivaModManager.UI
             {
                 config.Add("include", new string[1] { "." });
             }
-            else
-            {
-                config["include"] = new string[1] { "." };
-            }
             return config;
         }
 
