@@ -663,9 +663,8 @@ namespace DivaModManager.UI
             {
                 Global.ModList = Global.ModList_All;
                 ModGrid.ItemsSource = Global.ModList;
+                SearchModListTextBox.Text = "";
                 Global.UpdateConfig();
-
-
 
                 var path = Global.config.Configs[Global.config.CurrentGame].Launcher;
                 try
@@ -803,6 +802,7 @@ namespace DivaModManager.UI
             Global.config.BottomGridHeight = MainGrid.RowDefinitions[3].Height.Value;
             Global.config.LeftGridWidth = MiddleGrid.ColumnDefinitions[0].Width.Value;
             Global.config.RightGridWidth = MiddleGrid.ColumnDefinitions[2].Width.Value;
+            Global.ModList = Global.ModList_All;
             Global.UpdateConfig();
             System.Windows.Application.Current.Shutdown();
         }
@@ -2135,11 +2135,11 @@ namespace DivaModManager.UI
             {
                 if (!string.IsNullOrEmpty(SearchModListTextBox.Text))
                 {
-                    MessageBox.Show($"Sorting is not possible with search conditions specified. Sorry.", "Attention.", MessageBoxButton.OK);
+                    MessageBox.Show($"Sorting is not possible with search conditions specified.\nSorry.", "Attention.", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
                 var colStr = colHeader.Column.Header;
-                var msgRes = MessageBox.Show($"Sort by {colStr}.\nThe priority of the mod will change significantly.\n\nAre you sure?", "Attention.", MessageBoxButton.OKCancel);
+                var msgRes = MessageBox.Show($"Sort by {colStr}.\nThe priority of the mod will change significantly.\n\nAre you sure?", "Attention.", MessageBoxButton.OKCancel, MessageBoxImage.Question);
                 if (msgRes != MessageBoxResult.OK)
                 {
                     return;
@@ -2152,7 +2152,6 @@ namespace DivaModManager.UI
                         // Sort alphabetically
                         Global.ModList = new ObservableCollection<Mod>(Global.ModList.ToList().OrderBy(x => x.name, new NaturalSort()).ToList());
                         Global.logger.WriteLine("Sorted alphanumerically!", LoggerType.Info);
-
                     }
                     else if (colHeader.Column.Header.Equals("Enabled"))
                     {
@@ -2237,17 +2236,19 @@ namespace DivaModManager.UI
             }
         }
 
-        private async void SearchModList(string text)
+        private async void SearchModList(string searchModName)
         {
-            if (string.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(searchModName))
             {
+                // Restore all evacuated mods.
                 Global.ModList = Global.ModList_All;
             }
             else
             {
                 Global.ModList = new ObservableCollection<Mod>(Global.ModList_All.ToList()
-                    .Where(x => x.name.ToLower().Contains(text.ToLower())).ToList());
+                    .Where(x => x.name.ToLower().Contains(searchModName.ToLower())).ToList());
             }
+
             await Task.Run(() =>
             {
                 App.Current.Dispatcher.Invoke((Action)delegate
@@ -2255,7 +2256,6 @@ namespace DivaModManager.UI
                     ModGrid.ItemsSource = Global.ModList;
                 });
             });
-            Global.UpdateConfig();
             await Task.Run(() => ModLoader.Build());
         }
 
