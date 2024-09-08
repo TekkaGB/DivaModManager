@@ -455,7 +455,7 @@
                           IsTextSearchEnabled="True" TextSearch.TextPath="name"
                           SelectionMode="Extended" RowBackground="#202020" Foreground="#f2f2f2" LoadingRow="ModGrid_LoadingRow" HorizontalScrollBarVisibility="Hidden"
                           HorizontalAlignment="Center" Background="#202020" Grid.Column="0" FontSize="15" PreviewKeyDown="ModGrid_PreviewKeyDown"
-                          ContextMenuOpening="ModGrid_ContextMenuOpening" SelectionChanged="ModGrid_SelectionChanged" Grid.ColumnSpan="2">
+                          ContextMenuOpening="ModGrid_ContextMenuOpening" SelectionChanged="ModGrid_SelectionChanged" PreviewMouseMove="ModGrid_PreviewMouseMove" Grid.ColumnSpan="2">
                                 <DataGrid.Resources>
                                     <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#115F58"/>
                                     <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#f2f2f2"/>
