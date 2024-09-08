@@ -438,25 +438,24 @@
 
                         <ComboBox Grid.Column="5" Margin="0,0,10,0" Height="35" FontSize="20" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" Name="LauncherOptionsBox" SelectionChanged="LauncherOptionsBox_SelectionChanged"/>
                         <ComboBox Grid.Column="1" Margin="10,0,10,0" Height="35" FontSize="20" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" Name="LoadoutBox" SelectionChanged="LoadoutsBox_SelectionChanged"/>
-
-                        <Grid Name="MiddleGrid" Grid.Row="1" Grid.ColumnSpan="9">
+                        <Grid x:Name="MiddleGrid" Grid.Row="1" Grid.ColumnSpan="8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1.8*"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Grid Visibility="Collapsed" Name="DropBox" Margin="10,5,3,3" Panel.ZIndex="2" DragLeave="Add_Leave" DragEnter="Add_Enter" Drop="Add_Drop" AllowDrop="True" Background="Transparent">
+                            <Grid Visibility="Collapsed" x:Name="DropBox" Margin="10,5,3,3" Panel.ZIndex="2" DragLeave="Add_Leave" DragEnter="Add_Enter" Drop="Add_Drop" AllowDrop="True" Background="Transparent">
                                 <Border Opacity="0.7" Background="Black"/>
-                                <TextBlock Foreground="#f2f2f2" FontSize="40" Panel.ZIndex="3" VerticalAlignment="Center" HorizontalAlignment="Center">Drop files to install mod</TextBlock>
+                                <TextBlock Foreground="#f2f2f2" FontSize="40" Panel.ZIndex="3" VerticalAlignment="Center" HorizontalAlignment="Center"><Run Text="Drop files to install mod"/></TextBlock>
                             </Grid>
-                            <DataGrid DragEnter="Add_Enter" Margin="10,5,3,3" Name="ModGrid" AutoGenerateColumns="False" GridLinesVisibility="None" VerticalScrollBarVisibility="Auto"  BorderBrush="#424242"
+                            <DataGrid DragEnter="Add_Enter" Margin="0,43,0,3" x:Name="ModGrid" AutoGenerateColumns="False" GridLinesVisibility="None" VerticalScrollBarVisibility="Auto"  BorderBrush="#424242"
                           EnableColumnVirtualization="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
                           CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" AlternatingRowBackground="#2A2A2A"
                           dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" HeadersVisibility="Column" 
                           IsTextSearchEnabled="True" TextSearch.TextPath="name"
                           SelectionMode="Extended" RowBackground="#202020" Foreground="#f2f2f2" LoadingRow="ModGrid_LoadingRow" HorizontalScrollBarVisibility="Hidden"
                           HorizontalAlignment="Center" Background="#202020" Grid.Column="0" FontSize="15" PreviewKeyDown="ModGrid_PreviewKeyDown"
-                          ContextMenuOpening="ModGrid_ContextMenuOpening" SelectionChanged="ModGrid_SelectionChanged"  FontFamily="{StaticResource AnekLatin}">
+                          ContextMenuOpening="ModGrid_ContextMenuOpening" SelectionChanged="ModGrid_SelectionChanged" Grid.ColumnSpan="2">
                                 <DataGrid.Resources>
                                     <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#115F58"/>
                                     <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#f2f2f2"/>
@@ -469,14 +468,17 @@
                                         <Setter Property="FontWeight" Value="Medium"/>
                                     </Style>
                                 </DataGrid.Resources>
+                                <DataGrid.FontFamily>
+                                    <StaticResource ResourceKey="AnekLatin"/>
+                                </DataGrid.FontFamily>
                                 <DataGrid.ColumnHeaderStyle>
-                                    <Style TargetType="DataGridColumnHeader">
+                                    <Style TargetType="{x:Type DataGridColumnHeader}">
                                         <Setter Property="Background" Value="#303030" />
                                         <Setter Property="Foreground" Value="#f2f2f2"/>
                                         <Setter Property="Height" Value="17"/>
                                         <Setter Property="FontSize" Value="15"/>
                                         <Setter Property="FontWeight" Value="Medium"/>
-                                        <EventSetter Event="Click" Handler="SortAlphabeticallyAndGroupEnabled_Click"/>
+                                        <EventSetter Event="ButtonBase.Click" Handler="SortAlphabeticallyAndGroupEnabled_Click"/>
                                     </Style>
                                 </DataGrid.ColumnHeaderStyle>
                                 <DataGrid.ContextMenu>
@@ -491,9 +493,9 @@
                                 <DataGrid.Columns>
                                     <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding enabled, Mode=TwoWay}" IsReadOnly="False" Width="58">
                                         <DataGridCheckBoxColumn.CellStyle>
-                                            <Style TargetType="DataGridCell">
-                                                <EventSetter Event="CheckBox.Checked" Handler="OnChecked"/>
-                                                <EventSetter Event="CheckBox.Unchecked" Handler="OnUnchecked"/>
+                                            <Style TargetType="{x:Type DataGridCell}">
+                                                <EventSetter Event="ToggleButton.Checked" Handler="OnChecked"/>
+                                                <EventSetter Event="ToggleButton.Unchecked" Handler="OnUnchecked"/>
                                                 <Style.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True">
                                                         <Setter Property="IsEditing" Value="True" />
@@ -512,19 +514,23 @@
                                     <RowDefinition Height="1.5*"/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
-                                <Image Margin="3,3,10,5" Name="Preview" Grid.Row="0" Panel.ZIndex="2"/>
-                                <Image Margin="3,3,10,5" Name="PreviewBG" Grid.Row="0" Stretch="UniformToFill" Panel.ZIndex="1">
+                                <Image Margin="3,3,10,5" x:Name="Preview" Grid.Row="0" Panel.ZIndex="2"/>
+                                <Image Margin="3,3,10,5" x:Name="PreviewBG" Grid.Row="0" Stretch="UniformToFill" Panel.ZIndex="1">
                                     <Image.BitmapEffect>
                                         <BlurBitmapEffect Radius="40"/>
                                     </Image.BitmapEffect>
                                 </Image>
 
                                 <Image Grid.Row="0" gif:ImageBehavior.AnimatedSource="../Assets/load.gif" Panel.ZIndex="-1" VerticalAlignment="Center" HorizontalAlignment="Center" Height="90"/>
-                                <RichTextBox FontSize="15" FontFamily="{StaticResource AnekLatin}" Padding="10" Grid.Row="1" Margin="3,5,10,3" Name="DescriptionWindow" Foreground="#F2F2F2" Background="#202020" BorderBrush="#424242" ClipToBounds="False"
+                                <RichTextBox FontSize="15" FontFamily="{StaticResource AnekLatin}" Padding="10" Grid.Row="1" Margin="3,5,10,3" x:Name="DescriptionWindow" Foreground="#F2F2F2" Background="#202020" BorderBrush="#424242" ClipToBounds="False"
                      VerticalContentAlignment="Center" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" IsReadOnly="True" Grid.ColumnSpan="5" IsDocumentEnabled="True"
                              FontWeight="Medium"/>
                             </Grid>
+                            <TextBox x:Name="SearchModListTextBox" HorizontalAlignment="Left" Height="28" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="396" FontSize="18" KeyDown="SearchModListTextBox_KeyDown"/>
                         </Grid>
+                        <Button Name="SearchModListButton" Margin="171,4,10,0" Height="36" VerticalAlignment="Top" Grid.Column="2" Background="#181818" BorderBrush="#252525" Click="SearchModList_Click" Grid.Row="1" Grid.ColumnSpan="2">
+                            <TextBlock Text="Search" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontFamily="{StaticResource AnekLatin}" FontSize="20" FontWeight="Medium"/>
+                        </Button>
                         <GridSplitter Grid.Row="2" Grid.ColumnSpan="9" HorizontalAlignment="Stretch" Height="10" Background="Transparent" />
 
                         <RichTextBox FontFamily="{StaticResource Monospace}" FontSize="12" Margin="10,3,10,10" Name="ConsoleWindow" Background="#202020" BorderBrush="#424242" ClipToBounds="False" Grid.Row="3" Grid.Column="0" VerticalScrollBarVisibility="Auto" IsReadOnly="True" Grid.ColumnSpan="9" TextChanged="ScrollToBottom">

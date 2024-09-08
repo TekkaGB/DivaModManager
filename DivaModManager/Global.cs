@@ -18,6 +18,8 @@ namespace DivaModManager
         public static string assemblyLocation = AppDomain.CurrentDomain.BaseDirectory;
         public static List<string> games;
         public static ObservableCollection<Mod> ModList;
+        // After applying the filter, for backup purposes
+        public static ObservableCollection<Mod> ModList_All;
         public static ObservableCollection<String> LoadoutItems;
         public static void UpdateConfig()
         {

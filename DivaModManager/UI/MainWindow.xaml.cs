@@ -23,6 +23,7 @@ using SharpCompress.Readers;
 using Tomlyn;
 using Tomlyn.Model;
 using WpfAnimatedGif;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DivaModManager.UI
 {
@@ -113,6 +114,7 @@ namespace DivaModManager.UI
             else if (Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout] == null)
                 Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout] = new();
             Global.ModList = Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout];
+            Global.ModList_All = Global.ModList;
 
             Global.LoadoutItems = new ObservableCollection<String>(Global.config.Configs[Global.config.CurrentGame].Loadouts.Keys);
 
@@ -530,8 +532,8 @@ namespace DivaModManager.UI
         public static bool IsWindowOpen<T>(string name = "") where T : Window
         {
             return string.IsNullOrEmpty(name)
-               ? Application.Current.Windows.OfType<T>().Any()
-               : Application.Current.Windows.OfType<T>().Any(w => w.Name.Equals(name));
+               ? System.Windows.Application.Current.Windows.OfType<T>().Any()
+               : System.Windows.Application.Current.Windows.OfType<T>().Any(w => w.Name.Equals(name));
         }
 
         private void ConfirmConfigCreation(string configPath, Mod m, bool enabled)
@@ -591,7 +593,7 @@ namespace DivaModManager.UI
         private bool SetupGame()
         {
             var index = 0;
-            Application.Current.Dispatcher.Invoke(() =>
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
                 index = GameBox.SelectedIndex;
             });
@@ -619,7 +621,7 @@ namespace DivaModManager.UI
             await Task.Run(() =>
             {
                 var index = 0;
-                Application.Current.Dispatcher.Invoke(() =>
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
                 {
                     index = GameBox.SelectedIndex;
                 });
@@ -657,6 +659,12 @@ namespace DivaModManager.UI
         {
             if (Global.config.Configs[Global.config.CurrentGame].Launcher != null && File.Exists(Global.config.Configs[Global.config.CurrentGame].Launcher))
             {
+                Global.ModList = Global.ModList_All;
+                ModGrid.ItemsSource = Global.ModList;
+                Global.UpdateConfig();
+
+
+
                 var path = Global.config.Configs[Global.config.CurrentGame].Launcher;
                 try
                 {
@@ -794,7 +802,7 @@ namespace DivaModManager.UI
             Global.config.LeftGridWidth = MiddleGrid.ColumnDefinitions[0].Width.Value;
             Global.config.RightGridWidth = MiddleGrid.ColumnDefinitions[2].Width.Value;
             Global.UpdateConfig();
-            Application.Current.Shutdown();
+            System.Windows.Application.Current.Shutdown();
         }
 
         private void OpenItem_Click(object sender, RoutedEventArgs e)
@@ -1103,7 +1111,7 @@ namespace DivaModManager.UI
                         if (metadata.avi != null && metadata.avi.ToString().Length > 0)
                         {
                             BitmapImage bm = new BitmapImage(metadata.avi);
-                            Image image = new Image();
+                            System.Windows.Controls.Image image = new System.Windows.Controls.Image();
                             image.Source = bm;
                             image.Height = 35;
                             para.Inlines.Add(image);
@@ -1112,7 +1120,7 @@ namespace DivaModManager.UI
                         if (metadata.upic != null && metadata.upic.ToString().Length > 0)
                         {
                             BitmapImage bm = new BitmapImage(metadata.upic);
-                            Image image = new Image();
+                            System.Windows.Controls.Image image = new System.Windows.Controls.Image();
                             image.Source = bm;
                             image.Height = 25;
                             para.Inlines.Add(image);
@@ -1143,7 +1151,7 @@ namespace DivaModManager.UI
                     if (metadata.caticon != null && metadata.caticon.ToString().Length > 0)
                     {
                         BitmapImage bm = new BitmapImage(metadata.caticon);
-                        Image image = new Image();
+                        System.Windows.Controls.Image image = new System.Windows.Controls.Image();
                         image.Source = bm;
                         image.Width = 20;
                         para.Inlines.Add(image);
@@ -2119,6 +2127,11 @@ namespace DivaModManager.UI
             DataGridColumnHeader colHeader = sender as DataGridColumnHeader;
             if (colHeader != null)
             {
+                if (!string.IsNullOrEmpty(SearchModListTextBox.Text))
+                {
+                    MessageBox.Show($"Sorting is not possible with search conditions specified. Sorry.", "Attention.", MessageBoxButton.OK);
+                    return;
+                }
                 var colStr = colHeader.Column.Header;
                 var msgRes = MessageBox.Show($"Sort by {colStr}.\nThe priority of the mod will change significantly.\n\nAre you sure?", "Attention.", MessageBoxButton.OKCancel);
                 if (msgRes != MessageBoxResult.OK)
@@ -2133,6 +2146,7 @@ namespace DivaModManager.UI
                         // Sort alphabetically
                         Global.ModList = new ObservableCollection<Mod>(Global.ModList.ToList().OrderBy(x => x.name, new NaturalSort()).ToList());
                         Global.logger.WriteLine("Sorted alphanumerically!", LoggerType.Info);
+
                     }
                     else if (colHeader.Column.Header.Equals("Enabled"))
                     {
@@ -2202,6 +2216,49 @@ namespace DivaModManager.UI
                     if (checkbox != null)
                         checkbox.IsChecked = !checkbox.IsChecked;
                 }
+        }
+
+        private async void SearchModList_Click(object sender, RoutedEventArgs e)
+        {
+            this.SearchModList(SearchModListTextBox.Text);
+        }
+
+        private void SearchModListTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                SearchModList(SearchModListTextBox.Text);
+            }
+        }
+
+        private async void SearchModList(string text)
+        {
+            bool SetCanUserSortColumns = true;
+            if (string.IsNullOrEmpty(text))
+            {
+                Global.ModList = Global.ModList_All;
+                SetCanUserSortColumns = true;
+            }
+            else
+            {
+                Global.ModList = new ObservableCollection<Mod>(Global.ModList_All.ToList().Where(x => x.name.ToLower().Contains(text.ToLower())).ToList());
+                SetCanUserSortColumns = false;
+            }
+            await Task.Run(() =>
+            {
+                App.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    ModGrid.ItemsSource = Global.ModList;
+                });
+            });
+            Global.UpdateConfig();
+            await Task.Run(() => ModLoader.Build());
+
+            ModGrid.CanUserSortColumns = SetCanUserSortColumns;
+            foreach (var c in ModGrid.Columns)
+            {
+                c.CanUserSort = SetCanUserSortColumns;
+            }
         }
     }
 }
