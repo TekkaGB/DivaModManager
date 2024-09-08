@@ -153,6 +153,8 @@ namespace DivaModManager.UI
             LauncherOptionsBox.IsEnabled = false;
             LoadoutBox.IsEnabled = false;
             EditLoadoutsButton.IsEnabled = false;
+            SearchModListButton.IsEnabled = false;
+            SearchModListTextBox.IsEnabled = false;
             App.Current.Dispatcher.Invoke(async () =>
             {
                 Global.logger.WriteLine("Checking for mod updates...", LoggerType.Info);
@@ -1014,6 +1016,8 @@ namespace DivaModManager.UI
             LauncherOptionsBox.IsEnabled = false;
             LoadoutBox.IsEnabled = false;
             EditLoadoutsButton.IsEnabled = false;
+            SearchModListButton.IsEnabled = false;
+            SearchModListTextBox.IsEnabled = false;
             App.Current.Dispatcher.Invoke(async () =>
             {
                 Global.logger.WriteLine("Checking for mod updates...", LoggerType.Info);
@@ -2110,6 +2114,8 @@ namespace DivaModManager.UI
                 LauncherOptionsBox.IsEnabled = false;
                 LoadoutBox.IsEnabled = false;
                 EditLoadoutsButton.IsEnabled = false;
+                SearchModListButton.IsEnabled = false;
+                SearchModListTextBox.IsEnabled = false;
                 await App.Current.Dispatcher.Invoke(async () =>
                 {
                     Global.logger.WriteLine("Checking for mod updates...", LoggerType.Info);
