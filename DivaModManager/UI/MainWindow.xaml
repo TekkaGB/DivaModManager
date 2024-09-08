@@ -526,7 +526,7 @@
                      VerticalContentAlignment="Center" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" IsReadOnly="True" Grid.ColumnSpan="5" IsDocumentEnabled="True"
                              FontWeight="Medium"/>
                             </Grid>
-                            <TextBox x:Name="SearchModListTextBox" HorizontalAlignment="Left" Height="28" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="396" FontSize="18" KeyDown="SearchModListTextBox_KeyDown"/>
+                            <TextBox x:Name="SearchModListTextBox" MouseDoubleClick="SearchModListTextBox_MouseDoubleClick" HorizontalAlignment="Left" Height="28" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="396" FontSize="18" KeyDown="SearchModListTextBox_KeyDown"/>
                         </Grid>
                         <Button Name="SearchModListButton" Margin="171,4,10,0" Height="36" VerticalAlignment="Top" Grid.Column="2" Background="#181818" BorderBrush="#252525" Click="SearchModList_Click" Grid.Row="1" Grid.ColumnSpan="2">
                             <TextBlock Text="Search" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontFamily="{StaticResource AnekLatin}" FontSize="20" FontWeight="Medium"/>

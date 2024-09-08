@@ -2243,12 +2243,10 @@ namespace DivaModManager.UI
             if (string.IsNullOrEmpty(text))
             {
                 Global.ModList = Global.ModList_All;
-                SetCanUserSortColumns = true;
             }
             else
             {
                 Global.ModList = new ObservableCollection<Mod>(Global.ModList_All.ToList().Where(x => x.name.ToLower().Contains(text.ToLower())).ToList());
-                SetCanUserSortColumns = false;
             }
             await Task.Run(() =>
             {
@@ -2259,12 +2257,20 @@ namespace DivaModManager.UI
             });
             Global.UpdateConfig();
             await Task.Run(() => ModLoader.Build());
+        }
 
-            ModGrid.CanUserSortColumns = SetCanUserSortColumns;
-            foreach (var c in ModGrid.Columns)
+        private void ModGrid_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(SearchModListTextBox.Text))
             {
-                c.CanUserSort = SetCanUserSortColumns;
+                // Prohibit mod movement by dragging when mod search is enabled.
+                e.Handled = true;
             }
+        }
+
+        private void SearchModListTextBox_MouseDoubleClick(object sender, EventArgs e)
+        {
+            SearchModListTextBox.SelectAll();
         }
     }
 }
