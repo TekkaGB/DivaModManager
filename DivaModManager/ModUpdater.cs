@@ -34,6 +34,8 @@ namespace DivaModManager
                 main.LauncherOptionsBox.IsEnabled = true;
                 main.LoadoutBox.IsEnabled = true;
                 main.EditLoadoutsButton.IsEnabled = true;
+                main.SearchModListButton.IsEnabled = true;
+                main.SearchModListTextBox.IsEnabled = true;
                 main.Activate();
                 return;
             }
@@ -105,6 +107,8 @@ namespace DivaModManager
                 main.LauncherOptionsBox.IsEnabled = true;
                 main.LoadoutBox.IsEnabled = true;
                 main.EditLoadoutsButton.IsEnabled = true;
+                main.SearchModListButton.IsEnabled = true;
+                main.SearchModListTextBox.IsEnabled = true;
                 return;
             }
             List<GameBananaAPIV4> response = new();
@@ -132,6 +136,8 @@ namespace DivaModManager
                             main.LauncherOptionsBox.IsEnabled = true;
                             main.LoadoutBox.IsEnabled = true;
                             main.EditLoadoutsButton.IsEnabled = true;
+                            main.SearchModListButton.IsEnabled = true;
+                            main.SearchModListTextBox.IsEnabled = true;
                             return;
                         }
                     }
@@ -170,6 +176,8 @@ namespace DivaModManager
             main.LauncherOptionsBox.IsEnabled = true;
             main.LoadoutBox.IsEnabled = true;
             main.EditLoadoutsButton.IsEnabled = true;
+            main.SearchModListButton.IsEnabled = true;
+            main.SearchModListTextBox.IsEnabled = true;
             main.Activate();
         }
         private static void ReportUpdateProgress(DownloadProgress progress)
