@@ -2239,14 +2239,14 @@ namespace DivaModManager.UI
 
         private async void SearchModList(string text)
         {
-            bool SetCanUserSortColumns = true;
             if (string.IsNullOrEmpty(text))
             {
                 Global.ModList = Global.ModList_All;
             }
             else
             {
-                Global.ModList = new ObservableCollection<Mod>(Global.ModList_All.ToList().Where(x => x.name.ToLower().Contains(text.ToLower())).ToList());
+                Global.ModList = new ObservableCollection<Mod>(Global.ModList_All.ToList()
+                    .Where(x => x.name.ToLower().Contains(text.ToLower())).ToList());
             }
             await Task.Run(() =>
             {
