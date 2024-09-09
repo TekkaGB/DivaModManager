@@ -438,24 +438,25 @@
 
                         <ComboBox Grid.Column="5" Margin="0,0,10,0" Height="35" FontSize="20" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" Name="LauncherOptionsBox" SelectionChanged="LauncherOptionsBox_SelectionChanged"/>
                         <ComboBox Grid.Column="1" Margin="10,0,10,0" Height="35" FontSize="20" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" Name="LoadoutBox" SelectionChanged="LoadoutsBox_SelectionChanged"/>
-                        <Grid x:Name="MiddleGrid" Grid.Row="1" Grid.ColumnSpan="8">
+                        <Grid x:Name="MiddleGrid" Grid.Row="1" Grid.ColumnSpan="8" Margin="0,40,0,0">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1.8*"/>
+                                <ColumnDefinition Width="78*"/>
+                                <ColumnDefinition Width="735*"/>
                                 <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="451*"/>
                             </Grid.ColumnDefinitions>
-                            <Grid Visibility="Collapsed" x:Name="DropBox" Margin="10,5,3,3" Panel.ZIndex="2" DragLeave="Add_Leave" DragEnter="Add_Enter" Drop="Add_Drop" AllowDrop="True" Background="Transparent">
+                            <Grid Visibility="Collapsed" x:Name="DropBox" Margin="10,5,3,3" Panel.ZIndex="2" DragLeave="Add_Leave" DragEnter="Add_Enter" Drop="Add_Drop" AllowDrop="True" Background="Transparent" Grid.ColumnSpan="2">
                                 <Border Opacity="0.7" Background="Black"/>
                                 <TextBlock Foreground="#f2f2f2" FontSize="40" Panel.ZIndex="3" VerticalAlignment="Center" HorizontalAlignment="Center"><Run Text="Drop files to install mod"/></TextBlock>
                             </Grid>
-                            <DataGrid DragEnter="Add_Enter" Margin="0,43,0,3" x:Name="ModGrid" AutoGenerateColumns="False" GridLinesVisibility="None" VerticalScrollBarVisibility="Auto"  BorderBrush="#424242"
+                            <DataGrid DragEnter="Add_Enter" Margin="0,10,0,3" x:Name="ModGrid" AutoGenerateColumns="False" GridLinesVisibility="None" VerticalScrollBarVisibility="Auto"  BorderBrush="#424242"
                           EnableColumnVirtualization="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
                           CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" AlternatingRowBackground="#2A2A2A"
                           dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" HeadersVisibility="Column" 
                           IsTextSearchEnabled="True" TextSearch.TextPath="name"
                           SelectionMode="Extended" RowBackground="#202020" Foreground="#f2f2f2" LoadingRow="ModGrid_LoadingRow" HorizontalScrollBarVisibility="Hidden"
-                          HorizontalAlignment="Center" Background="#202020" Grid.Column="0" FontSize="15" PreviewKeyDown="ModGrid_PreviewKeyDown"
-                          ContextMenuOpening="ModGrid_ContextMenuOpening" SelectionChanged="ModGrid_SelectionChanged" PreviewMouseMove="ModGrid_PreviewMouseMove" Grid.ColumnSpan="2">
+                          HorizontalAlignment="Left" Background="#202020" Grid.Column="0" FontSize="15" PreviewKeyDown="ModGrid_PreviewKeyDown"
+                          ContextMenuOpening="ModGrid_ContextMenuOpening" SelectionChanged="ModGrid_SelectionChanged" PreviewMouseMove="ModGrid_PreviewMouseMove" Grid.ColumnSpan="4">
                                 <DataGrid.Resources>
                                     <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#115F58"/>
                                     <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#f2f2f2"/>
@@ -508,8 +509,8 @@
                                 </DataGrid.Columns>
 
                             </DataGrid>
-                            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="10" Background="Transparent"/>
-                            <Grid Grid.Column="2">
+                            <GridSplitter Grid.Column="2" HorizontalAlignment="Stretch" Width="10" Background="Transparent" Grid.ColumnSpan="2" Margin="0,0,451,0"/>
+                            <Grid Grid.Column="3">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="1.5*"/>
                                     <RowDefinition/>
@@ -526,9 +527,9 @@
                      VerticalContentAlignment="Center" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" IsReadOnly="True" Grid.ColumnSpan="5" IsDocumentEnabled="True"
                              FontWeight="Medium"/>
                             </Grid>
-                            <TextBox x:Name="SearchModListTextBox" MouseDoubleClick="SearchModListTextBox_MouseDoubleClick" HorizontalAlignment="Left" Height="28" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="396" FontSize="18" KeyDown="SearchModListTextBox_KeyDown"/>
+                            <TextBox x:Name="SearchModListTextBox" MouseDoubleClick="SearchModListTextBox_MouseDoubleClick" Margin="10,-32,0,0" Text="" Width="226" FontSize="18" KeyDown="SearchModListTextBox_KeyDown" Grid.ColumnSpan="2" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Height="25"/>
                         </Grid>
-                        <Button Name="SearchModListButton" Margin="171,4,10,0" Height="36" VerticalAlignment="Top" Grid.Column="2" Background="#181818" BorderBrush="#252525" Click="SearchModList_Click" Grid.Row="1" Grid.ColumnSpan="2">
+                        <Button Name="SearchModListButton" Margin="171,4,10,0" VerticalAlignment="Top" Grid.Column="1" Background="#181818" BorderBrush="#252525" Click="SearchModList_Click" Grid.Row="1" Grid.ColumnSpan="2" Height="36">
                             <TextBlock Text="Search" TextTrimming="CharacterEllipsis" Foreground="#f2f2f2" FontFamily="{StaticResource AnekLatin}" FontSize="20" FontWeight="Medium"/>
                         </Button>
                         <GridSplitter Grid.Row="2" Grid.ColumnSpan="9" HorizontalAlignment="Stretch" Height="10" Background="Transparent" />

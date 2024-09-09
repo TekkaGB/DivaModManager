@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace DivaModManager
 {
@@ -20,6 +16,7 @@ namespace DivaModManager
         public static ObservableCollection<Mod> ModList;
         // After applying the filter, for backup purposes
         public static ObservableCollection<Mod> ModList_All;
+        public static bool SearchModListFlg;
         public static ObservableCollection<String> LoadoutItems;
         public static void UpdateConfig()
         {

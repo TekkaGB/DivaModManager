@@ -1,4 +1,7 @@
-﻿using System;
+﻿using SharpCompress.Archives.SevenZip;
+using SharpCompress.Common;
+using SharpCompress.Readers;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -17,13 +20,9 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using SharpCompress.Archives.SevenZip;
-using SharpCompress.Common;
-using SharpCompress.Readers;
 using Tomlyn;
 using Tomlyn.Model;
 using WpfAnimatedGif;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace DivaModManager.UI
 {
@@ -435,8 +434,11 @@ namespace DivaModManager.UI
                     }
                 }
                 Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout] = new ObservableCollection<Mod>(temp);
-                Global.UpdateConfig();
-                await Task.Run(() => ModLoader.Build());
+                if (Global.SearchModListFlg == false)
+                {
+                    Global.UpdateConfig();
+                    await Task.Run(() => ModLoader.Build());
+                }
 
                 App.Current.Dispatcher.Invoke((Action)delegate
                 {
@@ -519,8 +521,11 @@ namespace DivaModManager.UI
         // Triggered when priority is switched on drag and dropped
         private async void ModGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
-            Global.UpdateConfig();
-            await Task.Run(() => ModLoader.Build());
+            if (Global.SearchModListFlg == false)
+            {
+                Global.UpdateConfig();
+                await Task.Run(() => ModLoader.Build());
+            }
         }
         private TomlTable AddInclude(TomlTable config)
         {
@@ -619,6 +624,11 @@ namespace DivaModManager.UI
 
         private async void Setup_Click(object sender, RoutedEventArgs e)
         {
+            if (Global.SearchModListFlg)
+            {
+                MessageBox.Show($"Please do it with the mod search cleared.\nSorry.", "Attention.", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
             GameBox.IsEnabled = false;
             await Task.Run(() =>
             {
@@ -661,9 +671,7 @@ namespace DivaModManager.UI
         {
             if (Global.config.Configs[Global.config.CurrentGame].Launcher != null && File.Exists(Global.config.Configs[Global.config.CurrentGame].Launcher))
             {
-                Global.ModList = Global.ModList_All;
-                ModGrid.ItemsSource = Global.ModList;
-                SearchModListTextBox.Text = "";
+                InitSearchMod();
                 Global.UpdateConfig();
 
                 var path = Global.config.Configs[Global.config.CurrentGame].Launcher;
@@ -752,6 +760,12 @@ namespace DivaModManager.UI
             {
                 return;
             }
+            if (Global.SearchModListFlg)
+            {
+                MessageBox.Show($"Please do it with the mod search cleared.\nSorry.", "Attention.", MessageBoxButton.OK, MessageBoxImage.Information);
+                e.Handled = true;
+                return;
+            }
 
             if (ModGrid.SelectedItem == null)
                 element.ContextMenu.Visibility = Visibility.Collapsed;
@@ -802,7 +816,7 @@ namespace DivaModManager.UI
             Global.config.BottomGridHeight = MainGrid.RowDefinitions[3].Height.Value;
             Global.config.LeftGridWidth = MiddleGrid.ColumnDefinitions[0].Width.Value;
             Global.config.RightGridWidth = MiddleGrid.ColumnDefinitions[2].Width.Value;
-            Global.ModList = Global.ModList_All;
+            InitSearchMod();
             Global.UpdateConfig();
             System.Windows.Application.Current.Shutdown();
         }
@@ -1002,11 +1016,23 @@ namespace DivaModManager.UI
         }
         private void CreateMod_Click(object sender, RoutedEventArgs e)
         {
+            if (Global.SearchModListFlg)
+            {
+                MessageBox.Show($"Please do it with the mod search cleared.\nSorry.", "Attention.", MessageBoxButton.OK, MessageBoxImage.Information);
+                e.Handled = true;
+                return;
+            }
             var cmw = new CreateModWindow();
             cmw.Show();
         }
         private void Update_Click(object sender, RoutedEventArgs e)
         {
+            if (Global.SearchModListFlg)
+            {
+                MessageBox.Show($"Please do it with the mod search cleared.\nSorry.", "Attention.", MessageBoxButton.OK, MessageBoxImage.Information);
+                e.Handled = true;
+                return;
+            }
             GameBox.IsEnabled = false;
             ModGrid.IsEnabled = false;
             ConfigButton.IsEnabled = false;
@@ -1619,6 +1645,12 @@ namespace DivaModManager.UI
         }
         private void OnBrowserTabSelected(object sender, RoutedEventArgs e)
         {
+            if (Global.SearchModListFlg)
+            {
+                MessageBox.Show($"Please do it with the mod search cleared.\nSorry.", "Attention.", MessageBoxButton.OK, MessageBoxImage.Information);
+                e.Handled = true;
+                return;
+            }
             if (!selected)
                 InitializeBrowser();
         }
@@ -1947,17 +1979,45 @@ namespace DivaModManager.UI
             }
         }
         private bool handle;
+
+        private int GameBox_BeforeSelectedIndex;
         private void GameBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!IsLoaded || Global.config == null)
+            {
                 return;
+            }
+
+            if (Global.SearchModListFlg)
+            {
+                MessageBox.Show($"Please do it with the mod search cleared.\nSorry.", "Attention.", MessageBoxButton.OK, MessageBoxImage.Information);
+                GameBox.SelectionChanged -= GameBox_SelectionChanged;
+                GameBox.SelectedIndex = GameBox_BeforeSelectedIndex;
+                GameBox.SelectionChanged += GameBox_SelectionChanged;
+                return;
+            }
+
+            ComboBox c = (ComboBox)sender;
+            GameBox_BeforeSelectedIndex = c.SelectedIndex;
             handle = true;
             
         }
+
+        private int LauncherOptionsBox_BeforeSelectedIndex;
         private void LauncherOptionsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!handle)
             {
+                if (Global.SearchModListFlg)
+                {
+                    MessageBox.Show($"Please do it with the mod search cleared.\nSorry.", "Attention.", MessageBoxButton.OK, MessageBoxImage.Information);
+                    LauncherOptionsBox.SelectionChanged -= LauncherOptionsBox_SelectionChanged;
+                    LauncherOptionsBox.SelectedIndex = LauncherOptionsBox_BeforeSelectedIndex;
+                    LauncherOptionsBox.SelectionChanged += LauncherOptionsBox_SelectionChanged;
+                    return;
+                }
+                ComboBox c = (ComboBox)sender;
+                LauncherOptionsBox_BeforeSelectedIndex = c.SelectedIndex;
                 Global.config.Configs[Global.config.CurrentGame].LauncherOptionIndex = LauncherOptionsBox.SelectedIndex;
                 Global.UpdateConfig();
             }
@@ -1965,10 +2025,13 @@ namespace DivaModManager.UI
         private async void LoadoutsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!IsLoaded)
+            {
                 return;
+            }
             // Change the loadout
             else if (LoadoutBox.SelectedItem != null)
             {
+                InitSearchMod();
                 Global.config.Configs[Global.config.CurrentGame].CurrentLoadout = LoadoutBox.SelectedItem.ToString();
 
                 // Create loadout if it doesn't exist
@@ -1978,6 +2041,7 @@ namespace DivaModManager.UI
                     Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout] = new();
 
                 Global.ModList = Global.config.Configs[Global.config.CurrentGame].Loadouts[Global.config.Configs[Global.config.CurrentGame].CurrentLoadout];
+                UpdateSearchMod();
                 Refresh();
                 Global.logger.WriteLine($"Loadout changed to {LoadoutBox.SelectedItem}", LoggerType.Info);
                 await Task.Run(() => ModLoader.Build());
@@ -1985,6 +2049,13 @@ namespace DivaModManager.UI
         }
         private void EditLoadouts_Click(object sender, RoutedEventArgs e)
         {
+            if (Global.SearchModListFlg)
+            {
+                MessageBox.Show($"Please do it with the mod search cleared.\nSorry.", "Attention.", MessageBoxButton.OK, MessageBoxImage.Information);
+                e.Handled = true;
+                return;
+            }
+
             var choices = new List<Choice>();
             choices.Add(new Choice()
             {
@@ -2135,7 +2206,7 @@ namespace DivaModManager.UI
             {
                 if (!string.IsNullOrEmpty(SearchModListTextBox.Text))
                 {
-                    MessageBox.Show($"Sorting is not possible with search conditions specified.\nSorry.", "Attention.", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show($"Please do it with the mod search cleared.\nSorry.", "Attention.", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
                 var colStr = colHeader.Column.Header;
@@ -2166,6 +2237,7 @@ namespace DivaModManager.UI
                             ModGrid.ItemsSource = Global.ModList;
                         });
                     });
+                    UpdateSearchMod();
                     Global.UpdateConfig();
                     await Task.Run(() => ModLoader.Build());
                 }
@@ -2225,7 +2297,7 @@ namespace DivaModManager.UI
 
         private async void SearchModList_Click(object sender, RoutedEventArgs e)
         {
-            this.SearchModList(SearchModListTextBox.Text);
+            SearchModList(SearchModListTextBox.Text);
         }
 
         private void SearchModListTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -2241,22 +2313,16 @@ namespace DivaModManager.UI
             if (string.IsNullOrEmpty(searchModName))
             {
                 // Restore all evacuated mods.
-                Global.ModList = Global.ModList_All;
+                InitSearchMod();
             }
             else
             {
+                Global.SearchModListFlg = true;
                 Global.ModList = new ObservableCollection<Mod>(Global.ModList_All.ToList()
                     .Where(x => x.name.ToLower().Contains(searchModName.ToLower())).ToList());
             }
 
-            await Task.Run(() =>
-            {
-                App.Current.Dispatcher.Invoke((Action)delegate
-                {
-                    ModGrid.ItemsSource = Global.ModList;
-                });
-            });
-            await Task.Run(() => ModLoader.Build());
+            ModGrid.ItemsSource = Global.ModList;
         }
 
         private void ModGrid_PreviewMouseMove(object sender, MouseEventArgs e)
@@ -2271,6 +2337,21 @@ namespace DivaModManager.UI
         private void SearchModListTextBox_MouseDoubleClick(object sender, EventArgs e)
         {
             SearchModListTextBox.SelectAll();
+        }
+
+        private void InitSearchMod()
+        {
+            Global.SearchModListFlg = false;
+            Global.ModList = Global.ModList_All;
+            ModGrid.ItemsSource = Global.ModList;
+            SearchModListTextBox.Text = "";
+        }
+
+        private void UpdateSearchMod()
+        {
+            Global.SearchModListFlg = false;
+            Global.ModList_All = Global.ModList;
+            SearchModListTextBox.Text = "";
         }
     }
 }
