@@ -61,8 +61,8 @@ namespace DivaModManager
                     return null;
                 switch (host)
                 {
-                    case "www.divamodarchive.xyz":
-                    case "divamodarchive.xyz":
+                    case "www.divamodarchive.com":
+                    case "divamodarchive.com":
                         return uri;
                 }
             }
@@ -109,18 +109,18 @@ namespace DivaModManager
             {
                 var post_id = url.ToString().Split('/').Last();
                 var DMAclient = new HttpClient();
-                var requestUrl = $"https://divamodarchive.xyz/api/v1/posts/{post_id}";
+                var requestUrl = $"https://divamodarchive.com/api/v1/posts/{post_id}";
                 string responseString = await DMAclient.GetStringAsync(requestUrl);
                 var post = JsonSerializer.Deserialize<DivaModArchivePost>(responseString);
                 var metadata = new Metadata();
                 metadata.id = post.ID;
-                metadata.submitter = post.User.Name;
-                metadata.description = post.ShortText;
-                metadata.preview = post.Image;
+                metadata.submitter = post.Authors[0].Name;
+                metadata.description = post.Text;
+                metadata.preview = post.Images[0];
                 metadata.homepage = post.Link;
-                metadata.avi = post.User.Avatar;
-                metadata.cat = post.Type;
-                metadata.lastupdate = post.Date;
+                metadata.avi = post.Authors[0].Avatar;
+                metadata.cat = post.PostType;
+                metadata.lastupdate = post.Time;
                 string metadataString = JsonSerializer.Serialize(metadata, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText($@"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{_mod.name}{Global.s}mod.json", metadataString);
                 success = true;
@@ -128,7 +128,7 @@ namespace DivaModManager
                 return;
             }
             else
-                Global.logger.WriteLine($"{UrlBox.Text} is invalid. The url should have the following format: https://gamebanana.com/<Mod Category>/<Mod ID> or https://divamodarchive.zyz/post/<Post ID>", LoggerType.Error);
+                Global.logger.WriteLine($"{UrlBox.Text} is invalid. The url should have the following format: https://gamebanana.com/<Mod Category>/<Mod ID> or https://divamodarchive.com/post/<Post ID>", LoggerType.Error);
         }
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)

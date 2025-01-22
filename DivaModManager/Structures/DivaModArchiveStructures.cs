@@ -15,56 +15,37 @@ namespace DivaModManager
         public string Name { get; set; }
         [JsonPropertyName("text")]
         public string Text { get; set; }
-        [JsonPropertyName("text_short")]
-        public string ShortText { get; set; }
+        [JsonPropertyName("images")]
+        public List<Uri> Images { get; set; }
+        [JsonPropertyName("files")]
+        public List<Uri> Files { get; set; }
+        [JsonPropertyName("file_names")]
+        public List<String> FileNames { get; set; }
+        [JsonPropertyName("time")]
+        public DateTime Time { get; set; }
         [JsonIgnore]
-        public bool IsShortTextLong => ShortText.Length > 40;
-        [JsonPropertyName("image")]
-        public Uri Image { get; set; }
-        [JsonPropertyName("images_extra")]
-        public List<Uri> ExtraImages { get; set; }
+        public string DateUpdatedAgo => $"Updated {StringConverters.FormatTimeAgo(DateTime.UtcNow - Time)}";
+        [JsonPropertyName("post_type")]
+        public string PostType { get; set; }
         [JsonIgnore]
-        public List<Uri> AllImages => GetAllImages(Image, ExtraImages);
-        [JsonPropertyName("link")]
-        public Uri DownloadUrl { get; set; }
-        [JsonPropertyName("date")]
-        public DateTime Date { get; set; }
-        [JsonIgnore]
-        public string DateUpdatedAgo => $"Updated {StringConverters.FormatTimeAgo(DateTime.UtcNow - Date)}";
-        [JsonPropertyName("type_tag")]
-        public int TypeTag { get; set; }
-        [JsonIgnore]
-        public string Type => StringConverters.TypeToString(TypeTag);
-        [JsonIgnore]
-        public Uri Link => new Uri($"https://divamodarchive.xyz/posts/{ID}");
-        [JsonPropertyName("likes")]
+        public Uri Link => new Uri($"https://divamodarchive.com/posts/{ID}");
+        [JsonPropertyName("like_count")]
         public int Likes { get; set; }
-        [JsonPropertyName("dislikes")]
-        public int Dislikes { get; set; }
-        [JsonPropertyName("downloads")]
+        [JsonPropertyName("download_count")]
         public int Downloads { get; set; }
         [JsonIgnore]
         public string DownloadString => StringConverters.FormatNumber(Downloads);
         [JsonIgnore]
         public string LikeString => StringConverters.FormatNumber(Likes);
-        [JsonIgnore]
-        public string DislikeString => StringConverters.FormatNumber(Dislikes);
 
-        [JsonPropertyName("user")]
-        public DivaModArchiveUser User { get; set; }
-        private List<Uri> GetAllImages(Uri MainImage, List<Uri> ImageList)
-        {
-            List<Uri> Images = new();
-            Images.Add(MainImage);
-            Images.AddRange(ImageList);
-            return Images;
-        }
+        [JsonPropertyName("authors")]
+        public List<DivaModArchiveUser> Authors { get; set; }
     }
     public class DivaModArchiveUser
     {
         [JsonPropertyName("id")]
         public double ID { get; set; }
-        [JsonPropertyName("name")]
+        [JsonPropertyName("display_name")]
         public string Name { get; set; }
         [JsonPropertyName("avatar")]
         public Uri Avatar { get; set; }

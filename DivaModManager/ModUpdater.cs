@@ -11,6 +11,7 @@ using System.Windows;
 using SevenZipExtractor;
 using SharpCompress.Common;
 using SharpCompress.Readers;
+using SharpCompress.Archives.SevenZip;
 using Tomlyn;
 using Tomlyn.Model;
 
@@ -39,7 +40,7 @@ namespace DivaModManager
             }
             var cancellationToken = new CancellationTokenSource();
             var requestUrls = new Dictionary<string, List<string>>();
-            var DMArequestUrl = "https://divamodarchive.xyz/api/v1/posts/posts?";
+            var DMArequestUrl = "https://divamodarchive.com/api/v1/posts/posts?";
             var mods = Directory.GetDirectories(path).Where(x => File.Exists($"{x}{Global.s}mod.json")).ToList();
             var modList = new Dictionary<string, List<string>>();
             var DMAmodList = new List<string>();
@@ -310,13 +311,13 @@ namespace DivaModManager
             // If lastupdate doesn't exist, add one
             if (metadata.lastupdate == null)
             {
-                metadata.lastupdate = item.Date;
+                metadata.lastupdate = item.Time;
                 string metadataString = JsonSerializer.Serialize(metadata, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText($@"{mod}{Global.s}mod.json", metadataString);
                 return;
             }
             // Compares dates of last update to current
-            if (DateTime.Compare((DateTime)metadata.lastupdate, item.Date) < 0)
+            if (DateTime.Compare((DateTime)metadata.lastupdate, item.Time) < 0)
             {
                 ++updateCounter;
                 // Display the changelog and confirm they want to update
@@ -329,7 +330,7 @@ namespace DivaModManager
                     if (File.Exists($@"{mod}{Global.s}mod.json"))
                     {
                         Global.logger.WriteLine($"Skipped update for {Path.GetFileName(mod)}...", LoggerType.Info);
-                        metadata.lastupdate = item.Date;
+                        metadata.lastupdate = item.Time;
                         string metadataString = JsonSerializer.Serialize(metadata, new JsonSerializerOptions { WriteIndented = true });
                         File.WriteAllText($@"{mod}{Global.s}mod.json", metadataString);
                     }
@@ -341,7 +342,7 @@ namespace DivaModManager
                     return;
                 }
                 // Download the update
-                await DownloadFile(item.DownloadUrl.ToString(), item.DownloadUrl.ToString().Split('/').Last(), mod, item, progress, cancellationToken);
+                await DownloadFile(item.Files[0].ToString(), item.Files[0].ToString().Split('/').Last(), mod, item, progress, cancellationToken);
             }
         }
         private static async Task DownloadFile(string uri, string fileName, string mod, GameBananaAPIV4 item, Progress<DownloadProgress> progress, CancellationTokenSource cancellationToken)
@@ -628,13 +629,13 @@ namespace DivaModManager
                 {
                     var metadata = JsonSerializer.Deserialize<Metadata>(File.ReadAllText($@"{output}{Global.s}mod.json"));
                     metadata.id = item.ID;
-                    metadata.submitter = item.User.Name;
-                    metadata.description = item.ShortText;
-                    metadata.preview = item.Image;
+                    metadata.submitter = item.Authors[0].Name;
+                    metadata.description = item.Text;
+                    metadata.preview = item.Images[0];
                     metadata.homepage = item.Link;
-                    metadata.avi = item.User.Avatar;
-                    metadata.cat = item.Type;
-                    metadata.lastupdate = item.Date;
+                    metadata.avi = item.Authors[0].Avatar;
+                    metadata.cat = item.PostType;
+                    metadata.lastupdate = item.Time;
                     string metadataString = JsonSerializer.Serialize(metadata, new JsonSerializerOptions { WriteIndented = true });
                     File.WriteAllText($@"{output}{Global.s}mod.json", metadataString);
                 }

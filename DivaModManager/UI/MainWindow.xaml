@@ -363,10 +363,10 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Image Margin="5,10,5,5" Source="{Binding Path=Image,Mode=OneWay,IsAsync=True}" Height="168" Panel.ZIndex="2"  VerticalAlignment="Center" Stretch="Uniform"/>
+                    <Image Margin="5,10,5,5" Source="{Binding Path=Images[0],Mode=OneWay,IsAsync=True}" Height="168" Panel.ZIndex="2"  VerticalAlignment="Center" Stretch="Uniform"/>
                     <Rectangle Height="168" Panel.ZIndex="1" Fill="Black" Stretch="UniformToFill" Margin="5,10,5,5" VerticalAlignment="Center">
                         <Rectangle.OpacityMask>
-                            <ImageBrush ImageSource="{Binding Path=Image,Mode=OneWay,IsAsync=True}"/>
+                            <ImageBrush ImageSource="{Binding Path=Images[0],Mode=OneWay,IsAsync=True}"/>
                         </Rectangle.OpacityMask>
                     </Rectangle>
                     <TextBlock x:Name="Title" FontFamily="{StaticResource AnekLatin}" Margin="5" Grid.Row="1" FontWeight="Medium" TextTrimming="WordEllipsis" Background="Transparent" VerticalAlignment="Center"  Foreground="#f2f2f2" Text="{Binding Path=Name}"/>
@@ -383,14 +383,14 @@
                     </Popup>
                     <Image Name="LoadingBar" Grid.Row="0" gif:ImageBehavior.AnimatedSource="../Assets/load.gif" Panel.ZIndex="1" VerticalAlignment="Center" HorizontalAlignment="Center" Height="100"/>
                     <StackPanel Grid.Row="2" Margin="10,-5,10,5" Orientation="Horizontal">
-                        <Image VerticalAlignment="Center" Source="{Binding Path=User.Avatar}" Margin="0,0,10,0" Height="35"/>
-                        <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource AnekLatin}" Foreground="#909090" Text="{Binding Path=User.Name}"/>
+                        <Image VerticalAlignment="Center" Source="{Binding Path=Authors[0].Avatar}" Margin="0,0,10,0" Height="35"/>
+                        <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource AnekLatin}" Foreground="#909090" Text="{Binding Path=Authors[0].Name}"/>
                     </StackPanel>
                     <Grid Name="CatGrid" HorizontalAlignment="Center" Grid.Row="5" Background="Transparent">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Name="CatText" FontFamily="{StaticResource AnekLatin}" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=Type}" TextTrimming="WordEllipsis"/>
+                        <TextBlock Name="CatText" FontFamily="{StaticResource AnekLatin}" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=PostType}" TextTrimming="WordEllipsis"/>
                         <Popup PlacementTarget="{Binding ElementName=CatGrid}" HorizontalAlignment="Center" AllowsTransparency="True">
                             <Popup.Style>
                                 <Style TargetType="Popup">
@@ -417,20 +417,19 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock FontFamily="{StaticResource AnekLatin}" VerticalAlignment="Center" FontSize="20" FontWeight="SemiBold" Foreground="#f2f2f2" Text="{Binding Path=Type}"/>
+                                    <TextBlock FontFamily="{StaticResource AnekLatin}" VerticalAlignment="Center" FontSize="20" FontWeight="SemiBold" Foreground="#f2f2f2" Text="{Binding Path=PostType}"/>
                                 </Grid>
                             </Border>
                         </Popup>
                     </Grid>
-                    <Popup MaxWidth="400" PlacementTarget="{Binding ElementName=ShortText}" AllowsTransparency="True">
+                    <Popup MaxWidth="400" PlacementTarget="{Binding ElementName=Desc}" AllowsTransparency="True">
                         <Popup.Style>
                             <Style TargetType="Popup">
                                 <Setter Property="IsOpen" Value="False"/>
                                 <Style.Triggers>
                                     <MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding IsMouseDirectlyOver, ElementName=ShortText, Mode=OneWay}" Value="True"/>
-                                            <Condition Binding="{Binding Path=IsShortTextLong}" Value="True"/>
+                                            <Condition Binding="{Binding IsMouseDirectlyOver, ElementName=Desc, Mode=OneWay}" Value="True"/>
                                         </MultiDataTrigger.Conditions>
                                         <Setter Property="IsOpen" Value="True"/>
                                     </MultiDataTrigger>
@@ -444,10 +443,10 @@
                             <Border.Background>
                                 <SolidColorBrush Color="#101010" Opacity="0.9"/>
                             </Border.Background>
-                            <TextBlock FontFamily="{StaticResource AnekLatin}" Margin="10" Text="{Binding Path=ShortText}" Foreground="#f2f2f2" TextWrapping="Wrap" FontSize="20" VerticalAlignment="Center" />
+                            <TextBlock FontFamily="{StaticResource AnekLatin}" Margin="10" Text="{Binding Path=Text}" Foreground="#f2f2f2" TextWrapping="Wrap" FontSize="20" VerticalAlignment="Center" />
                         </Border>
                     </Popup>
-                    <TextBlock Name="Desc" FontFamily="{StaticResource AnekLatin}" Margin="5,0,5,2" TextWrapping="Wrap" Grid.Row="3" Height="50" TextTrimming="WordEllipsis" Background="Transparent" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=ShortText}"/>
+                    <TextBlock Name="Desc" FontFamily="{StaticResource AnekLatin}" Margin="5,0,5,2" TextWrapping="Wrap" Grid.Row="3" Height="50" TextTrimming="WordEllipsis" Background="Transparent" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=Text}"/>
                     <StackPanel Grid.Row="6" Margin="0,0,0,5"  HorizontalAlignment="Center" VerticalAlignment="Center">
                         <StackPanel Background="Transparent" Name="DateUpdatedPanel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center"  >
                             <fa5:ImageAwesome Name="DateUpdatedIcon" Margin="0,0,5,0" Height="15" Icon="Solid_Sync" Foreground="#f2f2f2"/>
@@ -477,7 +476,7 @@
                             <Border.Background>
                                 <SolidColorBrush Color="#101010" Opacity="0.9"/>
                             </Border.Background>
-                            <TextBlock Margin="10" FontFamily="{StaticResource AnekLatin}" Foreground="#f2f2f2" FontWeight="Medium" FontSize="20" VerticalAlignment="Center" Text="{Binding Path=Date,StringFormat={}Updated {0}}"/>
+                            <TextBlock Margin="10" FontFamily="{StaticResource AnekLatin}" Foreground="#f2f2f2" FontWeight="Medium" FontSize="20" VerticalAlignment="Center" Text="{Binding Path=Time,StringFormat={}Updated {0}}"/>
                         </Border>
                     </Popup>
                     <StackPanel Name="StatPanel" Background="Transparent" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="4">
@@ -485,8 +484,6 @@
                         <TextBlock Name="DownloadText" FontFamily="{StaticResource AnekLatin}" Margin="5,0,10,0" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=DownloadString}" />
                         <fa5:ImageAwesome Name="LikeIcon" Margin="5,0,5,0" Height="15" Icon="Solid_ThumbsUp" Foreground="#f2f2f2"/>
                         <TextBlock Name="LikeText" FontFamily="{StaticResource AnekLatin}" Margin="5,0,10,0" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=LikeString}" />
-                        <fa5:ImageAwesome Name="DislikeIcon" Margin="5,0,5,0" Height="15" Icon="Solid_ThumbsDown" Foreground="#f2f2f2"/>
-                        <TextBlock Name="DislikeText" FontFamily="{StaticResource AnekLatin}" Margin="5,0,0,0" VerticalAlignment="Center" Foreground="#f2f2f2" Text="{Binding Path=DislikeString}" />
                     </StackPanel>
                     <Popup PlacementTarget="{Binding ElementName=StatPanel}" HorizontalAlignment="Center" AllowsTransparency="True">
                         <Popup.Style>
@@ -500,8 +497,6 @@
                                             <Condition Binding="{Binding IsMouseDirectlyOver, ElementName=DownloadText}" Value="False" />
                                             <Condition Binding="{Binding IsMouseDirectlyOver, ElementName=LikeIcon}" Value="False" />
                                             <Condition Binding="{Binding IsMouseDirectlyOver, ElementName=LikeText}" Value="False" />
-                                            <Condition Binding="{Binding IsMouseDirectlyOver, ElementName=DislikeIcon}" Value="False" />
-                                            <Condition Binding="{Binding IsMouseDirectlyOver, ElementName=DislikeText}" Value="False" />
                                         </MultiDataTrigger.Conditions>
                                         <Setter Property="IsOpen" Value="False"/>
                                     </MultiDataTrigger>
@@ -517,10 +512,9 @@
                             </Border.Background>
                             <TextBlock Margin="10" FontFamily="{StaticResource AnekLatin}" Foreground="#f2f2f2" FontWeight="Medium" FontSize="20" VerticalAlignment="Center" >
                                 <TextBlock.Text>
-                                    <MultiBinding StringFormat="{}{0:N0} Downloads • {1:N0} Likes • {2:N0} Dislikes">
+                                    <MultiBinding StringFormat="{}{0:N0} Downloads • {1:N0} Likes">
                                         <Binding Path="Downloads"/>
                                         <Binding Path="Likes"/>
-                                        <Binding Path="Dislikes"/>
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
@@ -532,7 +526,7 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Button Grid.Column="0" Foreground="#f2f2f2" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" Height="30" Width="95" Background="#303030" BorderBrush="#353535" VerticalAlignment="Bottom" Content="More Info" Click="DMAMoreInfo_Click"/>
-                        <Button Grid.Column="1" Foreground="#f2f2f2" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" Height="30" Width="95" Background="#303030" BorderBrush="#353535" VerticalAlignment="Top" Content="Download" IsEnabled="{Binding Path=Compatible}" Click="DMADownload_Click"/>
+                        <Button Grid.Column="1" Foreground="#f2f2f2" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" Height="30" Width="95" Background="#303030" BorderBrush="#353535" VerticalAlignment="Top" Content="Download" Click="DMADownload_Click"/>
                     </Grid>
                 </Grid>
             </Border>
@@ -1104,7 +1098,7 @@
                         <RichTextBox Margin="5" Name="DMADescText" Grid.Row="2" FontFamily="{StaticResource AnekLatin}" Background="Transparent" BorderThickness="0" IsDocumentEnabled="True" VerticalScrollBarVisibility="Auto" IsReadOnly="True" Foreground="#f2f2f2" Padding="10,0,10,10" FontSize="20"/>
                         <StackPanel Grid.ColumnSpan="2" Margin="20" Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Center">
                             <Border Name="DMADownloadButton" Margin="0,0,20,0" Height="50" Width="200" CornerRadius="2" Background="#006ac1">
-                                <Button Margin="3" Click="DMADownload_Click" Content="Download" FontFamily="{StaticResource AnekLatin}" IsEnabled="{Binding Path=Compatible}" FontSize="25" FontWeight="SemiBold" Foreground="#f2f2f2">
+                                <Button Margin="3" Click="DMADownload_Click" Content="Download" FontFamily="{StaticResource AnekLatin}" FontSize="25" FontWeight="SemiBold" Foreground="#f2f2f2">
                                     <Button.Resources>
                                         <Style TargetType="{x:Type Border}">
                                             <Setter Property="CornerRadius" Value="2"/>
@@ -1128,12 +1122,22 @@
                             </Button>
                         </StackPanel>
                     </Grid>
-                    <ComboBox Margin="0,0,15,0" Grid.Column="0" IsEnabled="False" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" FontSize="20" Name="DMAFilterBox" Height="35" HorizontalAlignment="Right" MinWidth="150" SelectionChanged="DMAFilterSelectionChanged">
+                    <ComboBox Margin="10,8,0,7" Grid.Column="0" IsEnabled="False" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" FontSize="20" Name="DMASortBox" Height="35" MinWidth="150" SelectionChanged="DMAFilterSelectionChanged" HorizontalAlignment="Left" Width="150">
                         <ComboBoxItem IsSelected="True">Latest</ComboBoxItem>
-                        <ComboBoxItem>Popular</ComboBoxItem>
+                        <ComboBoxItem>Downloads</ComboBoxItem>
+                        <ComboBoxItem>Likes</ComboBoxItem>
                     </ComboBox>
-                    <TextBox Margin="5,0,35,0" Padding="4,0,0,0" Grid.Column="1" FontFamily="{StaticResource AnekLatin}" IsEnabled="False" KeyDown="DMASearchBar_KeyDown" Name="DMASearchBar" Height="35" MinWidth="200" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
-                    <TextBlock Margin="5,0,35,0" Padding="7,8,3,3" Grid.Column="1" FontFamily="{StaticResource AnekLatin}" IsHitTestVisible="False" Height="35" MinWidth="200" HorizontalAlignment="Left" Text="Search..." VerticalAlignment="Center" Foreground="#303030">
+                    <ComboBox Margin="165,8,0,7" IsEnabled="False" FontFamily="{StaticResource AnekLatin}" FontWeight="Medium" FontSize="20" Name="DMAFilterBox" Height="35" HorizontalAlignment="Left" MinWidth="150" SelectionChanged="DMAFilterSelectionChanged" Grid.ColumnSpan="2">
+                        <ComboBoxItem IsSelected="True">All</ComboBoxItem>
+                        <ComboBoxItem>Song</ComboBoxItem>
+                        <ComboBoxItem>Cover</ComboBoxItem>
+                        <ComboBoxItem>Module</ComboBoxItem>
+                        <ComboBoxItem>UI</ComboBoxItem>
+                        <ComboBoxItem>Plugin</ComboBoxItem>
+                        <ComboBoxItem>Other</ComboBoxItem>
+                    </ComboBox>
+                    <TextBox Margin="245,8,50,8" Padding="4,0,0,0" Grid.Column="1" FontFamily="{StaticResource AnekLatin}" IsEnabled="False" KeyDown="DMASearchBar_KeyDown" Name="DMASearchBar" Height="35" MinWidth="200" VerticalContentAlignment="Center" Grid.ColumnSpan="2"/>
+                    <TextBlock Margin="257,0,0,0" Padding="7,8,3,3" Grid.Column="1" FontFamily="{StaticResource AnekLatin}" IsHitTestVisible="False" Height="35" MinWidth="200" HorizontalAlignment="Left" Text="Search..." VerticalAlignment="Center" Foreground="#303030">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>
@@ -1144,10 +1148,10 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <Button Grid.Column="1" IsEnabled="False" HorizontalAlignment="Right" Click="DMASearchButton_Click" Name="DMASearchButton" Height="35" Width="35">
+                    <Button Grid.Column="2" IsEnabled="False" HorizontalAlignment="Left" Click="DMASearchButton_Click" Name="DMASearchButton" Height="35" Width="35" Margin="170,8,0,7">
                         <fa5:ImageAwesome Icon="Solid_Search" Foreground="#f2f2f2" Margin="3"/>
                     </Button>
-                    <Image Grid.Column="2" Margin="15,0,0,0" Name="DMA" VerticalAlignment="Center" HorizontalAlignment="Left" Height="35" Source="../Assets/DMA_BLACK.png" Cursor="Hand" MouseLeftButtonDown="DMA_Click"/>
+                    <Image Grid.Column="2" Margin="210,0,0,0" Name="DMA" VerticalAlignment="Center" HorizontalAlignment="Left" Height="34" Source="../Assets/DMA_BLACK.png" Cursor="Hand" MouseLeftButtonDown="DMA_Click"/>
                     <Popup PlacementTarget="{Binding ElementName=DMA}" IsOpen="{Binding IsMouseDirectlyOver, ElementName=DMA, Mode=OneWay}" AllowsTransparency="True">
                         <Border CornerRadius="5" Panel.ZIndex="0" Margin="10">
                             <Border.BorderBrush>
@@ -1156,22 +1160,7 @@
                             <Border.Background>
                                 <SolidColorBrush Color="#101010" Opacity="0.9"/>
                             </Border.Background>
-                            <TextBlock Margin="10" FontFamily="{StaticResource AnekLatin}" Text="Go to divamodarchive.xyz" Foreground="#f2f2f2" FontWeight="Medium" FontSize="20" VerticalAlignment="Center" />
-                        </Border>
-                    </Popup>
-                    <Image Grid.Column="2" Margin="60,0,0,0" Name="DMADonate" Source="../Assets/KoFi.png" VerticalAlignment="Center" HorizontalAlignment="Left" Height="35" Cursor="Hand" MouseLeftButtonDown="DMADonate_Click"/>
-                    <Popup PlacementTarget="{Binding ElementName=DMADonate}" IsOpen="{Binding IsMouseDirectlyOver, ElementName=DMADonate, Mode=OneWay}" AllowsTransparency="True">
-                        <Border CornerRadius="5" Panel.ZIndex="0" Margin="10">
-                            <Border.BorderBrush>
-                                <SolidColorBrush Color="#101010" Opacity="0.9"/>
-                            </Border.BorderBrush>
-                            <Border.Background>
-                                <SolidColorBrush Color="#101010" Opacity="0.9"/>
-                            </Border.Background>
-                            <TextBlock Margin="10" FontFamily="{StaticResource AnekLatin}" Foreground="#f2f2f2" FontWeight="Medium" FontSize="20" VerticalAlignment="Center" >
-                                Donate to BroGamer to keep
-                                <LineBreak/>divamodarchive.xyz up and running!
-                            </TextBlock>
+                            <TextBlock Margin="10" FontFamily="{StaticResource AnekLatin}" Text="Go to divamodarchive.com" Foreground="#f2f2f2" FontWeight="Medium" FontSize="20" VerticalAlignment="Center" />
                         </Border>
                     </Popup>
 

@@ -79,11 +79,28 @@ namespace DivaModManager
             downloadWindow.ShowDialog();
             if (downloadWindow.YesNo)
             {
-                string fileName = post.DownloadUrl.ToString().Split('/').Last();
-                await DownloadFile(post.DownloadUrl.ToString(), fileName, new Progress<DownloadProgress>(ReportUpdateProgress),
-                            CancellationTokenSource.CreateLinkedTokenSource(cancellationToken.Token));
-                if (!cancelled)
-                    await Task.Run(() => ExtractFile(fileName, game, post));
+                string downloadUrl = null;
+                string fileName = null;
+                if (post.Files.Count == 1)
+                {
+                    downloadUrl = post.Files[0].ToString();
+                    fileName = post.FileNames[0];
+                }
+                else if (post.Files.Count > 1)
+                {
+                    UpdateFileBoxDMA fileBox = new UpdateFileBoxDMA(post);
+                    fileBox.Activate();
+                    fileBox.ShowDialog();
+                    downloadUrl = fileBox.chosenFileUrl.ToString();
+                    fileName = fileBox.chosenFileName;
+                }
+                if (downloadUrl != null && fileName != null)
+                {
+                    await DownloadFile(downloadUrl, fileName, new Progress<DownloadProgress>(ReportUpdateProgress),
+                                CancellationTokenSource.CreateLinkedTokenSource(cancellationToken.Token));
+                    if (!cancelled)
+                        await Task.Run(() => ExtractFile(fileName, game, post));
+                }
             }
         }
         public async void Download(string line, bool running)
@@ -117,7 +134,7 @@ namespace DivaModManager
                         downloadWindow.ShowDialog();
                         if (downloadWindow.YesNo)
                         {
-                            await DownloadFile(DMAresponse.DownloadUrl.ToString(), fileName, new Progress<DownloadProgress>(ReportUpdateProgress),
+                            await DownloadFile(DMAresponse.Files[0].ToString(), fileName, new Progress<DownloadProgress>(ReportUpdateProgress),
                                 CancellationTokenSource.CreateLinkedTokenSource(cancellationToken.Token));
                             if (!cancelled)
                                 await Task.Run(() => ExtractFile(fileName, "Project DIVA Mega Mix+", DMAresponse));
@@ -143,8 +160,8 @@ namespace DivaModManager
                 else if (URL.Contains("divamodarchive", StringComparison.CurrentCultureIgnoreCase))
                 {
                     string responseString = await client.GetStringAsync(URL);
-                    DMAresponse = JsonSerializer.Deserialize<DivaModArchivePost>(responseString);
-                    fileName = DMAresponse.DownloadUrl.ToString().Split('/').Last();
+                    DMAresponse = JsonSerializer.Deserialize<DivaModArchivePost>(responseString                                          );
+                    fileName = DMAresponse.Files[0].ToString().Split('/').Last();
                     return true;
                 }
                 else
@@ -191,7 +208,7 @@ namespace DivaModManager
                 else if (data.Length == 1)
                 {
                     MOD_ID = data[0].Replace("dma/", String.Empty);
-                    URL = $"https://divamodarchive.xyz/api/v1/posts/{MOD_ID}";
+                    URL = $"https://divamodarchive.com/api/v1/posts/{MOD_ID}";
                     return true;
                 }
                 else
@@ -358,13 +375,13 @@ namespace DivaModManager
                 {
                     Metadata metadata = new Metadata();
                     metadata.id = post.ID;
-                    metadata.submitter = post.User.Name;
-                    metadata.description = post.ShortText;
-                    metadata.preview = post.Image;
+                    metadata.submitter = post.Authors[0].Name;
+                    metadata.description = post.Text;
+                    metadata.preview = post.Images[0];
                     metadata.homepage = post.Link;
-                    metadata.avi = post.User.Avatar;
-                    metadata.cat = post.Type;
-                    metadata.lastupdate = post.Date;
+                    metadata.avi = post.Authors[0].Avatar;
+                    metadata.cat = post.PostType;
+                    metadata.lastupdate = post.Time;
                     string metadataString = JsonSerializer.Serialize(metadata, new JsonSerializerOptions { WriteIndented = true });
                     File.WriteAllText($@"{path}{Global.s}mod.json", metadataString);
                 }

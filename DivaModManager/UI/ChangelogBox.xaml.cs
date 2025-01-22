@@ -98,11 +98,11 @@ namespace DivaModManager.UI
         public ChangelogBox(DivaModArchivePost post, string packageName, string text, bool skip = false, bool loader = false)
         {
             InitializeComponent();
-            if (post.Image != null)
+            if (post.Images[0] != null)
             {
                 var bitmap = new BitmapImage();
                 bitmap.BeginInit();
-                bitmap.UriSource = post.Image;
+                bitmap.UriSource = post.Images[0];
                 bitmap.EndInit();
                 PreviewImage.Source = bitmap;
                 PreviewImage.Visibility = Visibility.Visible;

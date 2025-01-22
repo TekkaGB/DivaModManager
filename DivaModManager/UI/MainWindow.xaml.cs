@@ -725,7 +725,7 @@ namespace DivaModManager
         {
             try
             {
-                var ps = new ProcessStartInfo($"https://divamodarchive.xyz")
+                var ps = new ProcessStartInfo($"https://divamodarchive.com")
                 {
                     UseShellExecute = true,
                     Verb = "open"
@@ -1457,13 +1457,13 @@ namespace DivaModManager
             DMAImageRight.IsEnabled = true;
             DMABigImageLeft.IsEnabled = true;
             DMABigImageRight.IsEnabled = true;
-            imageCount = item.AllImages.Count;
+            imageCount = item.Images.Count;
             imageCounter = 0;
             if (imageCount > 0)
             {
                 Grid.SetColumnSpan(DMADescText, 1);
                 DMAImagePanel.Visibility = Visibility.Visible;
-                var image = new BitmapImage(item.AllImages[imageCounter]);
+                var image = new BitmapImage(item.Images[imageCounter]);
                 DMAScreenshot.Source = image;
                 DMABigScreenshot.Source = image;
             }
@@ -1513,7 +1513,7 @@ namespace DivaModManager
             var item = button.DataContext as DivaModArchivePost;
             if (--imageCounter == -1)
                 imageCounter = imageCount - 1;
-            var image = new BitmapImage(item.AllImages[imageCounter]);
+            var image = new BitmapImage(item.Images[imageCounter]);
             DMAScreenshot.Source = image;
             DMABigScreenshot.Source = image;
         }
@@ -1546,7 +1546,7 @@ namespace DivaModManager
             var item = button.DataContext as DivaModArchivePost;
             if (++imageCounter == imageCount)
                 imageCounter = 0;
-            var image = new BitmapImage(item.AllImages[imageCounter]);
+            var image = new BitmapImage(item.Images[imageCounter]);
             DMAScreenshot.Source = image;
             DMABigScreenshot.Source = image;
         }
@@ -1887,20 +1887,21 @@ namespace DivaModManager
         {
             DMASearchBar.IsEnabled = false;
             DMASearchButton.IsEnabled = false;
+            DMASortBox.IsEnabled = false;
             DMAFilterBox.IsEnabled = false;
             DMAClearCacheButton.IsEnabled = false;
             DMAPageLeft.IsEnabled = false;
             DMAPageRight.IsEnabled = false;
             DMAPageBox.IsEnabled = false;
-            DMAfilterSelect = true;
+            DMAFilterSelect = true;
             DMAPageBox.SelectedValue = DMApage;
             DMAPerPageBox.IsEnabled = false;
-            DMAfilterSelect = false;
+            DMAFilterSelect = false;
             DMAPage.Text = $"Page {DMApage}";
             DMAErrorPanel.Visibility = Visibility.Collapsed;
             DMALoadingBar.Visibility = Visibility.Visible;
             DMAFeedBox.Visibility = Visibility.Collapsed;
-            await DMAFeedGenerator.GetFeed(DMApage, (DMAFeedFilter)DMAFilterBox.SelectedIndex, DMASearchBar.Text, (DMAPerPageBox.SelectedIndex + 1) * 10);
+            await DMAFeedGenerator.GetFeed(DMApage, (DMAFeedSort)DMASortBox.SelectedIndex, (DMAFeedFilter)DMAFilterBox.SelectedIndex, DMASearchBar.Text, (DMAPerPageBox.SelectedIndex + 1) * 10);
             DMAFeedBox.ItemsSource = DMAFeedGenerator.CurrentFeed.Posts;
             if (DMAFeedGenerator.error)
             {
@@ -1947,6 +1948,7 @@ namespace DivaModManager
             DMAPageBox.ItemsSource = Enumerable.Range(1, (int)(DMAFeedGenerator.CurrentFeed.TotalPages));
 
             DMALoadingBar.Visibility = Visibility.Collapsed;
+            DMASortBox.IsEnabled = true;
             DMAFilterBox.IsEnabled = true;
             DMASearchBar.IsEnabled = true;
             DMASearchButton.IsEnabled = true;
@@ -1955,10 +1957,10 @@ namespace DivaModManager
             DMAPerPageBox.IsEnabled = true;
             DMAselected = true;
         }
-        private bool DMAfilterSelect = false;
+        private bool DMAFilterSelect = false;
         private void DMAFilterSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (IsLoaded && !DMAfilterSelect)
+            if (IsLoaded && !DMAFilterSelect)
             {
                 DMApage = 1;
                 DMARefreshFilter();
@@ -2115,7 +2117,7 @@ namespace DivaModManager
         }
         private void DMAPageBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!DMAfilterSelect && IsLoaded)
+            if (!DMAFilterSelect && IsLoaded)
             {
                 DMApage = (int)DMAPageBox.SelectedValue;
                 DMARefreshFilter();

@@ -33,10 +33,10 @@ namespace DivaModManager
         public DownloadWindow(DivaModArchivePost post)
         {
             InitializeComponent();
-            DownloadText.Text = $"{post.Name}\nSubmitted by {post.User.Name}";
+            DownloadText.Text = $"{post.Name}\nSubmitted by {post.Authors[0].Name}";
             var bitmap = new BitmapImage();
             bitmap.BeginInit();
-            bitmap.UriSource = post.Image;
+            bitmap.UriSource = post.Images[0];
             bitmap.EndInit();
             Preview.Source = bitmap;
         }
