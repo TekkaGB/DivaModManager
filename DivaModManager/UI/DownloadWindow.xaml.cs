@@ -1,7 +1,8 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Media.Imaging;
 
-namespace DivaModManager.UI
+namespace DivaModManager
 {
     /// <summary>
     /// Interaction logic for Download.xaml
@@ -26,6 +27,16 @@ namespace DivaModManager.UI
             var bitmap = new BitmapImage();
             bitmap.BeginInit();
             bitmap.UriSource = record.Image;
+            bitmap.EndInit();
+            Preview.Source = bitmap;
+        }
+        public DownloadWindow(DivaModArchivePost post)
+        {
+            InitializeComponent();
+            DownloadText.Text = $"{post.Name}\nSubmitted by {post.User.Name}";
+            var bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.UriSource = post.Image;
             bitmap.EndInit();
             Preview.Source = bitmap;
         }
