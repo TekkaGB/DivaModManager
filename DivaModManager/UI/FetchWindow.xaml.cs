@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
 using System.IO;
+using System.Reflection;
 using System.Net.Http;
 using System.Text.Json;
-using System.Windows;
 using System.Windows.Input;
 
-namespace DivaModManager.UI
+namespace DivaModManager
 {
     /// <summary>
     /// Interaction logic for EditWindow.xaml
@@ -39,6 +44,25 @@ namespace DivaModManager.UI
                 {
                     case "www.gamebanana.com":
                     case "gamebanana.com":
+                        return uri;
+                }
+            }
+            return null;
+        }
+        private Uri DMACreateUri(string url)
+        {
+            Uri uri;
+            if ((Uri.TryCreate(url, UriKind.Absolute, out uri) || Uri.TryCreate("http://" + url, UriKind.Absolute, out uri)) &&
+                (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
+            {
+                // Use validated URI here
+                string host = uri.DnsSafeHost;
+                if (uri.Segments.Length != 3)
+                    return null;
+                switch (host)
+                {
+                    case "www.divamodarchive.com":
+                    case "divamodarchive.com":
                         return uri;
                 }
             }
@@ -80,8 +104,31 @@ namespace DivaModManager.UI
                     Global.logger.WriteLine(ex.Message, LoggerType.Error);
                 }
             }
+            url = DMACreateUri(UrlBox.Text);
+            if (url != null)
+            {
+                var post_id = url.ToString().Split('/').Last();
+                var DMAclient = new HttpClient();
+                var requestUrl = $"https://divamodarchive.com/api/v1/posts/{post_id}";
+                string responseString = await DMAclient.GetStringAsync(requestUrl);
+                var post = JsonSerializer.Deserialize<DivaModArchivePost>(responseString);
+                var metadata = new Metadata();
+                metadata.id = post.ID;
+                metadata.submitter = post.Authors[0].Name;
+                metadata.description = post.Text;
+                metadata.preview = post.Images[0];
+                metadata.homepage = post.Link;
+                metadata.avi = post.Authors[0].Avatar;
+                metadata.cat = post.PostType;
+                metadata.lastupdate = post.Time;
+                string metadataString = JsonSerializer.Serialize(metadata, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText($@"{Global.config.Configs[Global.config.CurrentGame].ModsFolder}{Global.s}{_mod.name}{Global.s}mod.json", metadataString);
+                success = true;
+                Close();
+                return;
+            }
             else
-                Global.logger.WriteLine($"{UrlBox.Text} is invalid. The url should have the following format: https://gamebanana.com/<Mod Category>/<Mod ID>", LoggerType.Error);
+                Global.logger.WriteLine($"{UrlBox.Text} is invalid. The url should have the following format: https://gamebanana.com/<Mod Category>/<Mod ID> or https://divamodarchive.com/post/<Post ID>", LoggerType.Error);
         }
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)

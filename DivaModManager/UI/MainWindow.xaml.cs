@@ -1,30 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Reflection;
-using System.Text.Json;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
+using System.Diagnostics;
+using System.Reflection;
 using System.Windows.Documents;
-using System.Windows.Input;
+using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
-using SharpCompress.Archives.SevenZip;
+using System.Net.Http;
+using DivaModManager.UI;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Text.Json;
+using Tomlyn;
 using SharpCompress.Common;
 using SharpCompress.Readers;
-using Tomlyn;
-using Tomlyn.Model;
+using SharpCompress.Archives.SevenZip;
+using System.Threading;
 using WpfAnimatedGif;
+using System.Windows.Data;
+using Tomlyn.Model;
 
-namespace DivaModManager.UI
+namespace DivaModManager
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -718,6 +721,38 @@ namespace DivaModManager.UI
                 Global.logger.WriteLine($"Couldn't open up GameBanana ({ex.Message})", LoggerType.Error);
             }
         }
+        private void DMA_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var ps = new ProcessStartInfo($"https://divamodarchive.com")
+                {
+                    UseShellExecute = true,
+                    Verb = "open"
+                };
+                Process.Start(ps);
+            }
+            catch (Exception ex)
+            {
+                Global.logger.WriteLine($"Couldn't open up DivaModArchive ({ex.Message})", LoggerType.Error);
+            }
+        }
+        private void DMADonate_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var ps = new ProcessStartInfo($"https://ko-fi.com/brogamer")
+                {
+                    UseShellExecute = true,
+                    Verb = "open"
+                };
+                Process.Start(ps);
+            }
+            catch (Exception ex)
+            {
+                Global.logger.WriteLine($"Couldn't open up Ko-Fi ({ex.Message})", LoggerType.Error);
+            }
+        }
         private void Discord_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -1255,6 +1290,12 @@ namespace DivaModManager.UI
             var item = button.DataContext as GameBananaRecord;
             new ModDownloader().BrowserDownload(Global.games[GameFilterBox.SelectedIndex], item);
         }
+        private void DMADownload_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            var item = button.DataContext as DivaModArchivePost;
+            new ModDownloader().DMABrowserDownload(Global.games[GameBox.SelectedIndex], item);
+        }
         private void AltDownload_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
@@ -1267,6 +1308,24 @@ namespace DivaModManager.UI
         {
             Button button = sender as Button;
             var item = button.DataContext as GameBananaRecord;
+            try
+            {
+                var ps = new ProcessStartInfo(item.Link.ToString())
+                {
+                    UseShellExecute = true,
+                    Verb = "open"
+                };
+                Process.Start(ps);
+            }
+            catch (Exception ex)
+            {
+                Global.logger.WriteLine($"Couldn't open up {item.Link} ({ex.Message})", LoggerType.Error);
+            }
+        }
+        private void DMAHomepage_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            var item = button.DataContext as DivaModArchivePost;
             try
             {
                 var ps = new ProcessStartInfo(item.Link.ToString())
@@ -1383,18 +1442,80 @@ namespace DivaModManager.UI
 
             DescPanel.Visibility = Visibility.Visible;
         }
+        private void DMAMoreInfo_Click(object sender, RoutedEventArgs e)
+        {
+            DMAHomepageButton.Content = $"Mod Page";
+            Button button = sender as Button;
+            var item = button.DataContext as DivaModArchivePost;
+            DMADescPanel.DataContext = button.DataContext;
+            DMAMediaPanel.DataContext = button.DataContext;
+            DMADescText.ScrollToHome();
+            var text = "";
+            text += item.Text;
+            DMADescText.Document = ConvertToFlowDocument(text);
+            DMAImageLeft.IsEnabled = true;
+            DMAImageRight.IsEnabled = true;
+            DMABigImageLeft.IsEnabled = true;
+            DMABigImageRight.IsEnabled = true;
+            imageCount = item.Images.Count;
+            imageCounter = 0;
+            if (imageCount > 0)
+            {
+                Grid.SetColumnSpan(DMADescText, 1);
+                DMAImagePanel.Visibility = Visibility.Visible;
+                var image = new BitmapImage(item.Images[imageCounter]);
+                DMAScreenshot.Source = image;
+                DMABigScreenshot.Source = image;
+            }
+            else
+            {
+                Grid.SetColumnSpan(DMADescText, 2);
+                DMAImagePanel.Visibility = Visibility.Collapsed;
+            }
+            if (imageCount == 1)
+            {
+                DMAImageLeft.IsEnabled = false;
+                DMAImageRight.IsEnabled = false;
+                DMABigImageLeft.IsEnabled = false;
+                DMABigImageRight.IsEnabled = false;
+            }
+
+            DMADescPanel.Visibility = Visibility.Visible;
+        }
+        private void DMACloseDesc_Click(object sender, RoutedEventArgs e)
+        {
+            DMADescPanel.Visibility = Visibility.Collapsed;
+        }
         private void CloseDesc_Click(object sender, RoutedEventArgs e)
         {
             DescPanel.Visibility = Visibility.Collapsed;
+        }
+        private void DMACloseMedia_Click(object sender, RoutedEventArgs e)
+        {
+            DMAMediaPanel.Visibility = Visibility.Collapsed;
         }
         private void CloseMedia_Click(object sender, RoutedEventArgs e)
         {
             MediaPanel.Visibility = Visibility.Collapsed;
         }
 
+        private void DMAImage_Click(object sender, RoutedEventArgs e)
+        {
+            DMAMediaPanel.Visibility = Visibility.Visible;
+        }
         private void Image_Click(object sender, RoutedEventArgs e)
         {
             MediaPanel.Visibility = Visibility.Visible;
+        }
+        private void DMAImageLeft_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            var item = button.DataContext as DivaModArchivePost;
+            if (--imageCounter == -1)
+                imageCounter = imageCount - 1;
+            var image = new BitmapImage(item.Images[imageCounter]);
+            DMAScreenshot.Source = image;
+            DMABigScreenshot.Source = image;
         }
 
         private void ImageLeft_Click(object sender, RoutedEventArgs e)
@@ -1418,6 +1539,16 @@ namespace DivaModManager.UI
                 BigCaptionText.Visibility = Visibility.Collapsed;
                 CaptionText.Visibility = Visibility.Collapsed;
             }
+        }
+        private void DMAImageRight_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            var item = button.DataContext as DivaModArchivePost;
+            if (++imageCounter == imageCount)
+                imageCounter = 0;
+            var image = new BitmapImage(item.Images[imageCounter]);
+            DMAScreenshot.Source = image;
+            DMABigScreenshot.Source = image;
         }
         private void ImageRight_Click(object sender, RoutedEventArgs e)
         {
@@ -1614,12 +1745,18 @@ namespace DivaModManager.UI
             if (!selected)
                 InitializeBrowser();
         }
+        private void OnDMABrowserTabSelected(object sender, RoutedEventArgs e)
+        {
+            if (!DMAselected)
+                DMARefreshFilter();
+        }
         private void OnManagerTabSelected(object sender, RoutedEventArgs e)
         {
 
         }
 
         private static int page = 1;
+        private static int DMApage = 1;
         private void DecrementPage(object sender, RoutedEventArgs e)
         {
             --page;
@@ -1629,6 +1766,19 @@ namespace DivaModManager.UI
         {
             ++page;
             RefreshFilter();
+        }
+        private void DMADecrementPage(object sender, RoutedEventArgs e)
+        {
+            --DMApage;
+            DMARefreshFilter();
+        }
+        private void DMAIncrementPage(object sender, RoutedEventArgs e)
+        {
+            ++DMApage;
+            DMARefreshFilter();
+        }
+        private void DMABrowserRefresh(object sender, RoutedEventArgs e)
+        {
         }
         private void BrowserRefresh(object sender, RoutedEventArgs e)
         {
@@ -1641,6 +1791,11 @@ namespace DivaModManager.UI
         {
             FeedGenerator.ClearCache();
             RefreshFilter();
+        }
+        private void DMAClearCache(object sender, RoutedEventArgs e)
+        {
+            DMAFeedGenerator.ClearCache();
+            DMARefreshFilter();
         }
         private static bool filterSelect;
         private static bool searched = false;
@@ -1727,6 +1882,90 @@ namespace DivaModManager.UI
             NSFWCheckbox.IsEnabled = true;
             ClearCacheButton.IsEnabled = true;
         }
+        private static bool DMAselected = false;
+        private async void DMARefreshFilter()
+        {
+            DMASearchBar.IsEnabled = false;
+            DMASearchButton.IsEnabled = false;
+            DMASortBox.IsEnabled = false;
+            DMAFilterBox.IsEnabled = false;
+            DMAClearCacheButton.IsEnabled = false;
+            DMAPageLeft.IsEnabled = false;
+            DMAPageRight.IsEnabled = false;
+            DMAPageBox.IsEnabled = false;
+            DMAFilterSelect = true;
+            DMAPageBox.SelectedValue = DMApage;
+            DMAPerPageBox.IsEnabled = false;
+            DMAFilterSelect = false;
+            DMAPage.Text = $"Page {DMApage}";
+            DMAErrorPanel.Visibility = Visibility.Collapsed;
+            DMALoadingBar.Visibility = Visibility.Visible;
+            DMAFeedBox.Visibility = Visibility.Collapsed;
+            await DMAFeedGenerator.GetFeed(DMApage, (DMAFeedSort)DMASortBox.SelectedIndex, (DMAFeedFilter)DMAFilterBox.SelectedIndex, DMASearchBar.Text, (DMAPerPageBox.SelectedIndex + 1) * 10);
+            DMAFeedBox.ItemsSource = DMAFeedGenerator.CurrentFeed.Posts;
+            if (DMAFeedGenerator.error)
+            {
+                DMALoadingBar.Visibility = Visibility.Collapsed;
+                DMAErrorPanel.Visibility = Visibility.Visible;
+                DMABrowserRefreshButton.Visibility = Visibility.Visible;
+                if (DMAFeedGenerator.exception.Message.Contains("JSON tokens"))
+                {
+                    DMABrowserMessage.Text = "Uh oh! Diva Mod Manager failed to deserialize the DivaModArchive feed.";
+                    return;
+                }
+                switch (Regex.Match(DMAFeedGenerator.exception.Message, @"\d+").Value)
+                {
+                    case "443":
+                        DMABrowserMessage.Text = "Your internet connection is down.";
+                        break;
+                    case "500":
+                    case "503":
+                    case "504":
+                        DMABrowserMessage.Text = "DivaModArchive's servers are down.";
+                        break;
+                    default:
+                        DMABrowserMessage.Text = DMAFeedGenerator.exception.Message;
+                        break;
+                }
+                return;
+            }
+            if (DMApage < DMAFeedGenerator.CurrentFeed.TotalPages)
+                DMAPageRight.IsEnabled = true;
+            if (DMApage != 1)
+                DMAPageLeft.IsEnabled = true;
+            if (DMAFeedBox.Items.Count > 0)
+            {
+                DMAFeedBox.ScrollIntoView(DMAFeedBox.Items[0]);
+                DMAFeedBox.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                DMAErrorPanel.Visibility = Visibility.Visible;
+                DMABrowserRefreshButton.Visibility = Visibility.Collapsed;
+                DMABrowserMessage.Visibility = Visibility.Visible;
+                DMABrowserMessage.Text = "Diva Mod Manager couldn't find any mods.";
+            }
+            DMAPageBox.ItemsSource = Enumerable.Range(1, (int)(DMAFeedGenerator.CurrentFeed.TotalPages));
+
+            DMALoadingBar.Visibility = Visibility.Collapsed;
+            DMASortBox.IsEnabled = true;
+            DMAFilterBox.IsEnabled = true;
+            DMASearchBar.IsEnabled = true;
+            DMASearchButton.IsEnabled = true;
+            DMAClearCacheButton.IsEnabled = true;
+            DMAPageBox.IsEnabled = true;
+            DMAPerPageBox.IsEnabled = true;
+            DMAselected = true;
+        }
+        private bool DMAFilterSelect = false;
+        private void DMAFilterSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded && !DMAFilterSelect)
+            {
+                DMApage = 1;
+                DMARefreshFilter();
+            }
+        }
 
         private void FilterSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -1752,6 +1991,14 @@ namespace DivaModManager.UI
             {
                 page = 1;
                 RefreshFilter();
+            }
+        }
+        private void DMAPerPageSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded && !filterSelect)
+            {
+                DMApage = 1;
+                DMARefreshFilter();
             }
         }
         private void GameFilterSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1866,6 +2113,14 @@ namespace DivaModManager.UI
             {
                 page = (int)PageBox.SelectedValue;
                 RefreshFilter();
+            }
+        }
+        private void DMAPageBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!DMAFilterSelect && IsLoaded)
+            {
+                DMApage = (int)DMAPageBox.SelectedValue;
+                DMARefreshFilter();
             }
         }
         private void NSFWCheckbox_Checked(object sender, RoutedEventArgs e)
@@ -2184,6 +2439,16 @@ namespace DivaModManager.UI
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
             Search();
+        }
+        private void DMASearchBar_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                DMARefreshFilter();
+        }
+
+        private void DMASearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            DMARefreshFilter();
         }
 
         private void ModGrid_PreviewKeyDown(object sender, KeyEventArgs e)
