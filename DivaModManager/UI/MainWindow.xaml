@@ -9,7 +9,7 @@
         Background="#131313"
         Title="Diva Mod Manager" SizeChanged="OnResize"
         mc:Ignorable="d" Closing="Window_Closing" WindowStartupLocation="CenterScreen"
-        Height="750" Width="1280" MinHeight="750" MinWidth="1050" Loaded="WindowLoaded">
+        Height="750" Width="1280" MinHeight="750" MinWidth="1125" Loaded="WindowLoaded">
     <Window.Resources>
         <DataTemplate x:Key="GBModTemplate">
             <Border CornerRadius="5" Margin="5">
