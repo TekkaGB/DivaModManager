@@ -161,7 +161,7 @@ namespace DivaModManager
                 {
                     string responseString = await client.GetStringAsync(URL);
                     DMAresponse = JsonSerializer.Deserialize<DivaModArchivePost>(responseString                                          );
-                    fileName = DMAresponse.Files[0].ToString().Split('/').Last();
+                    fileName = DMAresponse.FileNames[0];
                     return true;
                 }
                 else
